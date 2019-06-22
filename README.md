@@ -4,7 +4,6 @@ A set of bash commands to power your WordPress.
 
 Uses the amazing WP-CLI !
 
-
 ## How to install
 
 Go to your favorite tools folder :
@@ -17,8 +16,8 @@ Go to your favorite tools folder :
 
 ## Update your WordPress core and plugins.
 
-wputools update;
+`wputools update;`
 
 ## Update this tool
 
-wputools self-update;
+`wputools self-update;`
