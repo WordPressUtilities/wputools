@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###################################
-## WPU Tools v 0.1.0
+## WPU Tools v 0.2.0
 ###################################
 
 _SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/";
@@ -35,6 +35,33 @@ if [ "${_PHP_VERSION_OK}" != 'y' ]; then
     return 0;
 fi;
 
+###################################
+## Going to the WordPress root dir
+###################################
+
+_WORDPRESS_FOUND='n';
+_SCRIPTSTARTDIR="$( pwd )/";
+_CURRENT_DIR="$( pwd )/";
+for (( c=1; c<=10; c++ )); do
+    if [ -d "wp-content" ]; then
+        _WORDPRESS_FOUND='y';
+        break;
+    else
+        cd ..;
+        _CURRENT_DIR="$( pwd )/";
+    fi;
+done
+
+
+if [ "${_WORDPRESS_FOUND}" == 'n' ]; then
+    cd "${_SCRIPTSTARTDIR}";
+    echo "/!\ The script could not find a WordPress root dir /!\\";
+    return 0;
+fi;
+
+###################################
+## Router
+###################################
 
 case "$1" in
     "update")
