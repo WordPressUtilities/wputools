@@ -21,3 +21,7 @@ Go to your favorite tools folder :
 ## Update this tool
 
 `wputools self-update;`
+
+## Clean WordPress path & files
+
+`wputools clean;

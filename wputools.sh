@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###################################
-## WPU Tools v 0.2.0
+## WPU Tools v 0.3.0
 ###################################
 
 _SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/";
@@ -64,6 +64,9 @@ fi;
 ###################################
 
 case "$1" in
+    "clean")
+        . "${_SOURCEDIR}bin/clean.sh";
+    ;;
     "update")
         . "${_SOURCEDIR}bin/update.sh";
     ;;
