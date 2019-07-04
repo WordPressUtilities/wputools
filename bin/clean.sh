@@ -13,6 +13,12 @@ wp comment delete --force $(wp comment list --status=spam --field=ID);
 # Delete revisions
 wp post delete --force $(wp post list --post_type='revision' --format=ids);
 
+# Delete orphaned post metas
+wp db query "DELETE pm FROM $(wp db prefix)postmeta pm LEFT JOIN $(wp db prefix)posts wp ON wp.ID = pm.post_id WHERE wp.ID IS NULL";
+
+# Delete locks
+wp db query "DELETE FROM $(wp db prefix)postmeta WHERE meta_key IN ('_edit_lock','_edit_last')";
+
 ## Clean
 ###################################
 
