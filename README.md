@@ -24,4 +24,5 @@ Go to your favorite tools folder :
 
 ## Clean WordPress path & files
 
-`wputools clean;
+`wputools clean;`
+
