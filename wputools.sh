@@ -1,8 +1,9 @@
 #!/bin/bash
 
 cat <<EOF
+
 ###################################
-## WPU Tools v 0.4.0
+## WPU Tools v 0.4.1
 ###################################
 
 EOF
@@ -39,13 +40,19 @@ if [ "${_PHP_VERSION_OK}" != 'y' ]; then
 fi;
 
 ###################################
-## Go to plugin source
+## Router before
 ###################################
 
-if [ "$1" == 'src' ]; then
-    cd "${_SOURCEDIR}";
-    return 0;
-fi;
+case "$1" in
+    "src")
+        . "${_SOURCEDIR}bin/src.sh";
+        return 0;
+    ;;
+    "self-update")
+        . "${_SOURCEDIR}bin/self-update.sh";
+        return 0;
+    ;;
+esac
 
 ###################################
 ## Going to the WordPress root dir
@@ -84,9 +91,6 @@ case "$1" in
     ;;
     "update")
         . "${_SOURCEDIR}bin/update.sh";
-    ;;
-    "self-update")
-        . "${_SOURCEDIR}bin/self-update.sh";
     ;;
     "help" | "*" | "")
         . "${_SOURCEDIR}bin/help.sh";

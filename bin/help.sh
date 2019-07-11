@@ -1,7 +1,8 @@
 #!/bin/bash
 
+echo "# HELP";
+
 cat <<EOF
-# HELP
 wputools bduser;       # Install SecuPress-Backdoor-User.
 wputools clean;        # Clean WordPress path & files.
 wputools src;          # Go to this tool source.

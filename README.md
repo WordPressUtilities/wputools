@@ -10,7 +10,7 @@ Go to your favorite tools folder :
 
 ```git clone https://github.com/WordPressUtilities/wputools```
 
-```cd wputools;_DIR_WPUTOOLS=$(pwd);echo "alias wputools=\". ${_DIR_WPUTOOLS}/wputools.sh\"" >> ~/.bash_profile;```
+```cd wputools;git submodule update --init --recursive;_DIR_WPUTOOLS=$(pwd);echo "alias wputools=\". ${_DIR_WPUTOOLS}/wputools.sh\"" >> ~/.bash_profile;```
 
 ## How to use
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "# UPDATE";
+
 _ADMIN_PROTECT_FILE=$(find . -mount -name 'wputh_admin_protect.php');
 _DEBUGLOG_FILE=$(find . -mount -name 'debug.log');
 
