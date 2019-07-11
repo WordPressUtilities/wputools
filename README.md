@@ -14,15 +14,26 @@ Go to your favorite tools folder :
 
 ## How to use
 
-## Update your WordPress core and plugins.
+### Install SecuPress-Backdoor-User.
 
-`wputools update;`
+`wputools bduser;`
 
-## Update this tool
-
-`wputools self-update;`
-
-## Clean WordPress path & files
+### Clean WordPress path & files.
 
 `wputools clean;`
 
+### Go to this tool source.
+
+`wputools src;`
+
+### Update this tool.
+
+`wputools self-update;`
+
+### Update your WordPress core and plugins.
+
+`wputools update;`
+
+## Thanks
+
+* To @boiteaweb for https://github.com/BoiteAWeb/SecuPress-Backdoor-User

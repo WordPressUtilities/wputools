@@ -1,8 +1,11 @@
 #!/bin/bash
 
+cat <<EOF
 ###################################
-## WPU Tools v 0.3.3
+## WPU Tools v 0.4.0
 ###################################
+
+EOF
 
 _SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/";
 _WPCLISRC="${_SOURCEDIR}wp-cli.phar";
@@ -32,6 +35,15 @@ esac
 
 if [ "${_PHP_VERSION_OK}" != 'y' ]; then
     echo "# Wrong PHP Version : ${_PHP_VERSION}";
+    return 0;
+fi;
+
+###################################
+## Go to plugin source
+###################################
+
+if [ "$1" == 'src' ]; then
+    cd "${_SOURCEDIR}";
     return 0;
 fi;
 
@@ -67,11 +79,14 @@ case "$1" in
     "clean")
         . "${_SOURCEDIR}bin/clean.sh";
     ;;
+    "bduser" | "backdoor-user")
+        . "${_SOURCEDIR}bin/bduser.sh";
+    ;;
     "update")
         . "${_SOURCEDIR}bin/update.sh";
     ;;
     "self-update")
-        cd "${_SOURCEDIR}"; git pull;
+        . "${_SOURCEDIR}bin/self-update.sh";
     ;;
     "help" | "*" | "")
         . "${_SOURCEDIR}bin/help.sh";

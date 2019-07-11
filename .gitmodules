@@ -1,0 +1,3 @@
+[submodule "tools/SecuPress-Backdoor-User"]
+	path = tools/SecuPress-Backdoor-User
+	url = https://github.com/BoiteAWeb/SecuPress-Backdoor-User.git
