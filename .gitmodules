@@ -1,3 +1,6 @@
 [submodule "tools/SecuPress-Backdoor-User"]
 	path = tools/SecuPress-Backdoor-User
-	url = https://github.com/BoiteAWeb/SecuPress-Backdoor-User.git
+	url = https://github.com/JulioPotier/SecuPress-Backdoor-User.git
+[submodule "tools/BashUtilities"]
+	path = tools/BashUtilities
+	url = https://github.com/Darklg/BashUtilities.git

@@ -3,7 +3,7 @@
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.4.1
+## WPU Tools v 0.4.2
 ###################################
 
 EOF
@@ -38,6 +38,12 @@ if [ "${_PHP_VERSION_OK}" != 'y' ]; then
     echo "# Wrong PHP Version : ${_PHP_VERSION}";
     return 0;
 fi;
+
+###################################
+## Dependencies
+###################################
+
+. "${_SOURCEDIR}/tools/BashUtilities/modules/files.sh";
 
 ###################################
 ## Router before
