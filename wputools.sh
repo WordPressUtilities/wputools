@@ -3,7 +3,7 @@
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.4.2
+## WPU Tools v 0.5.0
 ###################################
 
 EOF
@@ -97,6 +97,9 @@ case "$1" in
     ;;
     "update")
         . "${_SOURCEDIR}bin/update.sh";
+    ;;
+    "cache")
+        . "${_SOURCEDIR}bin/cache.sh";
     ;;
     "help" | "*" | "")
         . "${_SOURCEDIR}bin/help.sh";

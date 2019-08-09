@@ -18,6 +18,10 @@ Go to your favorite tools folder :
 
 `wputools bduser;`
 
+### Clear WordPress cache.
+
+`wputools cache;`
+
 ### Clean WordPress path & files.
 
 `wputools clean;`
