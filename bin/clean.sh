@@ -63,6 +63,7 @@ wp db optimize;
 
 find . -name '.DS_Store' -type f -delete;
 find . -name 'Thumbs.db' -type f -delete;
+find . -name 'error_log' -type f -delete;
 
 ###################################
 ## Git
