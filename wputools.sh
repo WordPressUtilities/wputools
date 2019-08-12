@@ -3,7 +3,7 @@
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.5.2
+## WPU Tools v 0.5.3
 ###################################
 
 EOF
@@ -38,6 +38,12 @@ if [ "${_PHP_VERSION_OK}" != 'y' ]; then
     echo "# Wrong PHP Version : ${_PHP_VERSION}";
     return 0;
 fi;
+
+###################################
+## Autocomplete commands
+###################################
+
+complete -W "bduser cache clean src self-update update" wputools
 
 ###################################
 ## Dependencies
