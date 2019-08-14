@@ -3,13 +3,6 @@
 echo "# CACHE";
 
 ###################################
-## Clearing WordPress object cache
-###################################
-
-echo '# Clearing WordPress object cache';
-wp cache flush;
-
-###################################
 ## Flush Rewrite rules
 ###################################
 
@@ -34,7 +27,7 @@ chmod 0777 "${_STATIC_PATH}";
 
 # Calling url
 echo '# Clearing static cache';
-curl -s "${_HOME_URL}/${_STATIC_FILE}" > /dev/null;
+curl -o - "${_HOME_URL}/${_STATIC_FILE}";
 rm "${_STATIC_PATH}";
 
 ###################################

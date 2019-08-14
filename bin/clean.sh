@@ -8,7 +8,7 @@ echo "# CLEAN";
 
 read -p "Do you need a backup ? [Y,n] : " wputools_clean_need_backup
 if [[ "${wputools_clean_need_backup}" != "N" && "${wputools_clean_need_backup}" != "n" ]]; then
-    wp db export;
+    wp db export - | gzip > ./db-$(date +%Y-%m-%d-%H%M%S).sql.gz;
 fi
 
 ###################################
