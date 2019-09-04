@@ -3,7 +3,7 @@
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.5.5
+## WPU Tools v 0.5.6
 ###################################
 
 EOF
@@ -20,6 +20,17 @@ if [ ! -f "${_WPCLISRC}" ]; then
     echo '# Installation in progress';
     curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output "${_WPCLISRC}";
     chmod +x "${_WPCLISRC}";
+fi;
+
+###################################
+## Test submodules
+###################################
+
+if [[ ! -f tools/BashUtilities/README.md || ! -f tools/SecuPress-Backdoor-User/readme.txt ]]; then
+    _CURRENT_DIR="$( pwd )/";
+    cd "${_SOURCEDIR}";
+    git submodule update --init --recursive;
+    cd "${_CURRENT_DIR}";
 fi;
 
 ###################################

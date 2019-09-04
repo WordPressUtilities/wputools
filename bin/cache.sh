@@ -35,4 +35,4 @@ rm "${_STATIC_PATH}";
 ###################################
 
 echo '# Cache warming';
-curl -ks "${_HOME_URL}" > /dev/null;
+curl -ks - "${_HOME_URL}" > /dev/null;
