@@ -1,9 +1,10 @@
 #!/bin/bash
 
+WPUTools(){
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.5.7
+## WPU Tools v 0.5.8
 ###################################
 
 EOF
@@ -85,7 +86,7 @@ _WORDPRESS_FOUND='n';
 _SCRIPTSTARTDIR="$( pwd )/";
 _CURRENT_DIR="$( pwd )/";
 for (( c=1; c<=10; c++ )); do
-    if [ -d "wp-content" ]; then
+    if [[ -d "wp-content" && -d "wp-includes" ]]; then
         _WORDPRESS_FOUND='y';
         break;
     else
@@ -122,3 +123,6 @@ case "$1" in
         . "${_SOURCEDIR}bin/help.sh";
     ;;
 esac
+}
+
+WPUTools "${1}";
