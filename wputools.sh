@@ -4,7 +4,7 @@ WPUTools(){
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.5.8
+## WPU Tools v 0.5.9
 ###################################
 
 EOF
@@ -55,7 +55,7 @@ fi;
 ## Autocomplete commands
 ###################################
 
-complete -W "bduser cache clean src self-update update" wputools
+complete -W "backup bduser cache clean src self-update update" wputools
 
 ###################################
 ## Dependencies
@@ -107,17 +107,8 @@ fi;
 ###################################
 
 case "$1" in
-    "clean")
-        . "${_SOURCEDIR}bin/clean.sh";
-    ;;
-    "bduser" | "backdoor-user")
-        . "${_SOURCEDIR}bin/bduser.sh";
-    ;;
-    "update")
-        . "${_SOURCEDIR}bin/update.sh";
-    ;;
-    "cache")
-        . "${_SOURCEDIR}bin/cache.sh";
+    "backup" | "bduser" | "clean" | "update" | "cache")
+        . "${_SOURCEDIR}bin/${1}.sh";
     ;;
     "help" | "*" | "")
         . "${_SOURCEDIR}bin/help.sh";

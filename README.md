@@ -14,6 +14,10 @@ Go to your favorite tools folder :
 
 ## How to use
 
+### Backup database.
+
+`wputools backup;`
+
 ### Install SecuPress-Backdoor-User.
 
 `wputools bduser;`
