@@ -14,7 +14,7 @@ Go to your favorite tools folder :
 
 ## How to use
 
-### Backup database.
+### Backup database + wp-config + htaccess + uploads (on demand).
 
 `wputools backup;`
 

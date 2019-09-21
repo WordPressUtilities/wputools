@@ -4,7 +4,7 @@ WPUTools(){
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.5.9
+## WPU Tools v 0.5.10
 ###################################
 
 EOF
@@ -62,6 +62,7 @@ complete -W "backup bduser cache clean src self-update update" wputools
 ###################################
 
 . "${_SOURCEDIR}/tools/BashUtilities/modules/files.sh";
+. "${_SOURCEDIR}/tools/BashUtilities/modules/values.sh";
 
 ###################################
 ## Router before

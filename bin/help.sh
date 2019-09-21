@@ -3,7 +3,7 @@
 echo "# HELP";
 
 cat <<EOF
-wputools backup;       # Backup database
+wputools backup;       # Backup database + wp-config + htaccess + uploads (on demand).
 wputools bduser;       # Install SecuPress-Backdoor-User.
 wputools cache;        # Clear WordPress cache.
 wputools clean;        # Clean WordPress path & files.
