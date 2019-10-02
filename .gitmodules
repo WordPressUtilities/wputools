@@ -4,3 +4,6 @@
 [submodule "tools/BashUtilities"]
 	path = tools/BashUtilities
 	url = https://github.com/Darklg/BashUtilities.git
+[submodule "tools/wpuwooimportexport"]
+	path = tools/wpuwooimportexport
+	url = https://github.com/WordPressUtilities/wpuwooimportexport.git

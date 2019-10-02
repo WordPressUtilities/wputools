@@ -4,7 +4,7 @@ WPUTools(){
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.5.10
+## WPU Tools v 0.6.0
 ###################################
 
 EOF
@@ -27,7 +27,7 @@ fi;
 ## Test submodules
 ###################################
 
-if [[ ! -f tools/BashUtilities/README.md || ! -f tools/SecuPress-Backdoor-User/readme.txt ]]; then
+if [[ ! -f tools/BashUtilities/README.md || ! -f tools/SecuPress-Backdoor-User/readme.txt || ! -f tools/wpuwooimportexport/README.md ]]; then
     _CURRENT_DIR="$( pwd )/";
     cd "${_SOURCEDIR}";
     git submodule update --init --recursive;
@@ -55,7 +55,7 @@ fi;
 ## Autocomplete commands
 ###################################
 
-complete -W "backup bduser cache clean src self-update update" wputools
+complete -W "backup bduser cache clean import src self-update update" wputools
 
 ###################################
 ## Dependencies
@@ -108,8 +108,8 @@ fi;
 ###################################
 
 case "$1" in
-    "backup" | "bduser" | "clean" | "update" | "cache")
-        . "${_SOURCEDIR}bin/${1}.sh";
+    "backup" | "bduser" | "clean" | "update" | "cache" | "import")
+        . "${_SOURCEDIR}bin/${1}.sh" "${2}";
     ;;
     "help" | "*" | "")
         . "${_SOURCEDIR}bin/help.sh";
@@ -117,4 +117,4 @@ case "$1" in
 esac
 }
 
-WPUTools "${1}";
+WPUTools "${1}" "${2}";

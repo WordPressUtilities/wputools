@@ -30,6 +30,10 @@ Go to your favorite tools folder :
 
 `wputools clean;`
 
+### Import posts from a CSV File.
+
+`wputools import file.csv;`
+
 ### Go to this tool source.
 
 `wputools src;`
