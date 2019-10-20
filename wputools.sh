@@ -4,7 +4,7 @@ WPUTools(){
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.6.2
+## WPU Tools v 0.7.0
 ###################################
 
 EOF
@@ -55,7 +55,7 @@ fi;
 ## Autocomplete commands
 ###################################
 
-complete -W "backup bduser cache clean import src self-update update" wputools
+complete -W "backup bduser cache clean import src self-update update wpuwoo" wputools
 
 ###################################
 ## Dependencies
@@ -108,8 +108,8 @@ fi;
 ###################################
 
 case "$1" in
-    "backup" | "bduser" | "clean" | "update" | "cache" | "import")
-        . "${_SOURCEDIR}bin/${1}.sh" "${2}";
+    "backup" | "bduser" | "clean" | "update" | "cache" | "import" | "wpuwoo")
+        . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}";
     ;;
     "help" | "*" | "")
         . "${_SOURCEDIR}bin/help.sh";
@@ -117,4 +117,4 @@ case "$1" in
 esac
 }
 
-WPUTools "${1}" "${2}";
+WPUTools "${1}" "${2}" "${3}" "${4}";
