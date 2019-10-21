@@ -4,7 +4,7 @@ WPUTools(){
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.7.0
+## WPU Tools v 0.7.1
 ###################################
 
 EOF
@@ -30,7 +30,7 @@ fi;
 if [[ ! -f tools/BashUtilities/README.md || ! -f tools/SecuPress-Backdoor-User/readme.txt || ! -f tools/wpuwooimportexport/README.md ]]; then
     _CURRENT_DIR="$( pwd )/";
     cd "${_SOURCEDIR}";
-    git submodule update --init --recursive;
+    #git submodule update --init --recursive;
     cd "${_CURRENT_DIR}";
 fi;
 
@@ -55,7 +55,7 @@ fi;
 ## Autocomplete commands
 ###################################
 
-complete -W "backup bduser cache clean import src self-update update wpuwoo" wputools
+complete -W "backup bduser cache clean src self-update update wpuwoo" wputools
 
 ###################################
 ## Dependencies
@@ -108,7 +108,10 @@ fi;
 ###################################
 
 case "$1" in
-    "backup" | "bduser" | "clean" | "update" | "cache" | "import" | "wpuwoo")
+    "import")
+        . "${_SOURCEDIR}bin/wpuwoo.sh" "import-csv" "${2}";
+    ;;
+    "backup" | "bduser" | "clean" | "update" | "cache" | "wpuwoo")
         . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}";
     ;;
     "help" | "*" | "")

@@ -32,7 +32,15 @@ Go to your favorite tools folder :
 
 ### Import posts from a CSV File.
 
-`wputools import file.csv;`
+`wputools wpuwoo import-csv file.csv`
+
+### Export post #10.
+
+`wputools wpuwoo import-export-post export 10`
+
+### Import post #10.
+
+`wputools wpuwoo import-export-post import 10`
 
 ### Go to this tool source.
 
