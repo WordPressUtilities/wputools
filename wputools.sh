@@ -1,10 +1,13 @@
 #!/bin/bash
 
 WPUTools(){
+
+_WPUTOOLS_VERSION='0.7.3';
+
 cat <<EOF
 
 ###################################
-## WPU Tools v 0.7.1
+## WPU Tools v ${_WPUTOOLS_VERSION}
 ###################################
 
 EOF
@@ -30,7 +33,7 @@ fi;
 if [[ ! -f tools/BashUtilities/README.md || ! -f tools/SecuPress-Backdoor-User/readme.txt || ! -f tools/wpuwooimportexport/README.md ]]; then
     _CURRENT_DIR="$( pwd )/";
     cd "${_SOURCEDIR}";
-    #git submodule update --init --recursive;
+    git submodule update --init --recursive;
     cd "${_CURRENT_DIR}";
 fi;
 
