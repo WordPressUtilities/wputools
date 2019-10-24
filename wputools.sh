@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-_WPUTOOLS_VERSION='0.7.4';
+_WPUTOOLS_VERSION='0.7.5';
 
 cat <<EOF
 
