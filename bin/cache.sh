@@ -20,7 +20,7 @@ _STATIC_PATH="${_CURRENT_DIR}${_STATIC_FILE}";
 _HOME_URL=$(php "${_WPCLISRC}" option get home --quiet --skip-plugins --skip-themes --skip-packages);
 
 # Copy file
-cp "${_SOURCEDIR}tools/cache.php" "${_STATIC_PATH}";
+cp "${_TOOLSDIR}cache.php" "${_STATIC_PATH}";
 
 # File will be deleted after use so lets ensure rights are ok.
 chmod 0777 "${_STATIC_PATH}";

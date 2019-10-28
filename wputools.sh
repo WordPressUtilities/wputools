@@ -2,7 +2,8 @@
 
 WPUTools(){
 
-_WPUTOOLS_VERSION='0.7.5';
+_WPUTOOLS_VERSION='0.7.6';
+_PHP_VERSIONS=(7.0 7.1 7.2 7.3)
 
 cat <<EOF
 
@@ -14,6 +15,7 @@ EOF
 
 _SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/";
 _WPCLISRC="${_SOURCEDIR}wp-cli.phar";
+_TOOLSDIR="${_SOURCEDIR}tools/";
 
 ###################################
 ## Test WP Cli
@@ -30,7 +32,7 @@ fi;
 ## Test submodules
 ###################################
 
-if [[ ! -f tools/BashUtilities/README.md || ! -f tools/SecuPress-Backdoor-User/readme.txt || ! -f tools/wpuwooimportexport/README.md ]]; then
+if [[ ! -f "${_TOOLSDIR}BashUtilities/README.md" || ! -f "${_TOOLSDIR}SecuPress-Backdoor-User/readme.txt" || ! -f "${_TOOLSDIR}wpuwooimportexport/README.md" ]]; then
     _CURRENT_DIR="$( pwd )/";
     cd "${_SOURCEDIR}";
     git submodule update --init --recursive;
@@ -44,7 +46,6 @@ fi;
 # Thanks to https://stackoverflow.com/a/53231244
 _PHP_VERSION=$(php -v | head -n 1 | cut -d " " -f 2 | cut -f1-2 -d".");
 _PHP_VERSION_OK='n';
-_PHP_VERSIONS=(7.0 7.1 7.2 7.3)
 case "${_PHP_VERSIONS[@]}" in  *"${_PHP_VERSION}"*)
     _PHP_VERSION_OK='y';
 esac
@@ -64,8 +65,8 @@ complete -W "backup bduser cache clean src self-update update wpuwoo" wputools
 ## Dependencies
 ###################################
 
-. "${_SOURCEDIR}/tools/BashUtilities/modules/files.sh";
-. "${_SOURCEDIR}/tools/BashUtilities/modules/values.sh";
+. "${_TOOLSDIR}/BashUtilities/modules/files.sh";
+. "${_TOOLSDIR}/BashUtilities/modules/values.sh";
 
 ###################################
 ## Router before

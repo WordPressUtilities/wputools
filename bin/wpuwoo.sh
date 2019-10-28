@@ -3,7 +3,7 @@
 echo "# WPU WOO";
 
 _WPUWOO_ACTION="${1}";
-_WPUWOO_ACTION_DIR="${_SOURCEDIR}tools/wpuwooimportexport/";
+_WPUWOO_ACTION_DIR="${_TOOLSDIR}wpuwooimportexport/";
 _WPUWOO_ACTION_FILE="${_WPUWOO_ACTION_DIR}tasks/${_WPUWOO_ACTION}.php";
 
 if [[ ! -f "${_WPUWOO_ACTION_FILE}" ]]; then

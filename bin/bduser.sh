@@ -15,7 +15,7 @@ _HOME_URL=$(php "${_WPCLISRC}" option get home --quiet --skip-plugins --skip-the
 ## Copy file
 ###################################
 
-cp "${_SOURCEDIR}tools/SecuPress-Backdoor-User/secupress-backdoor-user.php" "${_BD_PATH}";
+cp "${_TOOLSDIR}SecuPress-Backdoor-User/secupress-backdoor-user.php" "${_BD_PATH}";
 
 # Only load administrators
 bashutilities_sed "s/get_users()/get_users(array('role'=>'administrator'))/g" "${_BD_PATH}";
