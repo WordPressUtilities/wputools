@@ -9,6 +9,11 @@ echo "# CACHE";
 echo '# Flushing Rewrite rules';
 wp rewrite flush --hard;
 
+_cache_type='all';
+if [[ "${1}" != "" ]];then
+    _cache_type="${1}";
+fi;
+
 ###################################
 ## Clearing Static Cache
 ###################################
@@ -27,7 +32,7 @@ chmod 0777 "${_STATIC_PATH}";
 
 # Calling url
 echo '# Clearing static cache';
-curl -ks "${_HOME_URL}/${_STATIC_FILE}" > /dev/null;
+curl -ks "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}";
 rm "${_STATIC_PATH}";
 
 ###################################
