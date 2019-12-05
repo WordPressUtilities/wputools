@@ -2,8 +2,8 @@
 
 WPUTools(){
 
-_WPUTOOLS_VERSION='0.7.7';
-_PHP_VERSIONS=(7.0 7.1 7.2 7.3)
+_WPUTOOLS_VERSION='0.8.0';
+_PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 
 cat <<EOF
 
@@ -59,7 +59,30 @@ fi;
 ## Autocomplete commands
 ###################################
 
-complete -W "backup bduser cache clean src self-update update wpuwoo" wputools
+# Thanks : https://stackoverflow.com/a/5303225
+_wputools_complete() {
+    local cur prev
+
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD-1]}
+
+    if [ $COMP_CWORD -eq 1 ]; then
+        COMPREPLY=( $(compgen -W "backup bduser cache clean src self-update update wpuwoo" -- $cur) )
+    elif [ $COMP_CWORD -eq 2 ]; then
+        case "$prev" in
+            "cache")
+                COMPREPLY=( $(compgen -W "all opcache wprocket w3tc object" -- $cur) )
+            ;;
+            *)
+            ;;
+        esac
+    fi
+
+    return 0
+}
+
+complete -F _wputools_complete wputools
 
 ###################################
 ## Dependencies

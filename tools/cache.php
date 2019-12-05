@@ -14,7 +14,7 @@ $cache_type = isset($_GET['cache_type']) ? $_GET['cache_type'] : 'all';
 echo "# Cache type : " . htmlentities($cache_type) . "\n";
 
 // Opcache
-if (function_exists('opcache_reset') && ($cache_type == 'all' || $cache_type == 'opcache')) {
+if (function_exists('opcache_reset') && ($cache_type == 'all' || $cache_type == 'opcache' || $cache_type == 'opcode')) {
     echo '# Clearing opcache cache' . "\n";
     opcache_reset();
 }
