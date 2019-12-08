@@ -2,6 +2,7 @@
 
 echo "# SELF-UPDATE";
 
+# Update WPUTools
 cd "${_SOURCEDIR}";
 git pull;
 git submodule update --init --recursive;
@@ -13,5 +14,11 @@ else
     echo "Successful update from WPUTools v ${_WPUTOOLS_VERSION} to WPUTools v ${_WPUTOOLS_LATEST}";
 fi;
 
+# Update WP CLI
 php "${_WPCLISRC}" cli update --yes;
+
+# Reload autocomplete
+. "${_SOURCEDIR}inc/autocomplete.sh";
+
+# Back to the current dir
 cd "${_CURRENT_DIR}";
