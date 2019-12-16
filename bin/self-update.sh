@@ -2,6 +2,8 @@
 
 echo "# SELF-UPDATE";
 
+_CURRENT_DIR="$( pwd )/";
+
 # Update WPUTools
 cd "${_SOURCEDIR}";
 git pull;
