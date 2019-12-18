@@ -7,7 +7,8 @@
 echo "# BACKUP";
 
 # Vars
-_BACKUP_NAME="$(date +%Y-%m-%d-%H%M%S)";
+_BACKUP_RAND=$(openssl rand -hex 4);
+_BACKUP_NAME="$(date +%Y-%m-%d-%H%M%S)-${_BACKUP_RAND}";
 _BACKUP_PATH="./${_BACKUP_NAME}/";
 _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
 
@@ -22,7 +23,10 @@ cp ".htaccess" "${_BACKUP_PATH}htaccess.txt";
 # Backup UPLOADS
 backup_uploads=$(bashutilities_get_yn "- Backup uploads?" 'n');
 if [[ "${backup_uploads}" == 'y' ]]; then
+    # Copy uploads
     cp -a "wp-content/uploads" "${_BACKUP_PATH}uploads";
+    # Delete tmp files
+    find "${_BACKUP_PATH}uploads" -name '.DS_Store' -type f -delete;
 fi;
 
 # Zip TMP DIR
