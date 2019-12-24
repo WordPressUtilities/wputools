@@ -30,6 +30,10 @@ Go to your favorite tools folder :
 
 `wputools clean;`
 
+### Import an SQL dump.
+
+`wputools dbimport dump.sql;`
+
 ### Import posts from a CSV File.
 
 `wputools wpuwoo import-csv file.csv`

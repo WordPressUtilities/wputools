@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-_WPUTOOLS_VERSION='0.8.4';
+_WPUTOOLS_VERSION='0.9.0';
 _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 
 cat <<EOF
@@ -67,6 +67,7 @@ fi;
 
 . "${_TOOLSDIR}/BashUtilities/modules/files.sh";
 . "${_TOOLSDIR}/BashUtilities/modules/values.sh";
+. "${_TOOLSDIR}/BashUtilities/modules/messages.sh";
 
 ###################################
 ## Router before
@@ -102,7 +103,7 @@ done
 
 if [ "${_WORDPRESS_FOUND}" == 'n' ]; then
     cd "${_SCRIPTSTARTDIR}";
-    echo "/!\ The script could not find a WordPress root dir /!\\";
+    echo $(bashutilities_message 'The script could not find a WordPress root dir' 'error');
     return 0;
 fi;
 
@@ -114,7 +115,7 @@ case "$1" in
     "import")
         . "${_SOURCEDIR}bin/wpuwoo.sh" "import-csv" "${2}";
     ;;
-    "backup" | "bduser" | "clean" | "update" | "cache" | "wpuwoo")
+    "backup" | "bduser" | "clean" | "update" | "cache" | "dbimport" | "wpuwoo")
         . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}";
     ;;
     "help" | "*" | "")

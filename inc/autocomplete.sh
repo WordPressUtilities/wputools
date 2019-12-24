@@ -13,11 +13,14 @@ _wputools_complete() {
     prev=${COMP_WORDS[COMP_CWORD-1]}
 
     if [ $COMP_CWORD -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "backup bduser cache clean src self-update update wpuwoo" -- $cur) )
+        COMPREPLY=( $(compgen -W "backup bduser cache clean dbimport src self-update update wpuwoo" -- $cur) )
     elif [ $COMP_CWORD -eq 2 ]; then
         case "$prev" in
             "cache")
                 COMPREPLY=( $(compgen -W "all opcache wprocket w3tc object" -- $cur) )
+            ;;
+            "dbimport")
+                COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.sql' -- $cur ) )
             ;;
             *)
             ;;
