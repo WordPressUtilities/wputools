@@ -16,7 +16,7 @@ _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
 mkdir "${_BACKUP_NAME}";
 
 # Backup DATABASE
-wp db export - > "${_BACKUP_FILE}";
+php "${_WPCLISRC}" db export - > "${_BACKUP_FILE}";
 cp "wp-config.php" "${_BACKUP_PATH}wp-config.php";
 cp ".htaccess" "${_BACKUP_PATH}htaccess.txt";
 

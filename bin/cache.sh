@@ -7,7 +7,7 @@ echo "# CACHE";
 ###################################
 
 echo '# Flushing Rewrite rules';
-wp rewrite flush --hard;
+php "${_WPCLISRC}" rewrite flush --hard;
 
 _cache_type='all';
 if [[ "${1}" != "" ]];then
