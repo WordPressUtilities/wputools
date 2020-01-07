@@ -17,7 +17,7 @@ _wputools_complete() {
     elif [ $COMP_CWORD -eq 2 ]; then
         case "$prev" in
             "cache")
-                COMPREPLY=( $(compgen -W "all opcache wprocket w3tc object" -- $cur) )
+                COMPREPLY=( $(compgen -W "all opcache wprocket w3tc object url" -- $cur) )
             ;;
             "dbimport")
                 COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.sql' -- $cur ) )

@@ -14,6 +14,11 @@ if [[ "${1}" != "" ]];then
     _cache_type="${1}";
 fi;
 
+_cache_arg='';
+if [[ "${2}" != "" ]];then
+    _cache_arg="${2}";
+fi;
+
 ###################################
 ## Clearing Static Cache
 ###################################
@@ -32,7 +37,7 @@ chmod 0777 "${_STATIC_PATH}";
 
 # Calling url
 echo '# Clearing static cache';
-curl -ks "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}";
+curl -ks "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
 rm "${_STATIC_PATH}";
 
 ###################################
