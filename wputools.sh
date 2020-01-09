@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-_WPUTOOLS_VERSION='0.9.3';
+_WPUTOOLS_VERSION='0.9.4';
 _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 
 cat <<EOF

@@ -58,10 +58,16 @@ if (filter_var($cache_arg, FILTER_VALIDATE_URL) !== false) {
 if ($cache_type == 'url' && $cached_url) {
     echo '# Purging cache for URL "' . $cached_url . '"' . "\n";
 
-    /* Purge WP Rocket file */
+    /* Purge W3TC page */
     if (function_exists('rocket_clean_files')) {
         echo '# - Purging cache for URL in WP Rocket' . "\n";
         rocket_clean_files(array($cached_url));
+    }
+
+    /* Purge WP Rocket page */
+    if (function_exists('w3tc_flush_url')) {
+        echo '# - Purging cache for URL in W3TC' . "\n";
+        w3tc_flush_url($cached_url);
     }
 
     /* Purge cloudflare cache */

@@ -27,6 +27,8 @@ if [[ "${backup_uploads}" == 'y' ]]; then
     cp -a "wp-content/uploads" "${_BACKUP_PATH}uploads";
     # Delete tmp files
     find "${_BACKUP_PATH}uploads" -name '.DS_Store' -type f -delete;
+    # Delete logs
+    find "${_BACKUP_PATH}uploads" -name '*.log' -type f -delete;
 fi;
 
 # Zip TMP DIR
