@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-_WPUTOOLS_VERSION='0.9.4';
+_WPUTOOLS_VERSION='0.9.5';
 _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 
 cat <<EOF
@@ -22,10 +22,17 @@ _TOOLSDIR="${_SOURCEDIR}tools/";
 ###################################
 
 if [ ! -f "${_WPCLISRC}" ]; then
-    echo '# WP-CLI is missing';
-    echo '# Installation in progress';
+    echo '# WP-CLI : Installation in progress';
     curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output "${_WPCLISRC}";
     chmod +x "${_WPCLISRC}";
+fi;
+if [ ! -d ~/.wp-cli ];then
+    echo '# WP-CLI : creating config folder.';
+    mkdir ~/.wp-cli;
+fi;
+if [ ! -f ~/.wp-cli/config.yml ];then
+    echo '# WP-CLI : creating config file.';
+    echo -e "apache_modules:\n  - mod_rewrite" >> ~/.wp-cli/config.yml
 fi;
 
 ###################################
