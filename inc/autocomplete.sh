@@ -21,6 +21,7 @@ _wputools_complete() {
             ;;
             "dbimport")
                 COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.sql' -- $cur ) )
+                COMPREPLY+=( $( compgen -o plusdirs  -f -X '!*.tar.gz' -- $cur ) )
             ;;
             *)
             ;;
