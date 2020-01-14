@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-_WPUTOOLS_VERSION='0.9.7';
+_WPUTOOLS_VERSION='0.10.0';
 _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 
 cat <<EOF
@@ -16,6 +16,8 @@ EOF
 _SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/";
 _WPCLISRC="${_SOURCEDIR}wp-cli.phar";
 _TOOLSDIR="${_SOURCEDIR}tools/";
+_UPDATE_CONTROL_FILE="${_SOURCEDIR}/control.txt";
+_UPDATE_CHECK_EVERY_SEC=86400;
 
 ###################################
 ## Test WP Cli
@@ -67,6 +69,7 @@ fi;
 ###################################
 
 . "${_SOURCEDIR}inc/autocomplete.sh";
+. "${_SOURCEDIR}inc/check-update.sh";
 
 ###################################
 ## Dependencies
@@ -131,4 +134,4 @@ case "$1" in
 esac
 }
 
-WPUTools "${1}" "${2}" "${3}" "${4}";
+WPUTools "$@";
