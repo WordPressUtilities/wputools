@@ -28,11 +28,10 @@ if [[ ! -f "${_UPDATE_CONTROL_FILE}" ]];then
     return 0;
 fi;
 
-_last_check_age=$(( $(date +%s) - $(stat -f%c "${_UPDATE_CONTROL_FILE}") ))
-_max_check_age=80;
+_last_check_age=$(( $(date +%s) - $( date -r "${_UPDATE_CONTROL_FILE}" +%s) ))
 
-if [[ "${_last_check_age}" -gt "${_max_check_age}" ]];then
-    echo "# Checking for WPUTools Updates";
+if [[ "${_last_check_age}" -gt "${_UPDATE_CHECK_EVERY_SEC}" ]];then
+    echo "# Checking for WPUTools updates";
     wputools_check_update;
     return 0;
 fi;
