@@ -2,9 +2,9 @@
 
 WPUTools(){
 
-_WPUTOOLS_VERSION='0.10.1';
-_PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
-
+local _WPUTOOLS_VERSION='0.11.0';
+local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
+local _CURRENT_DIR="$( pwd )/";
 cat <<EOF
 
 ###################################
@@ -13,11 +13,12 @@ cat <<EOF
 
 EOF
 
-_SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/";
-_WPCLISRC="${_SOURCEDIR}wp-cli.phar";
-_TOOLSDIR="${_SOURCEDIR}tools/";
-_UPDATE_CONTROL_FILE="${_SOURCEDIR}/control.txt";
-_UPDATE_CHECK_EVERY_SEC=86400;
+local _SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/";
+local _WPCLISRC="${_SOURCEDIR}wp-cli.phar";
+local _TOOLSDIR="${_SOURCEDIR}tools/";
+local _UPDATE_CONTROL_FILE="${_SOURCEDIR}control.txt";
+local _UPDATE_CHECK_EVERY_SEC=86400;
+
 
 ###################################
 ## Test WP Cli
@@ -42,7 +43,6 @@ fi;
 ###################################
 
 if [[ ! -f "${_TOOLSDIR}BashUtilities/README.md" || ! -f "${_TOOLSDIR}SecuPress-Backdoor-User/readme.txt" || ! -f "${_TOOLSDIR}wpuwooimportexport/README.md" ]]; then
-    _CURRENT_DIR="$( pwd )/";
     cd "${_SOURCEDIR}";
     git submodule update --init --recursive;
     cd "${_CURRENT_DIR}";
@@ -98,9 +98,9 @@ esac
 ## Going to the WordPress root dir
 ###################################
 
-_WORDPRESS_FOUND='n';
-_SCRIPTSTARTDIR="$( pwd )/";
-_CURRENT_DIR="$( pwd )/";
+local _WORDPRESS_FOUND='n';
+local _SCRIPTSTARTDIR="$( pwd )/";
+
 for (( c=1; c<=10; c++ )); do
     if [[ -d "wp-content" && -d "wp-includes" ]]; then
         _WORDPRESS_FOUND='y';
@@ -126,7 +126,10 @@ case "$1" in
         . "${_SOURCEDIR}bin/wpuwoo.sh" "import-csv" "${2}";
     ;;
     "backup" | "bduser" | "clean" | "update" | "cache" | "dbimport" | "wpuwoo")
-        . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}";
+        . "${_SOURCEDIR}bin/${1}.sh" "${@:2}";
+    ;;
+    "wp")
+        php "${_WPCLISRC}" "${@:2}";
     ;;
     "help" | "*" | "")
         . "${_SOURCEDIR}bin/help.sh";

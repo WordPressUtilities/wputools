@@ -22,5 +22,8 @@ php "${_WPCLISRC}" cli update --yes;
 # Reload autocomplete
 . "${_SOURCEDIR}inc/autocomplete.sh";
 
+# Mark update control file
+touch "${_UPDATE_CONTROL_FILE}";
+
 # Back to the current dir
 cd "${_CURRENT_DIR}";

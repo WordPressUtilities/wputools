@@ -23,13 +23,14 @@ wputools_check_update() {
     touch "${_UPDATE_CONTROL_FILE}";
 }
 
+# Create control file if it dont exists : trigger update.
 if [[ ! -f "${_UPDATE_CONTROL_FILE}" ]];then
     wputools_check_update;
     return 0;
 fi;
 
+# If the file is older than our control duration : trigger update.
 _last_check_age=$(( $(date +%s) - $( date -r "${_UPDATE_CONTROL_FILE}" +%s) ))
-
 if [[ "${_last_check_age}" -gt "${_UPDATE_CHECK_EVERY_SEC}" ]];then
     echo "# Checking for WPUTools updates";
     wputools_check_update;
@@ -39,6 +40,6 @@ fi;
 
 wputools_update_available_message
 
-
-
-
+# Remove old functions
+unset -f wputools_check_update
+unset -f wputools_update_available_message
