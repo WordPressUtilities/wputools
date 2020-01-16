@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.11.0';
+local _WPUTOOLS_VERSION='0.11.1';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _CURRENT_DIR="$( pwd )/";
 cat <<EOF
@@ -19,24 +19,13 @@ local _TOOLSDIR="${_SOURCEDIR}tools/";
 local _UPDATE_CONTROL_FILE="${_SOURCEDIR}control.txt";
 local _UPDATE_CHECK_EVERY_SEC=86400;
 
+_WPUWOO_ACTION_DIR="${_TOOLSDIR}wpuwooimportexport/";
 
 ###################################
 ## Test WP Cli
 ###################################
 
-if [ ! -f "${_WPCLISRC}" ]; then
-    echo '# WP-CLI : Installation in progress';
-    curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output "${_WPCLISRC}";
-    chmod +x "${_WPCLISRC}";
-fi;
-if [ ! -d ~/.wp-cli ];then
-    echo '# WP-CLI : creating config folder.';
-    mkdir ~/.wp-cli;
-fi;
-if [ ! -f ~/.wp-cli/config.yml ];then
-    echo '# WP-CLI : creating config file.';
-    echo -e "apache_modules:\n  - mod_rewrite" >> ~/.wp-cli/config.yml
-fi;
+. "${_SOURCEDIR}inc/install-wpcli.sh";
 
 ###################################
 ## Test submodules

@@ -19,6 +19,11 @@ _wputools_complete() {
             "cache")
                 COMPREPLY=( $(compgen -W "all opcache wprocket w3tc object url" -- $cur) )
             ;;
+            "wpuwoo")
+                _reply=$(ls -1 "${_WPUWOO_ACTION_DIR}tasks/"*.php | awk -F'/' '{print $NF}');
+                _reply=${_reply//\.php/};
+                COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
+            ;;
             "dbimport")
                 COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.sql' -- $cur ) )
                 COMPREPLY+=( $( compgen -o plusdirs  -f -X '!*.tar.gz' -- $cur ) )
