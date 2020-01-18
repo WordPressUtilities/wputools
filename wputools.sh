@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.11.1';
+local _WPUTOOLS_VERSION='0.11.2';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _CURRENT_DIR="$( pwd )/";
 cat <<EOF
@@ -48,8 +48,12 @@ case "${_PHP_VERSIONS[@]}" in  *"${_PHP_VERSION}"*)
     _PHP_VERSION_OK='y';
 esac
 
+if [ "${_PHP_VERSION}" == '7.0' ]; then
+    echo $(bashutilities_message "Your PHP Version is obsolete : ${_PHP_VERSION}" 'warning');
+fi;
+
 if [ "${_PHP_VERSION_OK}" != 'y' ]; then
-    echo "# Wrong PHP Version : ${_PHP_VERSION}";
+    echo $(bashutilities_message "Wrong PHP Version : ${_PHP_VERSION}" 'error');
     return 0;
 fi;
 
@@ -58,7 +62,9 @@ fi;
 ###################################
 
 . "${_SOURCEDIR}inc/autocomplete.sh";
-. "${_SOURCEDIR}inc/check-update.sh";
+if [[ "$1" != "self-update" ]];then
+    . "${_SOURCEDIR}inc/check-update.sh";
+fi;
 
 ###################################
 ## Dependencies
