@@ -18,7 +18,7 @@ fi;
 
 # Update WP CLI
 php "${_WPCLISRC}" cli update --yes;
-php "${_WPCLISRC}" cli cache prune;
+php "${_WPCLISRC}" cli cache prune --quiet;
 
 # Reload autocomplete
 . "${_SOURCEDIR}inc/autocomplete.sh";

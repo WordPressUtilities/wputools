@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.11.3';
+local _WPUTOOLS_VERSION='0.11.4';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _CURRENT_DIR="$( pwd )/";
 cat <<EOF
@@ -20,6 +20,10 @@ local _UPDATE_CONTROL_FILE="${_SOURCEDIR}control.txt";
 local _UPDATE_CHECK_EVERY_SEC=86400;
 
 _WPUWOO_ACTION_DIR="${_TOOLSDIR}wpuwooimportexport/";
+
+if [[ -f "${_SOURCEDIR}wputools-local.sh" ]];then
+    . "${_SOURCEDIR}wputools-local.sh";
+fi;
 
 ###################################
 ## Test WP Cli
