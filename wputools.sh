@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.11.4';
+local _WPUTOOLS_VERSION='0.11.5';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _CURRENT_DIR="$( pwd )/";
 cat <<EOF
@@ -125,7 +125,7 @@ case "$1" in
         . "${_SOURCEDIR}bin/wpuwoo.sh" "import-csv" "${2}";
     ;;
     "backup" | "bduser" | "clean" | "update" | "cache" | "dbimport" | "wpuwoo")
-        . "${_SOURCEDIR}bin/${1}.sh" "${@:2}";
+        . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}" "${5}";
     ;;
     "wp")
         php "${_WPCLISRC}" "${@:2}";

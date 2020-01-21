@@ -45,7 +45,7 @@ chmod 0777 "${_STATIC_PATH}";
 
 # Calling url
 echo '# Clearing static cache';
-curl -ks "${_EXTRA_CURL_ARGS}" "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
+curl -ks ${_EXTRA_CURL_ARGS} "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
 rm "${_STATIC_PATH}";
 
 ###################################
@@ -53,4 +53,4 @@ rm "${_STATIC_PATH}";
 ###################################
 
 echo '# Cache warming';
-curl -ks "${_EXTRA_CURL_ARGS}" "${_HOME_URL}" > /dev/null;
+curl -ks ${_EXTRA_CURL_ARGS} "${_HOME_URL}" > /dev/null;
