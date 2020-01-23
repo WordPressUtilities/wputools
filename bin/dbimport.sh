@@ -18,7 +18,7 @@ if [[ "${_dbimport_file}" == *.tar.gz ]]; then
     tar xvf "${_dbimport_file}" -C "${_tmp_folder}";
 
     # Find SQL Dump in tmp folder
-    _tmp_dump=$(find . -name *.sql -print -quit);
+    _tmp_dump=$(find "${_tmp_folder}" -name "*sql" -print -quit);
     if [[ -f "${_tmp_dump}" ]];then
         _dbimport_file="${_tmp_dump}";
     fi;
