@@ -36,6 +36,11 @@ php "${_WPCLISRC}" db reset --yes;
 # Import DB File
 php "${_WPCLISRC}" db import "${_dbimport_file}";
 
+if [[ -n "${_WPDB_REPLACE_BEFORE}" && -n "${_WPDB_REPLACE_AFTER}" ]];then
+    # Search replace
+    php "${_WPCLISRC}" search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}";
+fi;
+
 if [[ -d "${_tmp_folder}" ]];then
     rm -rf "${_tmp_folder}";
 fi;

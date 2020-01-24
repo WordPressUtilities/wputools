@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.11.6';
+local _WPUTOOLS_VERSION='0.12.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _CURRENT_DIR="$( pwd )/";
 cat <<EOF
@@ -115,6 +115,14 @@ if [ "${_WORDPRESS_FOUND}" == 'n' ]; then
     echo $(bashutilities_message 'The script could not find a WordPress root dir' 'error');
     return 0;
 fi;
+
+if [[ -f "${_CURRENT_DIR}../wputools-local.sh" ]];then
+    . "${_CURRENT_DIR}../wputools-local.sh";
+fi;
+if [[ -f "${_CURRENT_DIR}wputools-local.sh" ]];then
+    . "${_CURRENT_DIR}wputools-local.sh";
+fi;
+
 
 ###################################
 ## Router
