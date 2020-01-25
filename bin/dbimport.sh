@@ -11,13 +11,22 @@ if [[ ! -f "${_dbimport_file}" ]]; then
     return 0;
 fi;
 
+# untar in a tmp folder
 if [[ "${_dbimport_file}" == *.tar.gz ]]; then
-    # Unzip/untarr in a tmp folder
     _tmp_folder="${_dbimport_file/.tar.gz/}";
     mkdir "${_tmp_folder}";
     tar xvf "${_dbimport_file}" -C "${_tmp_folder}";
+fi;
 
-    # Find SQL Dump in tmp folder
+# unzip in a tmp folder
+if [[ "${_dbimport_file}" == *.sql.gz ]]; then
+    _tmp_folder="${_dbimport_file/.sql.gz/}";
+    mkdir "${_tmp_folder}";
+    gunzip -c "${_dbimport_file}" > "${_tmp_folder}/file.sql"
+fi;
+
+# Find a SQL Dump in tmp folder
+if [[ -n "${_tmp_folder}" && -d "${_tmp_folder}" ]];then
     _tmp_dump=$(find "${_tmp_folder}" -name "*sql" -print -quit);
     if [[ -f "${_tmp_dump}" ]];then
         _dbimport_file="${_tmp_dump}";
