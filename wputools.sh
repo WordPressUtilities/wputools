@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.12.1';
+local _WPUTOOLS_VERSION='0.12.2';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _CURRENT_DIR="$( pwd )/";
 cat <<EOF
@@ -24,6 +24,14 @@ _WPUWOO_ACTION_DIR="${_TOOLSDIR}wpuwooimportexport/";
 if [[ -f "${_SOURCEDIR}wputools-local.sh" ]];then
     . "${_SOURCEDIR}wputools-local.sh";
 fi;
+
+###################################
+## Dependencies
+###################################
+
+. "${_TOOLSDIR}/BashUtilities/modules/files.sh";
+. "${_TOOLSDIR}/BashUtilities/modules/values.sh";
+. "${_TOOLSDIR}/BashUtilities/modules/messages.sh";
 
 ###################################
 ## Test WP Cli
@@ -69,14 +77,6 @@ fi;
 if [[ "$1" != "self-update" ]];then
     . "${_SOURCEDIR}inc/check-update.sh";
 fi;
-
-###################################
-## Dependencies
-###################################
-
-. "${_TOOLSDIR}/BashUtilities/modules/files.sh";
-. "${_TOOLSDIR}/BashUtilities/modules/values.sh";
-. "${_TOOLSDIR}/BashUtilities/modules/messages.sh";
 
 ###################################
 ## Router before
