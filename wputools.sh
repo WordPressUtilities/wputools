@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.12.2';
+local _WPUTOOLS_VERSION='0.12.3';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _CURRENT_DIR="$( pwd )/";
 cat <<EOF
@@ -123,7 +123,6 @@ if [[ -f "${_CURRENT_DIR}wputools-local.sh" ]];then
     . "${_CURRENT_DIR}wputools-local.sh";
 fi;
 
-
 ###################################
 ## Router
 ###################################
@@ -138,10 +137,18 @@ case "$1" in
     "wp")
         php "${_WPCLISRC}" "${@:2}";
     ;;
-    "help" | "*" | "")
+    "help" | "" | * )
         . "${_SOURCEDIR}bin/help.sh";
     ;;
 esac
+
+###################################
+## Remove old functions
+###################################
+
+unset -f wputools_check_update
+unset -f wputools_update_available_message
+
 }
 
 WPUTools "$@";
