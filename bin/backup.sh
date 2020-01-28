@@ -22,8 +22,21 @@ mkdir "${_BACKUP_NAME}";
 
 # Backup DATABASE
 php "${_WPCLISRC}" db export - > "${_BACKUP_FILE}";
-cp "wp-config.php" "${_BACKUP_PATH}wp-config.php";
+
+# Backup htaccess
 cp ".htaccess" "${_BACKUP_PATH}htaccess.txt";
+
+# Backup wp-config.php
+_wp_config_file="";
+if [[ -f "wp-config.php" ]];then
+    _wp_config_file="wp-config.php";
+fi;
+if [[ -f "../wp-config.php" ]];then
+    _wp_config_file="../wp-config.php";
+fi;
+if [[ -n "${_wp_config_file}" ]];then
+    cp "${_wp_config_file}" "${_BACKUP_PATH}wp-config.php";
+fi;
 
 # Backup UPLOADS
 if [[ "${_BACKUP_YESS}" == '1' ]];then
