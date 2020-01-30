@@ -58,6 +58,25 @@ Go to your favorite tools folder :
 
 `wputools update;`
 
+
+## Override
+
+You can add a `wputools-local.sh` file at the root of your WordPress install or in the folder above.
+
+```bash
+#!/bin/bash
+
+# Arguments for CURL if the site is password protected
+_EXTRA_CURL_ARGS="-u user:password";
+
+# Static home URL if needed
+_HOME_URL="http://example.com";
+
+# URL replace format to trigger a search-replace after dbimport
+_WPDB_REPLACE_BEFORE="http://example-before.com";
+_WPDB_REPLACE_AFTER="http://example-after.com";
+```
+
 ## Thanks
 
-* To @boiteaweb for https://github.com/BoiteAWeb/SecuPress-Backdoor-User
+* To @JulioPotier for https://github.com/JulioPotier/SecuPress-Backdoor-User

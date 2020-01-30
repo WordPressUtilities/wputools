@@ -10,6 +10,10 @@ if [ -z "${_EXTRA_CURL_ARGS}" ];then
     _EXTRA_CURL_ARGS='';
 fi;
 
+if [ -z "${_HOME_URL}" ];then
+    _HOME_URL=$(php "${_WPCLISRC}" option get home --quiet --skip-plugins --skip-themes --skip-packages);
+fi;
+
 ###################################
 ## Flush Rewrite rules
 ###################################
@@ -35,7 +39,6 @@ fi;
 _STATIC_RAND=$(openssl rand -hex 4);
 _STATIC_FILE="cache-${_STATIC_RAND}.php";
 _STATIC_PATH="${_CURRENT_DIR}${_STATIC_FILE}";
-_HOME_URL=$(php "${_WPCLISRC}" option get home --quiet --skip-plugins --skip-themes --skip-packages);
 
 # Copy file
 cp "${_TOOLSDIR}cache.php" "${_STATIC_PATH}";

@@ -9,7 +9,9 @@ echo "# BACKDOOR-USER";
 _BD_RAND=$(openssl rand -hex 4);
 _BD_FILE="bduser-${_BD_RAND}.php";
 _BD_PATH="${_CURRENT_DIR}${_BD_FILE}";
-_HOME_URL=$(php "${_WPCLISRC}" option get home --quiet --skip-plugins --skip-themes --skip-packages);
+if [ -z "${_HOME_URL}" ];then
+    _HOME_URL=$(php "${_WPCLISRC}" option get home --quiet --skip-plugins --skip-themes --skip-packages);
+fi;
 
 ###################################
 ## Copy file
