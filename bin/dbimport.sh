@@ -39,6 +39,9 @@ if [[ "${_dbimport_file}" != *.sql ]]; then
     return 0;
 fi;
 
+# Force maintenance mode
+php "${_WPCLISRC}" maintenance-mode activate;
+
 # Purge DB
 php "${_WPCLISRC}" db reset --yes;
 
@@ -49,6 +52,9 @@ if [[ -n "${_WPDB_REPLACE_BEFORE}" && -n "${_WPDB_REPLACE_AFTER}" ]];then
     # Search replace
     php "${_WPCLISRC}" search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}";
 fi;
+
+# Disable maintenance mode
+php "${_WPCLISRC}" maintenance-mode deactivate;
 
 if [[ -d "${_tmp_folder}" ]];then
     rm -rf "${_tmp_folder}";
