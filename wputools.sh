@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.12.6';
+local _WPUTOOLS_VERSION='0.12.7';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0)
 local _CURRENT_DIR="$( pwd )/";
@@ -27,6 +27,16 @@ if [[ -f "${_SOURCEDIR}wputools-local.sh" ]];then
 fi;
 
 ###################################
+## Test submodules
+###################################
+
+if [[ ! -f "${_TOOLSDIR}BashUtilities/README.md" || ! -f "${_TOOLSDIR}SecuPress-Backdoor-User/readme.txt" || ! -f "${_TOOLSDIR}wpuwooimportexport/README.md" ]]; then
+    cd "${_SOURCEDIR}";
+    git submodule update --init --recursive;
+    cd "${_CURRENT_DIR}";
+fi;
+
+###################################
 ## Dependencies
 ###################################
 
@@ -39,16 +49,6 @@ fi;
 ###################################
 
 . "${_SOURCEDIR}inc/install-wpcli.sh";
-
-###################################
-## Test submodules
-###################################
-
-if [[ ! -f "${_TOOLSDIR}BashUtilities/README.md" || ! -f "${_TOOLSDIR}SecuPress-Backdoor-User/readme.txt" || ! -f "${_TOOLSDIR}wpuwooimportexport/README.md" ]]; then
-    cd "${_SOURCEDIR}";
-    git submodule update --init --recursive;
-    cd "${_CURRENT_DIR}";
-fi;
 
 ###################################
 ## Test PHP
@@ -114,6 +114,7 @@ done
 if [ "${_WORDPRESS_FOUND}" == 'n' ]; then
     cd "${_SCRIPTSTARTDIR}";
     echo $(bashutilities_message 'The script could not find a WordPress root dir' 'error');
+    . "${_SOURCEDIR}inc/stop.sh";
     return 0;
 fi;
 
@@ -143,12 +144,8 @@ case "$1" in
     ;;
 esac
 
-###################################
-## Remove old functions
-###################################
 
-unset -f wputools_check_update
-unset -f wputools_update_available_message
+. "${_SOURCEDIR}inc/stop.sh";
 
 }
 
