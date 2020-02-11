@@ -8,6 +8,10 @@ _BACKUP_YESS=0;
 if [[ "${1}" == '-y' || "${1}" == 'y' ]];then
     _BACKUP_YESS=1;
 fi;
+_BACKUP_NOOO=0;
+if [[ "${1}" == '-n' || "${1}" == 'n' ]];then
+    _BACKUP_NOOO=1;
+fi;
 
 echo "# BACKUP";
 
@@ -41,6 +45,8 @@ fi;
 # Backup UPLOADS
 if [[ "${_BACKUP_YESS}" == '1' ]];then
     backup_uploads='y';
+elif [[ "${_BACKUP_NOOO}" == '1' ]];then
+    backup_uploads='n';
 else
     backup_uploads=$(bashutilities_get_yn "- Backup uploads?" 'n');
 fi;
