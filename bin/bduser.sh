@@ -10,7 +10,7 @@ _BD_RAND=$(openssl rand -hex 4);
 _BD_FILE="bduser-${_BD_RAND}.php";
 _BD_PATH="${_CURRENT_DIR}${_BD_FILE}";
 if [ -z "${_HOME_URL}" ];then
-    _HOME_URL=$(php "${_WPCLISRC}" option get home --quiet --skip-plugins --skip-themes --skip-packages);
+    _HOME_URL=$($_PHP_COMMAND $_WPCLISRC option get home --quiet --skip-plugins --skip-themes --skip-packages);
 fi;
 
 ###################################

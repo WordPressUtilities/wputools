@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.12.8';
+local _WPUTOOLS_VERSION='0.13.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0)
 local _CURRENT_DIR="$( pwd )/";
@@ -19,12 +19,19 @@ local _WPCLISRC="${_SOURCEDIR}wp-cli.phar";
 local _TOOLSDIR="${_SOURCEDIR}tools/";
 local _UPDATE_CONTROL_FILE="${_SOURCEDIR}control.txt";
 local _UPDATE_CHECK_EVERY_SEC=86400;
+local _PHP_COMMAND='php';
 
 _WPUWOO_ACTION_DIR="${_TOOLSDIR}wpuwooimportexport/";
 
 if [[ -f "${_SOURCEDIR}wputools-local.sh" ]];then
     . "${_SOURCEDIR}wputools-local.sh";
 fi;
+
+_WPCLICOMMAND(){
+    $_PHP_COMMAND $_WPCLISRC $@;
+}
+
+typeset -fx _WPCLICOMMAND;
 
 ###################################
 ## Test submodules
@@ -55,7 +62,7 @@ fi;
 ###################################
 
 # Thanks to https://stackoverflow.com/a/53231244
-_PHP_VERSION=$(php -v | head -n 1 | cut -d " " -f 2 | cut -f1-2 -d".");
+_PHP_VERSION=$("${_PHP_COMMAND}" -v | head -n 1 | cut -d " " -f 2 | cut -f1-2 -d".");
 _PHP_VERSION_OK='n';
 case "${_PHP_VERSIONS[@]}" in  *"${_PHP_VERSION}"*)
     _PHP_VERSION_OK='y';
@@ -137,7 +144,7 @@ case "$1" in
         . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}" "${5}";
     ;;
     "wp")
-        php "${_WPCLISRC}" "${@:2}";
+        _WPCLICOMMAND "${@:2}";
     ;;
     "help" | "" | * )
         . "${_SOURCEDIR}bin/help.sh";

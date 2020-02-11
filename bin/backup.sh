@@ -25,7 +25,7 @@ _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
 mkdir "${_BACKUP_NAME}";
 
 # Backup DATABASE
-php "${_WPCLISRC}" db export - > "${_BACKUP_FILE}";
+_WPCLICOMMAND db export - > "${_BACKUP_FILE}";
 
 # Backup htaccess
 cp ".htaccess" "${_BACKUP_PATH}htaccess.txt";

@@ -17,9 +17,9 @@ else
 fi;
 
 # Update WP CLI
-php "${_WPCLISRC}" cli update --yes;
+_WPCLICOMMAND cli update --yes;
 if [[ -d ~/.wp-cli ]];then
-    php "${_WPCLISRC}" cli cache prune --quiet;
+    _WPCLICOMMAND cli cache prune --quiet;
 fi;
 
 # Reload autocomplete

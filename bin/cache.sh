@@ -11,7 +11,7 @@ if [ -z "${_EXTRA_CURL_ARGS}" ];then
 fi;
 
 if [ -z "${_HOME_URL}" ];then
-    _HOME_URL=$(php "${_WPCLISRC}" option get home --quiet --skip-plugins --skip-themes --skip-packages);
+    _HOME_URL=$($_PHP_COMMAND $_WPCLISRC option get home --quiet --skip-plugins --skip-themes --skip-packages);
 fi;
 
 ###################################
@@ -19,7 +19,7 @@ fi;
 ###################################
 
 echo '# Flushing Rewrite rules';
-php "${_WPCLISRC}" rewrite flush --hard;
+_WPCLICOMMAND rewrite flush --hard;
 
 _cache_type='all';
 if [[ "${1}" != "" ]];then

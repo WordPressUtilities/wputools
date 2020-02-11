@@ -19,7 +19,7 @@ EOF
 wputools_check_update() {
     echo "# Fetching latest updates";
     $(cd "${_SOURCEDIR}" && git fetch --tags);
-    php "${_WPCLISRC}" cli check-update;
+    _WPCLICOMMAND cli check-update;
     wputools_update_available_message
     touch "${_UPDATE_CONTROL_FILE}";
 }

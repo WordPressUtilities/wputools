@@ -23,16 +23,16 @@ fi;
 ###################################
 
 echo '# Updating WordPress core';
-php "${_WPCLISRC}" core update;
+_WPCLICOMMAND core update;
 
 echo '# Updating WordPress core translations';
-php "${_WPCLISRC}" language core update;
+_WPCLICOMMAND language core update;
 
 echo '# Updating WordPress plugins';
-php "${_WPCLISRC}" plugin update --all;
+_WPCLICOMMAND plugin update --all;
 
 echo '# Updating WordPress plugins translations';
-php "${_WPCLISRC}" language plugin update --all;
+_WPCLICOMMAND language plugin update --all;
 
 echo '# Updating submodules';
 git submodule foreach git pull origin master;

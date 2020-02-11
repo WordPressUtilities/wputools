@@ -29,6 +29,6 @@ bashutilities_sed "s#include#require_once 'wp-load.php';wp();include#" "${_PROJE
 bashutilities_sed "s#dirname(__FILE__) . '/../#'${_WPUWOO_ACTION_DIR}#g" "${_PROJECT_FILE}";
 
 cd "${_CURRENT_DIR}";
-php "${_PROJECT_FILE}" "${2}" "${3}";
+"${_PHP_COMMAND}" "${_PROJECT_FILE}" "${2}" "${3}";
 
 rm "${_PROJECT_FILE}";
