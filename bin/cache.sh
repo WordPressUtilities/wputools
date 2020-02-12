@@ -36,7 +36,7 @@ fi;
 ###################################
 
 # Initial datas
-_STATIC_RAND=$(openssl rand -hex 4);
+_STATIC_RAND=$(bashutilities_rand_string 6);
 _STATIC_FILE="cache-${_STATIC_RAND}.php";
 _STATIC_PATH="${_CURRENT_DIR}${_STATIC_FILE}";
 

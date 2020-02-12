@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.13.0';
+local _WPUTOOLS_VERSION='0.13.1';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0)
 local _CURRENT_DIR="$( pwd )/";

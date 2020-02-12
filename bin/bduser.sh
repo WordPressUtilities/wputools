@@ -6,7 +6,7 @@ echo "# BACKDOOR-USER";
 ## Initial datas
 ###################################
 
-_BD_RAND=$(openssl rand -hex 4);
+_BD_RAND=$(bashutilities_rand_string 6);
 _BD_FILE="bduser-${_BD_RAND}.php";
 _BD_PATH="${_CURRENT_DIR}${_BD_FILE}";
 if [ -z "${_HOME_URL}" ];then

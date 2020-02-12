@@ -16,7 +16,7 @@ fi;
 echo "# BACKUP";
 
 # Vars
-_BACKUP_RAND=$(openssl rand -hex 4);
+_BACKUP_RAND=$(bashutilities_rand_string 6);
 _BACKUP_NAME="$(date +%Y-%m-%d-%H%M%S)-${_BACKUP_RAND}";
 _BACKUP_PATH="./${_BACKUP_NAME}/";
 _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
