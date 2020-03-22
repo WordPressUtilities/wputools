@@ -46,6 +46,10 @@ Go to your favorite tools folder :
 
 `wputools wpuwoo import-export-post import 10`
 
+### Create an override settings file.
+
+`wputools settings;`
+
 ### Go to this tool source.
 
 `wputools src;`
@@ -57,7 +61,6 @@ Go to your favorite tools folder :
 ### Update your WordPress core and plugins.
 
 `wputools update;`
-
 
 ## Override
 
@@ -78,7 +81,9 @@ _WPDB_REPLACE_AFTER="http://example-after.com";
 
 # Override WP-CLI Version or PHP binary
 _PHP_COMMAND='/Applications/MAMP/bin/php/php5.4.45/bin/php';
-_WPCLICOMMAND="${_PHP_COMMAND} ${_WPCLISRC}";
+_WPCLICOMMAND(){
+    $_PHP_COMMAND $_WPCLISRC $@;
+}
 
 ```
 
