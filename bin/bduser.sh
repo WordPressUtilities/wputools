@@ -39,3 +39,5 @@ echo "${_HOME_URL}/${_BD_FILE}";
 if [[ -f "/usr/bin/open" ]];then
     /usr/bin/open "${_HOME_URL}/${_BD_FILE}";
 fi
+
+unset _HOME_URL;
