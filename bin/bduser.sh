@@ -34,3 +34,8 @@ chmod 0777 "${_BD_PATH}";
 
 echo "Please follow the link below to use secupress-backdoor-user";
 echo "${_HOME_URL}/${_BD_FILE}";
+
+# Open in a new window if it exists
+if [[ -f "/usr/bin/open" ]];then
+    /usr/bin/open "${_HOME_URL}/${_BD_FILE}";
+fi
