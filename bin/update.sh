@@ -22,20 +22,44 @@ fi;
 ## Update
 ###################################
 
-echo '# Updating WordPress core';
-_WPCLICOMMAND core update;
+_PLUGIN_ID="$1";
+if [[ ! -z "$_PLUGIN_ID" ]];then
+    _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
 
-echo '# Updating WordPress core translations';
-_WPCLICOMMAND language core update;
+    # Check if plugin dir exists
+    if [[ ! -d "${_PLUGIN_DIR}" ]];then
+        echo $(bashutilities_message "The plugin \"${_PLUGIN_ID}\" does not exists" 'error');
+    else
+        # Reset git status
+        git reset;
+        # If plugin uses git : update from git
+        if [[ -d "${_PLUGIN_DIR}.git" || -f "${_PLUGIN_DIR}.git" ]];then
+            (cd "${_PLUGIN_DIR}" && git pull origin master);
+        # Update plugin with WP-CLI
+        else
+            _WPCLICOMMAND plugin update "${_PLUGIN_ID}";
+            _WPCLICOMMAND language plugin update "${_PLUGIN_ID}";
+        fi;
+        # Commit plugin update
+        git add "${_PLUGIN_DIR}";
+        git commit -m "Plugin update : ${_PLUGIN_ID}";
+    fi;
+else
+    echo '# Updating WordPress core';
+    _WPCLICOMMAND core update;
 
-echo '# Updating WordPress plugins';
-_WPCLICOMMAND plugin update --all;
+    echo '# Updating WordPress core translations';
+    _WPCLICOMMAND language core update;
 
-echo '# Updating WordPress plugins translations';
-_WPCLICOMMAND language plugin update --all;
+    echo '# Updating WordPress plugins';
+    _WPCLICOMMAND plugin update --all;
 
-echo '# Updating submodules';
-git submodule foreach git pull origin master;
+    echo '# Updating WordPress plugins translations';
+    _WPCLICOMMAND language plugin update --all;
+
+    echo '# Updating submodules';
+    git submodule foreach git pull origin master;
+fi;
 
 ###################################
 ## Closing checks
