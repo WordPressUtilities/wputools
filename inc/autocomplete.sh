@@ -24,6 +24,10 @@ _wputools_complete() {
                 _reply=${_reply//\.php/};
                 COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
             ;;
+            "update")
+                _reply=$(ls -1 "${_CURRENT_DIR}wp-content/plugins" | awk -F'/' '{print $NF}');
+                COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
+            ;;
             "dbimport")
                 COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.sql' -- $cur ) )
                 COMPREPLY+=( $( compgen -o plusdirs  -f -X '!*.tar.gz' -- $cur ) )

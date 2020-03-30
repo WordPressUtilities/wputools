@@ -25,6 +25,7 @@ fi;
 _PLUGIN_ID="$1";
 if [[ ! -z "$_PLUGIN_ID" ]];then
     _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
+    _PLUGIN_LANG="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
 
     # Check if plugin dir exists
     if [[ ! -d "${_PLUGIN_DIR}" ]];then
@@ -32,17 +33,23 @@ if [[ ! -z "$_PLUGIN_ID" ]];then
     else
         # Reset git status
         git reset;
-        # If plugin uses git : update from git
+        # Update
         if [[ -d "${_PLUGIN_DIR}.git" || -f "${_PLUGIN_DIR}.git" ]];then
+            # If plugin uses git : update from git
+            echo '# Update from git';
             (cd "${_PLUGIN_DIR}" && git pull origin master);
-        # Update plugin with WP-CLI
         else
+            # Update plugin with WP-CLI
+            echo '# Update from WP-CLI';
             _WPCLICOMMAND plugin update "${_PLUGIN_ID}";
             _WPCLICOMMAND language plugin update "${_PLUGIN_ID}";
         fi;
         # Commit plugin update
+        _PLUGIN_VERSION=$(wp plugin get "${_PLUGIN_ID}" --field=version);
+        _PLUGIN_TITLE=$(wp plugin get "${_PLUGIN_ID}" --field=title);
         git add "${_PLUGIN_DIR}";
-        git commit -m "Plugin update : ${_PLUGIN_ID}";
+        git add "${_PLUGIN_LANG}";
+        git commit -m "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
     fi;
 else
     echo '# Updating WordPress core';
