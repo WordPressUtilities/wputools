@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.15.1';
+local _WPUTOOLS_VERSION='0.16.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0)
 local _CURRENT_DIR="$( pwd )/";
@@ -23,6 +23,8 @@ local _PHP_COMMAND='php';
 local _HAS_WPUTOOLS_LOCAL='0';
 
 _WPUWOO_ACTION_DIR="${_TOOLSDIR}wpuwooimportexport/";
+_WPUTOOLS_PLUGIN_LIST="${_TOOLSDIR}plugins.txt";
+_WPUTOOLS_MUPLUGIN_LIST="${_TOOLSDIR}muplugins.txt";
 
 if [[ -f "${_SOURCEDIR}wputools-local.sh" ]];then
     . "${_SOURCEDIR}wputools-local.sh";
@@ -143,7 +145,7 @@ case "$1" in
     "import")
         . "${_SOURCEDIR}bin/wpuwoo.sh" "import-csv" "${2}";
     ;;
-    "backup" | "bduser" | "clean" | "update" | "cache" | "dbimport" | "settings" | "wpuwoo")
+    "backup" | "bduser" | "clean" | "update" | "cache" | "dbimport" | "muplugin" | "plugin" | "settings" | "wpuwoo")
         . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}" "${5}";
     ;;
     "wp")

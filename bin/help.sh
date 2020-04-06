@@ -8,6 +8,8 @@ wputools bduser;       # Install SecuPress-Backdoor-User.
 wputools cache;        # Clear WordPress cache.
 wputools clean;        # Clean WordPress path & files.
 wputools dbimport;     # Import an SQL dump.
+wputools muplugin;     # Install a WordPressUtilities mu-plugin.
+wputools plugin;       # Install a WordPressUtilities plugin.
 wputools self-update;  # Update this tool.
 wputools settings;     # Create an override settings file.
 wputools src;          # Go to this tool source.

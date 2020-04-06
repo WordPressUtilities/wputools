@@ -46,6 +46,14 @@ Go to your favorite tools folder :
 
 `wputools wpuwoo import-export-post import 10`
 
+### Install a WordPressUtilities mu-plugin
+
+`wputools mu-plugin wpu_file_cache;`
+
+### Install a WordPressUtilities plugin
+
+`wputools plugin wpuloginas;`
+
 ### Create an override settings file.
 
 `wputools settings;`

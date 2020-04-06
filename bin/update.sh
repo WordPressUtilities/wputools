@@ -45,8 +45,8 @@ if [[ ! -z "$_PLUGIN_ID" ]];then
             _WPCLICOMMAND language plugin update "${_PLUGIN_ID}";
         fi;
         # Commit plugin update
-        _PLUGIN_VERSION=$(wp plugin get "${_PLUGIN_ID}" --field=version);
-        _PLUGIN_TITLE=$(wp plugin get "${_PLUGIN_ID}" --field=title);
+        _PLUGIN_VERSION=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=version);
+        _PLUGIN_TITLE=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=title);
         git add "${_PLUGIN_DIR}";
         git add "${_PLUGIN_LANG}";
         git commit -m "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
