@@ -10,10 +10,6 @@ if [ -z "${_EXTRA_CURL_ARGS}" ];then
     _EXTRA_CURL_ARGS='';
 fi;
 
-if [ -z "${_HOME_URL}" ];then
-    _HOME_URL=$($_PHP_COMMAND $_WPCLISRC option get home --quiet --skip-plugins --skip-themes --skip-packages);
-fi;
-
 ###################################
 ## Flush Rewrite rules
 ###################################
@@ -57,6 +53,3 @@ rm "${_STATIC_PATH}";
 
 echo '# Cache warming';
 curl -ksL ${_EXTRA_CURL_ARGS} "${_HOME_URL}" > /dev/null;
-
-unset _HOME_URL;
-unset _EXTRA_CURL_ARGS;

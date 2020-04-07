@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.16.0';
+local _WPUTOOLS_VERSION='0.16.1';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0)
 local _CURRENT_DIR="$( pwd )/";
@@ -135,6 +135,10 @@ fi;
 if [[ -f "${_CURRENT_DIR}wputools-local.sh" ]];then
     . "${_CURRENT_DIR}wputools-local.sh";
     _HAS_WPUTOOLS_LOCAL='1';
+fi;
+
+if [ -z "${_HOME_URL}" ];then
+    _HOME_URL=$($_PHP_COMMAND $_WPCLISRC option get home --quiet --skip-plugins --skip-themes --skip-packages);
 fi;
 
 ###################################

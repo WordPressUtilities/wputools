@@ -8,7 +8,7 @@
 
 # URL replace format to trigger a search-replace after dbimport
 #_WPDB_REPLACE_BEFORE="http://example-before.com";
-#_WPDB_REPLACE_AFTER="http://example-after.com";
+#_WPDB_REPLACE_AFTER="http://example.com";
 
 # Override WP-CLI Version or PHP binary
 #_PHP_COMMAND='/Applications/MAMP/bin/php/php5.4.45/bin/php';

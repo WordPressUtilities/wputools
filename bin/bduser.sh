@@ -9,9 +9,6 @@ echo "# BACKDOOR-USER";
 _BD_RAND=$(bashutilities_rand_string 6);
 _BD_FILE="bduser-${_BD_RAND}.php";
 _BD_PATH="${_CURRENT_DIR}${_BD_FILE}";
-if [ -z "${_HOME_URL}" ];then
-    _HOME_URL=$($_PHP_COMMAND $_WPCLISRC option get home --quiet --skip-plugins --skip-themes --skip-packages);
-fi;
 
 ###################################
 ## Copy file
@@ -39,5 +36,3 @@ echo "${_HOME_URL}/${_BD_FILE}";
 if [[ -f "/usr/bin/open" ]];then
     /usr/bin/open "${_HOME_URL}/${_BD_FILE}";
 fi
-
-unset _HOME_URL;

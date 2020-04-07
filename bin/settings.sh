@@ -38,3 +38,9 @@ fi
 ###################################
 
 cp "${_TOOLSDIR}wputools-local.sh" "${_WPUTOOLS_LOCAL_PATH}";
+
+wputools_use_home_url=$(bashutilities_get_yn "- Use “${_HOME_URL}” as home_url?" 'y');
+if [[ "${wputools_use_home_url}" == 'y' ]];then
+    bashutilities_sed "s#http://example.com#${_HOME_URL}#g" "${_WPUTOOLS_LOCAL_PATH}";
+    bashutilities_sed "s/#_HOME_URL/_HOME_URL/g" "${_WPUTOOLS_LOCAL_PATH}";
+fi
