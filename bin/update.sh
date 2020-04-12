@@ -18,6 +18,13 @@ if [ -f "${_ADMIN_PROTECT_FILE}" ]; then
     mv "${_ADMIN_PROTECT_FILE}" "${_ADMIN_PROTECT_FILE}.txt";
 fi;
 
+function commit_without_protect(){
+    git reset;
+    git add -A;
+    git restore --staged "${_ADMIN_PROTECT_FILE}" "${_ADMIN_PROTECT_FILE}.txt";
+    git commit -m "${1}";
+}
+
 ###################################
 ## Update
 ###################################
@@ -52,11 +59,26 @@ if [[ ! -z "$_PLUGIN_ID" ]];then
         git commit -m "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
     fi;
 else
+
+    ###################################
+    ## CORE
+    ###################################
+
     echo '# Updating WordPress core';
+    _WPCLICOMMAND core check-update;
     _WPCLICOMMAND core update;
+    rm "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
 
     echo '# Updating WordPress core translations';
     _WPCLICOMMAND language core update;
+
+    _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
+
+    commit_without_protect "Update WordPress to ${_LATEST_WORDPRESS}";
+
+    ###################################
+    ## Plugins
+    ###################################
 
     echo '# Updating WordPress plugins';
     _WPCLICOMMAND plugin update --all;
@@ -64,8 +86,18 @@ else
     echo '# Updating WordPress plugins translations';
     _WPCLICOMMAND language plugin update --all;
 
+    # Update
+    commit_without_protect "Update plugins";
+
+    ###################################
+    ## Submodules
+    ###################################
+
     echo '# Updating submodules';
     git submodule foreach git pull origin master;
+
+    # Update
+    commit_without_protect "Update submodules";
 fi;
 
 ###################################
