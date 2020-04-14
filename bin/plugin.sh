@@ -3,11 +3,15 @@
 echo "# INSTALL PLUGIN";
 
 _PLUGIN_ID="${1}";
+if [[ "${_PLUGIN_ID}" == '' ]];then
+    echo $(bashutilities_message "No plugin specified." 'error');
+    return 0;
+fi
+
 _PLUGIN_LIST=($(cat ${_WPUTOOLS_PLUGIN_LIST} | tr "\n" " " ));
 _IS_WPU='0';
 for plugin_item in "${_PLUGIN_LIST[@]}"; do
     if [[ "${_PLUGIN_ID}" == "${plugin_item}" ]];then
-        echo "${plugin_item} present in the array";
         _IS_WPU="1";
     fi;
 done

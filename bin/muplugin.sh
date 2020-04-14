@@ -3,12 +3,14 @@
 echo "# INSTALL MU-PLUGIN";
 
 _MUPLUGIN_ID="${1}";
-_PLUGIN_ID="${1}";
-_PLUGIN_LIST=($(cat ${_WPUTOOLS_MUPLUGIN_LIST} | tr "\n" " " ));
+if [[ "${_MUPLUGIN_ID}" == '' ]];then
+    echo $(bashutilities_message "No mu-plugin specified." 'error');
+    return 0;
+fi
+_MUPLUGIN_LIST=($(cat ${_WPUTOOLS_MUPLUGIN_LIST} | tr "\n" " " ));
 _IS_WPU='0';
-for plugin_item in "${_PLUGIN_LIST[@]}"; do
-    if [[ "${_PLUGIN_ID}" == "${plugin_item}" ]];then
-        echo "${plugin_item} present in the array";
+for muplugin_item in "${_MUPLUGIN_LIST[@]}"; do
+    if [[ "${_MUPLUGIN_ID}" == "${muplugin_item}" ]];then
         _IS_WPU="1";
     fi;
 done
