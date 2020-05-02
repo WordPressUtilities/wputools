@@ -26,6 +26,9 @@ else
     _WPCLICOMMAND plugin install --activate "${1}";
 fi
 
+_PLUGIN_LANG=$(_WPCLICOMMAND language core list --field=language --status=active);
+_WPCLICOMMAND language plugin install "${_PLUGIN_ID}" "${_PLUGIN_LANG}";
+
 # Get infos
 _PLUGIN_VERSION=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=version);
 _PLUGIN_TITLE=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=title);
@@ -33,6 +36,7 @@ _PLUGIN_TITLE=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=title);
 # Commit items
 git reset;
 git add "${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
+git add "${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
 git add .gitmodules;
 
 # Commit

@@ -22,7 +22,7 @@ function commit_without_protect(){
     git reset;
     git add -A;
     git restore --staged "${_ADMIN_PROTECT_FILE}" "${_ADMIN_PROTECT_FILE}.txt";
-    git commit -m "${1}";
+    git commit --no-verify -m "${1}";
 }
 
 ###################################
