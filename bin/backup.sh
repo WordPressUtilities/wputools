@@ -1,17 +1,29 @@
 #!/bin/bash
 
 ###################################
-## Backup
+## Get parameters
 ###################################
 
-_BACKUP_YESS=0;
-if [[ "${1}" == '-y' || "${1}" == 'y' ]];then
-    _BACKUP_YESS=1;
-fi;
-_BACKUP_NOOO=0;
-if [[ "${1}" == '-n' || "${1}" == 'n' ]];then
-    _BACKUP_NOOO=1;
-fi;
+backup_uploads="";
+backup_topdir="";
+function check_parameters {
+    OPTIND=1;
+    while getopts "u:t:" option; do
+        case "${option}" in
+            u)
+                backup_uploads=${OPTARG}
+            ;;
+            t)
+                backup_topdir=${OPTARG}
+            ;;
+        esac
+    done
+}
+check_parameters "$@"
+
+###################################
+## Backup
+###################################
 
 echo "# BACKUP";
 
@@ -43,11 +55,7 @@ if [[ -n "${_wp_config_file}" ]];then
 fi;
 
 # Backup UPLOADS
-if [[ "${_BACKUP_YESS}" == '1' ]];then
-    backup_uploads='y';
-elif [[ "${_BACKUP_NOOO}" == '1' ]];then
-    backup_uploads='n';
-else
+if [[ "${backup_uploads}" == '' ]];then
     backup_uploads=$(bashutilities_get_yn "- Backup uploads?" 'n');
 fi;
 if [[ "${backup_uploads}" == 'y' ]]; then
@@ -60,7 +68,11 @@ if [[ "${backup_uploads}" == 'y' ]]; then
 fi;
 
 # Zip TMP DIR
-tar -zcvf "backup-${_BACKUP_NAME}.tar.gz" "${_BACKUP_NAME}";
+_BACKUP_ARCHIVE="backup-${_BACKUP_NAME}.tar.gz"
+if [[ "${backup_topdir}" == 'y' ]];then
+    _BACKUP_ARCHIVE="../${_BACKUP_ARCHIVE}";
+fi
+tar -zcvf "${_BACKUP_ARCHIVE}" "${_BACKUP_NAME}";
 
 # Delete TMP DIR
 rm -rf "${_BACKUP_NAME}";

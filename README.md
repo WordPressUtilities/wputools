@@ -18,6 +18,14 @@ Go to your favorite tools folder :
 
 `wputools backup;`
 
+#### Backup database + wp-config + htaccess + uploads in top dir.
+
+`wputools backup -t "y";`
+
+#### Backup database + wp-config + htaccess + uploads without asking.
+
+`wputools backup -u "y";`
+
 ### Install SecuPress-Backdoor-User.
 
 `wputools bduser;`
