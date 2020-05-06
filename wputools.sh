@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.18.0';
+local _WPUTOOLS_VERSION='0.18.1';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0)
 local _CURRENT_DIR="$( pwd )/";
@@ -19,6 +19,7 @@ local _WPCLISRC="${_SOURCEDIR}wp-cli.phar";
 local _TOOLSDIR="${_SOURCEDIR}tools/";
 local _UPDATE_CONTROL_FILE="${_SOURCEDIR}control.txt";
 local _UPDATE_CHECK_EVERY_SEC=86400;
+local _HOME_URL='';
 local _PHP_COMMAND='php';
 local _HAS_WPUTOOLS_LOCAL='0';
 local _WPUTOOLS_NO_UPDATE='0';
@@ -141,7 +142,7 @@ if [[ -f "${_CURRENT_DIR}wputools-local.sh" ]];then
     _HAS_WPUTOOLS_LOCAL='1';
 fi;
 
-if [ -z "${_HOME_URL}" ];then
+if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
     _HOME_URL=$($_PHP_COMMAND $_WPCLISRC option get home --quiet --skip-plugins --skip-themes --skip-packages);
 fi;
 

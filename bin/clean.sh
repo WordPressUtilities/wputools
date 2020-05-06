@@ -8,9 +8,9 @@ _db_prefix=$(_WPCLICOMMAND db prefix);
 ## Ask for a backup
 ###################################
 
-read -p "Do you need a backup ? [Y,n] : " wputools_clean_need_backup
-if [[ "${wputools_clean_need_backup}" != "N" && "${wputools_clean_need_backup}" != "n" ]]; then
-    _WPCLICOMMAND db export - | gzip > ./db-$(date +%Y-%m-%d-%H%M%S).sql.gz;
+wputools_clean_need_backup=$(bashutilities_get_yn "- Do you need a backup?" 'y');
+if [[ "${wputools_clean_need_backup}" == "y" ]]; then
+    . "${_SOURCEDIR}bin/backup.sh" -u=n;
 fi
 
 ###################################
