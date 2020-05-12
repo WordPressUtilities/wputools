@@ -28,6 +28,18 @@ if [[ "${2}" != "" ]];then
 fi;
 
 ###################################
+## Clearing cache directories
+###################################
+
+_CACHE_DIRS=(min critical-css busting);
+for _cache_dir in "${_CACHE_DIRS[@]}"; do
+    if [[ -d "${_CURRENT_DIR}wp-content/cache/${_cache_dir}/" ]];then
+        echo "# Clearing cache dir “${_cache_dir}”";
+        rm -rf "${_CURRENT_DIR}wp-content/cache/${_cache_dir}/";
+    fi;
+done;
+
+###################################
 ## Clearing Static Cache
 ###################################
 
