@@ -72,6 +72,7 @@ _BACKUP_ARCHIVE="backup-${_BACKUP_NAME}.tar.gz"
 if [[ "${backup_topdir}" == 'y' ]];then
     _BACKUP_ARCHIVE="../${_BACKUP_ARCHIVE}";
 fi
+_BACKUP_ARCHIVE="${_BACKUP_DIR}${_BACKUP_ARCHIVE}";
 tar -zcvf "${_BACKUP_ARCHIVE}" "${_BACKUP_NAME}";
 
 # Delete TMP DIR
