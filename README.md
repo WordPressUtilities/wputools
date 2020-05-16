@@ -30,6 +30,10 @@ Go to your favorite tools folder :
 
 `wputools bduser;`
 
+### Login as the first available administrator.
+
+`wputools login;`
+
 ### Clear WordPress cache.
 
 `wputools cache;`
