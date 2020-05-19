@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.19.0';
+local _WPUTOOLS_VERSION='0.19.1';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0)
 local _CURRENT_DIR="$( pwd )/";
@@ -146,6 +146,9 @@ fi;
 if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
     _HOME_URL=$($_PHP_COMMAND $_WPCLISRC option get home --quiet --skip-plugins --skip-themes --skip-packages);
 fi;
+
+# Load functions
+. "${_SOURCEDIR}inc/functions.sh";
 
 ###################################
 ## Router

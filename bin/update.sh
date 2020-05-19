@@ -59,6 +59,7 @@ if [[ ! -z "$_PLUGIN_ID" ]];then
         git commit -m "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
     fi;
 else
+    run_test_before;
 
     ###################################
     ## CORE
@@ -98,6 +99,8 @@ else
 
     # Update
     commit_without_protect "Update submodules";
+
+    run_test_after;
 fi;
 
 ###################################
