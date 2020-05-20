@@ -68,7 +68,7 @@ else
     echo '# Updating WordPress core';
     _WPCLICOMMAND core check-update;
     _WPCLICOMMAND core update;
-    rm "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
+    rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
 
     echo '# Updating WordPress core translations';
     _WPCLICOMMAND language core update;

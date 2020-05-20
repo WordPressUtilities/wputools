@@ -19,10 +19,14 @@ _wputools_test_after_length=0;
 
 function wputools_test_check_urls(){
     WPUTools cache > /dev/null;
-    for line in $(cat "${_wputools_test__file}")
-    do
+    while read line; do
+        echo "";
+        echo "####################";
+        echo "## Test : ${line}";
+        echo "####################";
+        echo "";
         wget -qO- "${line}";
-    done
+    done < "${_wputools_test__file}"
 }
 
 function run_test_before(){
@@ -44,6 +48,9 @@ function run_test_after(){
             echo "- After: ${_wputools_test_after_length}";
             echo "${_wputools_test_before_content}" > diff-before.txt;
             echo "${_wputools_test_after_content}" > diff-after.txt;
+            if [[ -f "/usr/bin/opendiff" ]];then
+                opendiff diff-before.txt diff-after.txt;
+            fi;
         fi
     fi;
 }
