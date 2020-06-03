@@ -33,7 +33,7 @@ wputools_use_home_url=$(bashutilities_get_yn "- Use “${_HOME_URL}” as home_u
 if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' ]];then
     echo $(bashutilities_message "A wputools-local.sh file already exists" 'warning');
 else
-    _WPUTOOLS_LOCAL_FILE="${_WPUTOOLS_LOCAL_FILE}wputools-local.sh";
+    _WPUTOOLS_LOCAL_FILE="${_WPUTOOLS_LOCAL_PATH}wputools-local.sh";
     cp "${_TOOLSDIR}wputools-local.sh" "${_WPUTOOLS_LOCAL_FILE}";
     if [[ "${wputools_use_home_url}" == 'y' ]];then
         bashutilities_sed "s#http://example.com#${_HOME_URL}#g" "${_WPUTOOLS_LOCAL_FILE}";
