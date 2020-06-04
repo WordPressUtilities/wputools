@@ -4,6 +4,9 @@
 define('WP_USE_THEMES', false);
 define('WP_ADMIN', true);
 
+/* Disable maintenance */
+define('WPUMAINTENANCE_DISABLED', true);
+
 /* Thanks to http://boiteaweb.fr/wordpress-bootstraps-ou-comment-bien-charger-wordpress-6717.html */
 chdir(dirname(__FILE__));
 $bootstrap = 'wp-load.php';
