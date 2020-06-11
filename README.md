@@ -8,9 +8,13 @@ Uses the amazing WP-CLI !
 
 Go to your favorite tools folder :
 
-```git clone https://github.com/WordPressUtilities/wputools```
+```
+git clone https://github.com/WordPressUtilities/wputools
+```
 
-```cd wputools;_DIR_WPUTOOLS=$(pwd);echo "alias wputools=\". ${_DIR_WPUTOOLS}/wputools.sh\"" >> ~/.bash_profile;```
+```
+cd wputools;_DIR_WPUTOOLS=$(pwd);echo "alias wputools=\". ${_DIR_WPUTOOLS}/wputools.sh\"" >> ~/.bash_profile;
+```
 
 ## How to use
 
