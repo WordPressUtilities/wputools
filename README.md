@@ -12,6 +12,8 @@ Go to your favorite tools folder :
 git clone https://github.com/WordPressUtilities/wputools
 ```
 
+Add CLI shortcut :
+
 ```
 cd wputools;_DIR_WPUTOOLS=$(pwd);echo "alias wputools=\". ${_DIR_WPUTOOLS}/wputools.sh\"" >> ~/.bash_profile;
 ```
