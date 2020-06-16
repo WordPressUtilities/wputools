@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.19.7';
+local _WPUTOOLS_VERSION='0.20.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0)
 local _CURRENT_DIR="$( pwd )/";
@@ -20,6 +20,7 @@ local _TOOLSDIR="${_SOURCEDIR}tools/";
 local _UPDATE_CONTROL_FILE="${_SOURCEDIR}control.txt";
 local _UPDATE_CHECK_EVERY_SEC=86400;
 local _HOME_URL='';
+local _SITE_NAME='';
 local _BACKUP_DIR='';
 local _PHP_COMMAND='php';
 local _HAS_WPUTOOLS_LOCAL='0';
@@ -52,9 +53,10 @@ fi;
 ## Dependencies
 ###################################
 
-. "${_TOOLSDIR}/BashUtilities/modules/files.sh";
-. "${_TOOLSDIR}/BashUtilities/modules/values.sh";
-. "${_TOOLSDIR}/BashUtilities/modules/messages.sh";
+. "${_TOOLSDIR}BashUtilities/modules/files.sh";
+. "${_TOOLSDIR}BashUtilities/modules/messages.sh";
+. "${_TOOLSDIR}BashUtilities/modules/texttransform.sh";
+. "${_TOOLSDIR}BashUtilities/modules/values.sh";
 
 ###################################
 ## Test WP Cli
@@ -145,6 +147,9 @@ fi;
 
 if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
     _HOME_URL=$($_PHP_COMMAND $_WPCLISRC option get home --quiet --skip-plugins --skip-themes --skip-packages);
+fi;
+if [[ -z "${_SITE_NAME}" || "${_SITE_NAME}" == '' ]];then
+    _SITE_NAME=$($_PHP_COMMAND $_WPCLISRC option get blogname --quiet --skip-plugins --skip-themes --skip-packages);
 fi;
 
 # Load functions

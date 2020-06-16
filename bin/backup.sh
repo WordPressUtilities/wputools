@@ -28,8 +28,10 @@ check_parameters "$@"
 echo "# BACKUP";
 
 # Vars
+_SITE_NAME_SLUG=$(bashutilities_string_to_slug "${_SITE_NAME}");
+_SITE_NAME_SLUG="${_SITE_NAME_SLUG:0:10}";
 _BACKUP_RAND=$(bashutilities_rand_string 6);
-_BACKUP_NAME="$(date +%Y-%m-%d-%H%M%S)-${_BACKUP_RAND}";
+_BACKUP_NAME="${_SITE_NAME_SLUG}-$(date +%Y-%m-%d-%H%M%S)-${_BACKUP_RAND}";
 _BACKUP_PATH="./${_BACKUP_NAME}/";
 _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
 
