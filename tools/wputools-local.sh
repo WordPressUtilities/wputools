@@ -6,6 +6,9 @@
 # Static home URL if needed
 #_HOME_URL="http://example.com";
 
+# Site name if needed
+#_SITE_NAME="MYSITENAME";
+
 # URL replace format to trigger a search-replace after dbimport
 #_WPDB_REPLACE_BEFORE="http://example-before.com";
 #_WPDB_REPLACE_AFTER="http://example.com";
