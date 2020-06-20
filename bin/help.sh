@@ -16,6 +16,7 @@ wputools settings;     # Create an override settings file.
 wputools src;          # Go to this tool source.
 wputools update;       # Update your WordPress core and plugins.
 wputools wp;           # Execute a WP-CLI Task.
+wputools wpconfig;     # Quick Wizard to generate a wp-config.php file.
 wputools wpuwoo;       # Execute a WPU Woo Import Export Task.
 EOF
 

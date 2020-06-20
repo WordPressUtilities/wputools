@@ -40,6 +40,10 @@ Add CLI shortcut :
 
 `wputools login;`
 
+### Quick Wizard to generate a wp-config.php file.
+
+`wputools wpconfig;`
+
 ### Clear WordPress cache.
 
 `wputools cache;`
