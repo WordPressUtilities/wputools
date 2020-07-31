@@ -15,6 +15,8 @@ else
     fi;
 fi;
 
+_WPUTOOLS_BACKUP_DIR="${_CURRENT_DIR}../backups/";
+
 ###################################
 ## Check again
 ###################################
@@ -30,6 +32,7 @@ fi
 
 wputools_use_home_url=$(bashutilities_get_yn "- Use “${_HOME_URL}” as home_url?" 'y');
 wputools_use_site_name=$(bashutilities_get_yn "- Use “${_SITE_NAME}” as site name?" 'y');
+wputools_use_backup_dir=$(bashutilities_get_yn "- Create the backups folder in the parent folder ?" 'y');
 
 if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' ]];then
     echo $(bashutilities_message "A wputools-local.sh file already exists" 'warning');
@@ -43,6 +46,12 @@ else
     if [[ "${wputools_use_site_name}" == 'y' ]];then
         bashutilities_sed "s#MYSITENAME#${_SITE_NAME}#g" "${_WPUTOOLS_LOCAL_FILE}";
         bashutilities_sed "s/#_SITE_NAME/_SITE_NAME/g" "${_WPUTOOLS_LOCAL_FILE}";
+    fi
+    # Backup dir
+    if [[ "${wputools_use_backup_dir}" == 'y' ]];then
+        bashutilities_sed "s#MYBACKUPDIR#${_WPUTOOLS_BACKUP_DIR}#g" "${_WPUTOOLS_LOCAL_FILE}";
+        bashutilities_sed "s/#_BACKUP_DIR/_BACKUP_DIR/g" "${_WPUTOOLS_LOCAL_FILE}";
+        mkdir "${_WPUTOOLS_BACKUP_DIR}";
     fi
 fi
 

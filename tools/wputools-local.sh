@@ -14,7 +14,7 @@
 #_WPDB_REPLACE_AFTER="http://example.com";
 
 # BACKUP DIRECTORY
-#_BACKUP_DIR="~/backups/";
+#_BACKUP_DIR="MYBACKUPDIR";
 
 # Override WP-CLI Version or PHP binary
 #_PHP_COMMAND='/Applications/MAMP/bin/php/php5.4.45/bin/php';
