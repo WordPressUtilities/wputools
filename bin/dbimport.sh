@@ -48,10 +48,14 @@ _WPCLICOMMAND db reset --yes;
 # Import DB File
 _WPCLICOMMAND db import "${_dbimport_file}";
 
+wputools_execute_file "wputools-dbimport-before-search-replace.sh";
+
 if [[ -n "${_WPDB_REPLACE_BEFORE}" && -n "${_WPDB_REPLACE_AFTER}" ]];then
     # Search replace
     _WPCLICOMMAND search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}";
 fi;
+
+wputools_execute_file "wputools-dbimport-after-search-replace.sh";
 
 # Check if uploads can be retrieved
 uploads_dir='-';
@@ -86,6 +90,8 @@ if [[ "${dbimport_uploads}" == 'y' ]];then
         echo "# Old Uploads deleted";
     fi;
 fi;
+
+wputools_execute_file "wputools-dbimport-after.sh";
 
 # Disable maintenance mode
 _WPCLICOMMAND maintenance-mode deactivate;

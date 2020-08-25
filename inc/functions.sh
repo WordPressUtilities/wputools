@@ -54,3 +54,26 @@ function run_test_after(){
         fi
     fi;
 }
+
+###################################
+## Execute if file exists
+###################################
+
+function wputools_execute_file(){
+    local _STR_FOUND="“${1}” found. Executing ...";
+    if [[ -f "${1}" ]];then
+        echo "${_STR_FOUND}";
+        . "${1}";
+        return 1;
+    fi;
+    if [[ -f "${_CURRENT_DIR}../${1}" ]];then
+        echo "${_STR_FOUND}";
+        . "${_CURRENT_DIR}../${1}";
+        return 1;
+    fi;
+    if [[ -f "${_CURRENT_DIR}../${1}" ]];then
+        echo "${_STR_FOUND}";
+        . "${_CURRENT_DIR}../${1}";
+        return 1;
+    fi;
+}
