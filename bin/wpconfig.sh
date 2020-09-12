@@ -21,7 +21,7 @@ mysql_password='root';
 mysql_database="${wpconfig_site_id}";
 project_raw_domain="${wpconfig_site_id}.test";
 
-wpconfig_default_settings=$(bashutilities_get_yn "- Use default settings? (localhostroot/root)" 'y');
+wpconfig_default_settings=$(bashutilities_get_yn "- Use default settings? (localhost/root/root)" 'y');
 if [[ "${wpconfig_default_settings}" != 'y' ]];then
     mysql_host=$(bashutilities_get_user_var "- What is the MySQL host?" "localhost");
     mysql_user=$(bashutilities_get_user_var "- What is the MySQL user?" "root");
@@ -56,7 +56,7 @@ define('WP_HOME', 'http://' . \$_SERVER['HTTP_HOST'] . '/');
 define('DISABLE_WP_CRON', true);
 
 # Environment
-define('WPU_ENVIRONMENT', 'local');
+define('WP_ENVIRONMENT_TYPE', 'local');
 
 # Config
 define('EMPTY_TRASH_DAYS', 7);
