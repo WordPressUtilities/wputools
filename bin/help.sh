@@ -7,6 +7,7 @@ wputools backup;       # Backup database + wp-config + htaccess + uploads (on de
 wputools bduser;       # Install SecuPress-Backdoor-User.
 wputools login;        # Login as the first available administrator.
 wputools cache;        # Clear WordPress cache.
+wputools cachewarm;    # Preload WordPress urls.
 wputools clean;        # Clean WordPress path & files.
 wputools dbimport;     # Import an SQL dump.
 wputools muplugin;     # Install a WordPressUtilities mu-plugin.

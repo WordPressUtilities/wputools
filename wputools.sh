@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.22.1';
+local _WPUTOOLS_VERSION='0.22.2';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1)
 local _CURRENT_DIR="$( pwd )/";
@@ -178,7 +178,7 @@ case "$1" in
     "import")
         . "${_SOURCEDIR}bin/wpuwoo.sh" "import-csv" "${2}";
     ;;
-    "backup" | "bduser" | "login" | "clean" | "update" | "cache" | "dbimport" | "muplugin" | "plugin" | "settings" | "wpuwoo")
+    "backup" | "bduser" | "login" | "clean" | "update" | "cache" | "cachewarm" | "dbimport" | "muplugin" | "plugin" | "settings" | "wpuwoo")
         . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}" "${5}";
     ;;
     "wp")

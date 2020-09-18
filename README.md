@@ -48,6 +48,10 @@ Add CLI shortcut :
 
 `wputools cache;`
 
+### Preload WordPress urls.
+
+`wputools cachewarm;`
+
 ### Clean WordPress path & files.
 
 `wputools clean;`
