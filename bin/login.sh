@@ -17,7 +17,7 @@ _WPULOG_PATH="${_CURRENT_DIR}${_WPULOG_FILE}";
 cp "${_TOOLSDIR}login.php" "${_WPULOG_PATH}";
 
 # File will be deleted after use so lets ensure rights are ok.
-chmod 0777 "${_WPULOG_PATH}";
+chmod 0644 "${_WPULOG_PATH}";
 
 ###################################
 ## Information

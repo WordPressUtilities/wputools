@@ -31,11 +31,11 @@ fi;
 ## Clearing cache directories
 ###################################
 
-_CACHE_DIRS=(min critical-css busting);
+_CACHE_DIRS=(cache/min cache/critical-css cache/busting uploads/cache/fvm);
 for _cache_dir in "${_CACHE_DIRS[@]}"; do
-    if [[ -d "${_CURRENT_DIR}wp-content/cache/${_cache_dir}/" ]];then
+    if [[ -d "${_CURRENT_DIR}wp-content/${_cache_dir}/" ]];then
         echo "# Clearing cache dir “${_cache_dir}”";
-        rm -rf "${_CURRENT_DIR}wp-content/cache/${_cache_dir}/";
+        rm -rf "${_CURRENT_DIR}wp-content/${_cache_dir}/";
     fi;
 done;
 
