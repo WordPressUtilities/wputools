@@ -84,6 +84,10 @@ Add CLI shortcut :
 
 `wputools settings;`
 
+### Insert sample posts & images
+
+`wputools sample;`
+
 ### Go to this tool source.
 
 `wputools src;`

@@ -52,7 +52,7 @@ _STATIC_PATH="${_CURRENT_DIR}${_STATIC_FILE}";
 cp "${_TOOLSDIR}cache.php" "${_STATIC_PATH}";
 
 # File will be deleted after use so lets ensure rights are ok.
-chmod 0777 "${_STATIC_PATH}";
+chmod 0644 "${_STATIC_PATH}";
 
 # Calling url
 echo '# Clearing static cache';
