@@ -60,13 +60,14 @@ require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
 
-echo "Samples for : attachments\n";
+echo "Samples for attachments\n";
 foreach ($images as $url) {
+    $tmp_file = download_url($url);
     $file_array = array(
         'name' => sanitize_title(basename($url)) . '.jpg',
-        'tmp_name' => download_url($url)
+        'tmp_name' => $tmp_file
     );
-    if (is_wp_error($tmp)) {
+    if (is_wp_error($tmp_file)) {
         @unlink($file_array['tmp_name']);
     } else {
         $id = media_handle_sideload($file_array, 0);
