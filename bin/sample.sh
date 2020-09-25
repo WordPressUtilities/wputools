@@ -23,8 +23,18 @@ chmod 0644 "${_WPUSAMPLE_PATH}";
 ## Information
 ###################################
 
+_WPUSAMPLE_TYPE='all';
+if [[ "${1}" != "" ]];then
+    _WPUSAMPLE_TYPE="${1}";
+fi;
+
+_WPUSAMPLE_NUM='5';
+if [[ "${2}" != "" ]];then
+    _WPUSAMPLE_NUM="${2}";
+fi;
+
 # Call file
-curl -ksL ${_EXTRA_CURL_ARGS} "${_HOME_URL}/${_WPUSAMPLE_FILE}";
+curl -ksL ${_EXTRA_CURL_ARGS} "${_HOME_URL}/${_WPUSAMPLE_FILE}?sample_posttype=${_WPUSAMPLE_TYPE}&sample_num=${_WPUSAMPLE_NUM}";
 
 # Delete
 rm "${_WPUSAMPLE_PATH}";
