@@ -22,10 +22,9 @@ if (isset($_GET['sample_num']) && is_numeric($_GET['sample_num'])) {
     $_samples_nb = (int) $_GET['sample_num'];
 }
 if (isset($_GET['sample_posttype']) && $_GET['sample_posttype']) {
-    if(is_numeric($_GET['sample_posttype'])){
+    if (is_numeric($_GET['sample_posttype'])) {
         $_samples_nb = (int) $_GET['sample_posttype'];
-    }
-    else {
+    } else {
         $_posttype = esc_html($_GET['sample_posttype']);
     }
 }
@@ -33,7 +32,6 @@ if (isset($_GET['sample_posttype']) && $_GET['sample_posttype']) {
 /* ----------------------------------------------------------
   Content
 ---------------------------------------------------------- */
-
 
 $raw_contents = array(
     'Sometimes when you innovate, you make mistakes. It is best to admit them quickly, and get on with improving your other innovations.',
@@ -73,10 +71,15 @@ foreach ($post_types as $pt => $post_type) {
 ---------------------------------------------------------- */
 
 $images = array(
-    'http://source.unsplash.com/random/1280x720?t=' . time(),
-    'http://source.unsplash.com/random/720x1280?t=' . time(),
-    'http://source.unsplash.com/random/1280x1280?t=' . time()
+    'http://source.unsplash.com/random/1280x720',
+    'http://source.unsplash.com/random/720x1280',
+    'http://source.unsplash.com/random/1280x1280'
 );
+$images_nb = count($images);
+$images_list = array();
+for ($i = 0; $i < $_samples_nb; $i++) {
+    $images_list[] = $images[$i % $images_nb] . '?t=' . microtime(true);
+}
 
 if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
     require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -97,5 +100,7 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
                 echo "Success : #" . $id . "\n";
             }
         }
+        @flush();
+        @ob_flush();
     }
 }
