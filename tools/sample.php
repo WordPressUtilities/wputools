@@ -54,6 +54,7 @@ foreach ($post_types as $pt => $post_type) {
 
     $label = $post_type->labels->singular_name;
     echo "Samples for post type : " . $label . "\n";
+    $taxonomies = get_object_taxonomies($pt);
     for ($i = 1; $i <= $_samples_nb; $i++) {
         $post_id = wp_insert_post(array(
             'post_title' => $label . ' #' . $i,
@@ -62,6 +63,16 @@ foreach ($post_types as $pt => $post_type) {
             'post_status' => 'publish',
             'post_author' => 1
         ));
+        foreach ($taxonomies as $tax_name) {
+            if (in_array($tax_name, array('post_format'))) {
+                continue;
+            }
+            $nb_tax = mt_rand(2, $_samples_nb);
+            $nb_start = mt_rand(1, $nb_tax);
+            for ($y = $nb_start; $y <= $nb_tax; $y++) {
+                wp_set_object_terms($post_id, $tax_name . ' ' . $y, $tax_name, true);
+            }
+        }
         echo "Success : #" . $post_id . "\n";
     }
 }
