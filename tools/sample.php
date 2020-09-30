@@ -12,6 +12,8 @@ define('WP_USE_THEMES', false);
 require 'wp-load.php';
 wp();
 
+$_hasImport = false;
+
 /* ----------------------------------------------------------
   Settings
 ---------------------------------------------------------- */
@@ -63,6 +65,7 @@ foreach ($post_types as $pt => $post_type) {
             'post_status' => 'publish',
             'post_author' => 1
         ));
+        $_hasImport = true;
         foreach ($taxonomies as $tax_name) {
             if (in_array($tax_name, array('post_format'))) {
                 continue;
@@ -89,7 +92,7 @@ $images = array(
 $images_nb = count($images);
 $images_list = array();
 for ($i = 0; $i < $_samples_nb; $i++) {
-    $images_list[] = $images[$i % $images_nb] . '?t=' . microtime(true);
+    $images_list[] = $images[$i % $images_nb] . '?t=' . time() . $i;
 }
 
 if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
@@ -97,7 +100,7 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
     require_once ABSPATH . 'wp-admin/includes/image.php';
     require_once ABSPATH . 'wp-admin/includes/media.php';
     echo "Samples for attachments\n";
-    foreach ($images as $url) {
+    foreach ($images_list as $url) {
         $tmp_file = download_url($url);
         $file_array = array(
             'name' => sanitize_title(basename($url)) . '.jpg',
@@ -108,10 +111,15 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
         } else {
             $id = media_handle_sideload($file_array, 0);
             if (is_numeric($id)) {
+                $_hasImport = true;
                 echo "Success : #" . $id . "\n";
             }
         }
         @flush();
         @ob_flush();
     }
+}
+
+if (!$_hasImport) {
+    echo "Nothing was imported\n";
 }
