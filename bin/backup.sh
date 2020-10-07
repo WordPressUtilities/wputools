@@ -44,6 +44,11 @@ _WPCLICOMMAND db export - > "${_BACKUP_FILE}";
 # Backup htaccess
 cp ".htaccess" "${_BACKUP_PATH}htaccess.txt";
 
+# Backup local overrides
+if [[ -f "wp-content/mu-plugins/wpu_local_overrides.php" ]];then
+    cp "wp-content/mu-plugins/wpu_local_overrides.php" "${_BACKUP_PATH}wpu_local_overrides.php";
+fi;
+
 # Backup wp-config.php
 _wp_config_file="";
 if [[ -f "wp-config.php" ]];then

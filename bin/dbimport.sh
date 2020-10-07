@@ -60,14 +60,21 @@ wputools_execute_file "wputools-dbimport-after-search-replace.sh";
 # Check if uploads can be retrieved
 uploads_dir='-';
 dbimport_uploads='n';
+dbimport_wpulocaloverrides='n';
+overrides_file='-';
 if [[ -d "${_tmp_folder}" ]];then
     # Check if uploads are available aside backup
     dirname_file=$(dirname "${_dbimport_file}");
     uploads_dir="${dirname_file}/uploads";
+    overrides_file="${dirname_file}/wpu_local_overrides.php";
     # Ask to import uploads
-    if [[ "${uploads_dir}" != '-' && -d "${uploads_dir}" ]];then
+    if [[ -d "${uploads_dir}" ]];then
         dbimport_uploads=$(bashutilities_get_yn "- Import uploads ?" 'y');
     fi
+    # Ask to import override
+    if [[ -f "${overrides_file}" ]];then
+        dbimport_wpulocaloverrides=$(bashutilities_get_yn "- Import wpu_local_overrides ?" 'y');
+    fi;
 fi;
 
 if [[ "${dbimport_uploads}" == 'y' ]];then
@@ -89,6 +96,29 @@ if [[ "${dbimport_uploads}" == 'y' ]];then
         rm -rf "${dbimport_uploads_current_new}";
         echo "# Old Uploads deleted";
     fi;
+fi;
+
+if [[ "${dbimport_wpulocaloverrides}" == 'y' ]];then
+    dbimport_muplugins_dir="${_CURRENT_DIR}wp-content/mu-plugins";
+    dbimport_wpulocaloverrides_file="${dbimport_muplugins_dir}/wpu_local_overrides.php";
+    # Ensure dir is available
+    if [[ ! -d "${dbimport_muplugins_dir}" ]];then
+        mkdir -p "${dbimport_muplugins_dir}";
+    fi;
+
+    # Ensure file does not exists
+    dbimport_wpulocaloverrides_file_delete='n';
+    if [[ -f "${dbimport_wpulocaloverrides_file}" ]];then
+        dbimport_wpulocaloverrides_file_delete=$(bashutilities_get_yn "- Delete old wpu_local_overrides file ?" 'y');
+    fi;
+    if [[ "${dbimport_wpulocaloverrides_file_delete}" == 'y' ]];then
+        rm "${dbimport_wpulocaloverrides_file}";
+        echo "# Old wpu_local_overrides file deleted";
+    fi;
+
+    mv "${overrides_file}" "${dbimport_wpulocaloverrides_file}";
+    echo "# wpu_local_overrides imported"
+
 fi;
 
 wputools_execute_file "wputools-dbimport-after.sh";
