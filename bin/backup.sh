@@ -71,6 +71,9 @@ if [[ -n "${_wp_config_file}" ]];then
 fi;
 
 # Backup UPLOADS
+if [[ ! -z "${_BACKUP_UPLOADS}" ]];then
+    backup_uploads="${_BACKUP_UPLOADS}";
+fi;
 if [[ "${backup_uploads}" == '' ]];then
     backup_uploads=$(bashutilities_get_yn "- Backup uploads?" 'n');
 fi;

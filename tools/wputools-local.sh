@@ -16,6 +16,9 @@
 # BACKUP DIRECTORY
 #_BACKUP_DIR="MYBACKUPDIR";
 
+# DISABLE BACKUP FOR UPLOADS
+#_BACKUP_UPLOADS="n";
+
 # Override WP-CLI Version or PHP binary
 #_PHP_COMMAND='/Applications/MAMP/bin/php/php5.4.45/bin/php';
 #_WPCLICOMMAND(){
