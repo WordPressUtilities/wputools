@@ -31,6 +31,17 @@ if (isset($_GET['sample_posttype']) && $_GET['sample_posttype']) {
     }
 }
 
+switch ($_posttype) {
+case 'pages':
+    $_posttype = 'page';
+    break;
+case 'posts':
+    $_posttype = 'post';
+    break;
+default:
+
+}
+
 /* ----------------------------------------------------------
   Content
 ---------------------------------------------------------- */

@@ -56,7 +56,7 @@ chmod 0644 "${_STATIC_PATH}";
 
 # Calling url
 echo '# Clearing static cache';
-curl -ksL ${_EXTRA_CURL_ARGS} "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
+wputools_call_url "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
 rm "${_STATIC_PATH}";
 
 ###################################
@@ -64,4 +64,4 @@ rm "${_STATIC_PATH}";
 ###################################
 
 echo '# Cache warming';
-curl -ksL ${_EXTRA_CURL_ARGS} "${_HOME_URL}" > /dev/null;
+wputools_call_url "${_HOME_URL}" > /dev/null;

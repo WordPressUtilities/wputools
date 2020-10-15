@@ -77,3 +77,11 @@ function wputools_execute_file(){
         return 1;
     fi;
 }
+
+###################################
+## Call URL
+###################################
+
+function wputools_call_url(){
+    curl -ksL ${_EXTRA_CURL_ARGS} "${1}";
+}

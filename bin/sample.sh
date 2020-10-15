@@ -34,7 +34,7 @@ if [[ "${2}" != "" ]];then
 fi;
 
 # Call file
-curl -ksL ${_EXTRA_CURL_ARGS} "${_HOME_URL}/${_WPUSAMPLE_FILE}?sample_posttype=${_WPUSAMPLE_TYPE}&sample_num=${_WPUSAMPLE_NUM}";
+wputools_call_url "${_HOME_URL}/${_WPUSAMPLE_FILE}?sample_posttype=${_WPUSAMPLE_TYPE}&sample_num=${_WPUSAMPLE_NUM}";
 
 # Delete
 rm "${_WPUSAMPLE_PATH}";
