@@ -6,7 +6,7 @@
 
 # Thanks : https://stackoverflow.com/a/5303225
 _wputools_complete() {
-    local cur prev
+    local cur prev prev2
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -42,6 +42,13 @@ _wputools_complete() {
             *)
             ;;
         esac
+    elif [ $COMP_CWORD -eq 3 ]; then
+        prev2=${COMP_WORDS[COMP_CWORD-2]}
+
+        if [[ "$prev2" == 'wpuwoo' && "$prev" == 'import-csv' ]];then
+            COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.csv' -- $cur ) )
+        fi;
+
     fi
 
     return 0
