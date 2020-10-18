@@ -43,6 +43,7 @@ _BACKUP_RAND=$(bashutilities_rand_string 6);
 _BACKUP_NAME="${_SITE_NAME_SLUG}-$(date +%Y-%m-%d-%H%M%S)-${_BACKUP_RAND}";
 _BACKUP_PATH="./${_BACKUP_NAME}/";
 _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
+_BACKUP_FILES=(".htaccess" "wp-content/mu-plugins/wpu_local_overrides.php" "wp-config.php" "../wp-config.php")
 
 # Create TMP DIR
 mkdir "${_BACKUP_NAME}";
@@ -50,25 +51,19 @@ mkdir "${_BACKUP_NAME}";
 # Backup DATABASE
 _WPCLICOMMAND db export - > "${_BACKUP_FILE}";
 
-# Backup htaccess
-cp ".htaccess" "${_BACKUP_PATH}htaccess.txt";
-
-# Backup local overrides
-if [[ -f "wp-content/mu-plugins/wpu_local_overrides.php" ]];then
-    cp "wp-content/mu-plugins/wpu_local_overrides.php" "${_BACKUP_PATH}wpu_local_overrides.php";
-fi;
-
-# Backup wp-config.php
-_wp_config_file="";
-if [[ -f "wp-config.php" ]];then
-    _wp_config_file="wp-config.php";
-fi;
-if [[ -f "../wp-config.php" ]];then
-    _wp_config_file="../wp-config.php";
-fi;
-if [[ -n "${_wp_config_file}" ]];then
-    cp "${_wp_config_file}" "${_BACKUP_PATH}wp-config.php";
-fi;
+# Backup files
+for ix in ${!_BACKUP_FILES[*]}
+do
+    _BACKUP_FILE_ITEM="${_CURRENT_DIR}${_BACKUP_FILES[$ix]}";
+    if [[ -f "${_BACKUP_FILE_ITEM}" ]];then
+        _BACKUP_FILE_ITEM_NAME=$(basename "${_BACKUP_FILE_ITEM}");
+        # Prevent invisible files
+        if [[ ${_BACKUP_FILE_ITEM_NAME::1} == "." ]] ;then
+            _BACKUP_FILE_ITEM_NAME="${_BACKUP_FILE_ITEM_NAME:1}.txt"
+        fi;
+        cp "${_BACKUP_FILE_ITEM}" "${_BACKUP_PATH}${_BACKUP_FILE_ITEM_NAME}";
+    fi;
+done
 
 # Backup UPLOADS
 if [[ ! -z "${_BACKUP_UPLOADS}" ]];then
