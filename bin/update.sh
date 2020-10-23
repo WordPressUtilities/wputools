@@ -44,7 +44,7 @@ if [[ ! -z "$_PLUGIN_ID" ]];then
         if [[ -d "${_PLUGIN_DIR}.git" || -f "${_PLUGIN_DIR}.git" ]];then
             # If plugin uses git : update from git
             echo '# Update from git';
-            (cd "${_PLUGIN_DIR}" && git pull origin master);
+            (cd "${_PLUGIN_DIR}"; git checkout master; git checkout main; git pull origin);
         else
             # Update plugin with WP-CLI
             echo '# Update from WP-CLI';
@@ -95,7 +95,7 @@ else
     ###################################
 
     echo '# Updating submodules';
-    git submodule foreach git pull origin master;
+    git submodule foreach 'git checkout master; git checkout main; git pull origin';
 
     # Update
     commit_without_protect "Update submodules";
