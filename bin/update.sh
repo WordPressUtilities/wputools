@@ -100,6 +100,9 @@ else
     # Update
     commit_without_protect "Update submodules";
 
+    # Fix sub-sub-modules behavior.
+    git submodule update --init --recursive;
+
     run_test_after;
 fi;
 
