@@ -10,6 +10,7 @@ wputools cache;        # Clear WordPress cache.
 wputools cachewarm;    # Preload WordPress urls.
 wputools clean;        # Clean WordPress path & files.
 wputools dbimport;     # Import an SQL dump.
+wputools importsite;   # Import a distant website.
 wputools muplugin;     # Install a WordPressUtilities mu-plugin.
 wputools plugin;       # Install a WordPressUtilities plugin.
 wputools sample;       # Insert sample posts & images.

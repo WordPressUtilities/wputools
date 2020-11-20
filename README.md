@@ -56,6 +56,10 @@ Add CLI shortcut :
 
 `wputools clean;`
 
+### Import a distant website.
+
+`wputools importsite conf.sh;`
+
 ### Import an SQL dump.
 
 `wputools dbimport dump.sql;`
