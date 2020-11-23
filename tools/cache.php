@@ -35,6 +35,13 @@ if (function_exists('w3tc_flush_all') && ($cache_type == 'all' || $cache_type ==
     w3tc_flush_all();
 }
 
+// FVM
+if (function_exists('fvm_purge_all') && ($cache_type == 'all' || $cache_type == 'fvm')) {
+    echo '# Clearing FVM cache' . "\n";
+    fvm_purge_all();
+    fvm_purge_others();
+}
+
 // Object Cache
 if (function_exists('wp_cache_flush') && ($cache_type == 'all' || $cache_type == 'object')) {
     echo '# Clearing object cache' . "\n";
