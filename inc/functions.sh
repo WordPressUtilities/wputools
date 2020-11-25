@@ -85,3 +85,20 @@ function wputools_execute_file(){
 function wputools_call_url(){
     curl -ksL ${_EXTRA_CURL_ARGS} "${1}";
 }
+
+###################################
+## WPUTools replace old URL
+###################################
+
+function wputools_get_siteurl(){
+    _TMP_DB_NAME=$(bashutilities_search_extract_file__php_constant "DB_NAME" "wp-config.php");
+    _TMP_DB_USER=$(bashutilities_search_extract_file__php_constant "DB_USER" "wp-config.php");
+    _TMP_DB_PASSWORD=$(bashutilities_search_extract_file__php_constant "DB_PASSWORD" "wp-config.php");
+    _TMP_DB_HOST=$(bashutilities_search_extract_file__php_constant "DB_HOST" "wp-config.php");
+    _TMP_DB_PREFIX=$(bashutilities_search_extract_file "\$table_prefix =" "';" "wp-config.php");
+    _TMP_DB_PREFIX=${_TMP_DB_PREFIX/\'/};
+
+    local _OLD_URL=$( mysql --skip-column-names -u "${_TMP_DB_USER}" -p"${_TMP_DB_PASSWORD}" -h "${_TMP_DB_HOST}" -se "USE ${_TMP_DB_NAME};SELECT option_value FROM ${_TMP_DB_PREFIX}options WHERE option_name='siteurl'");
+
+    echo "${_OLD_URL}";
+}

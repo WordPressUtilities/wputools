@@ -50,6 +50,17 @@ _WPCLICOMMAND db import "${_dbimport_file}";
 
 wputools_execute_file "wputools-dbimport-before-search-replace.sh";
 
+# Try to extract siteurl if not specified
+if [[ ! -n "${_WPDB_REPLACE_BEFORE}" ]];then
+    _WPDB_REPLACE_BEFORE_TMP=$(wputools_get_siteurl);
+    if [[ "${_WPDB_REPLACE_BEFORE_TMP}" != '' ]];then
+        use__wpdb_replace_before_tmp=$(bashutilities_get_yn "- Use '${_WPDB_REPLACE_BEFORE_TMP}' as the URL to replace ?" 'y');
+        if [[ "${use__wpdb_replace_before_tmp}" == 'y' ]];then
+            _WPDB_REPLACE_BEFORE=$(_WPDB_REPLACE_BEFORE_TMP);
+        fi;
+    fi;
+fi;
+
 if [[ -n "${_WPDB_REPLACE_BEFORE}" && -n "${_WPDB_REPLACE_AFTER}" ]];then
     # Search replace
     _WPCLICOMMAND search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}";
