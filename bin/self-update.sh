@@ -6,7 +6,7 @@ _CURRENT_DIR="$( pwd )/";
 
 # Update WPUTools
 cd "${_SOURCEDIR}";
-git pull;
+git pull origin master;
 git submodule update --init --recursive;
 _WPUTOOLS_LATEST=$(git describe --tags $(git rev-list --tags --max-count=1));
 
