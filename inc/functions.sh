@@ -98,16 +98,26 @@ wputools__get_db_prefix(){
     echo "${_TMP_DB_PREFIX}";
 }
 
+wputools__get_db_user(){
+    echo $(bashutilities_search_extract_file__php_constant "DB_USER" "wp-config.php");
+}
+
+wputools__get_db_password(){
+    echo $(bashutilities_search_extract_file__php_constant "DB_PASSWORD" "wp-config.php");
+}
+
+wputools__get_db_host(){
+    echo $(bashutilities_search_extract_file__php_constant "DB_HOST" "wp-config.php");
+}
+
+wputools__get_db_name(){
+    echo $(bashutilities_search_extract_file__php_constant "DB_NAME" "wp-config.php");
+}
+
 ###################################
-## WPUTools replace old URL
+## WPUTools get old URL
 ###################################
 
 function wputools_get_siteurl(){
-    local _TMP_DB_NAME=$(bashutilities_search_extract_file__php_constant "DB_NAME" "wp-config.php");
-    local _TMP_DB_USER=$(bashutilities_search_extract_file__php_constant "DB_USER" "wp-config.php");
-    local _TMP_DB_PASSWORD=$(bashutilities_search_extract_file__php_constant "DB_PASSWORD" "wp-config.php");
-    local _TMP_DB_HOST=$(bashutilities_search_extract_file__php_constant "DB_HOST" "wp-config.php");
-    local _TMP_DB_PREFIX=$(wputools__get_db_prefix);
-    local _OLD_URL=$( mysql --skip-column-names -u "${_TMP_DB_USER}" -p"${_TMP_DB_PASSWORD}" -h "${_TMP_DB_HOST}" -se "USE ${_TMP_DB_NAME};SELECT option_value FROM ${_TMP_DB_PREFIX}options WHERE option_name='siteurl'");
-    echo "${_OLD_URL}";
+    echo $( mysql --skip-column-names -u "$(wputools__get_db_user)" -p"$(wputools__get_db_password)" -h "$(wputools__get_db_host)" -se "USE $(wputools__get_db_name);SELECT option_value FROM $(wputools__get_db_prefix)options WHERE option_name='siteurl'");
 }
