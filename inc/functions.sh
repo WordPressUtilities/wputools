@@ -115,9 +115,41 @@ wputools__get_db_name(){
 }
 
 ###################################
+## WPUTools - Query
+###################################
+
+function wputools_query_select(){
+    # Create temp my.cnf
+    local rand_cnf=$(bashutilities_rand_string 6);
+    local cnf_file="my-${rand_cnf}-";
+    local cnf_file_content=$(cat <<EOF
+    [client]
+user=$(wputools__get_db_user)
+password=$(wputools__get_db_password)
+host="$(wputools__get_db_host)"
+EOF
+);
+    echo "${cnf_file_content}" > "${cnf_file}";
+
+    # Do query
+    echo $( mysql --defaults-extra-file="${cnf_file}" --skip-column-names -se "${1}");
+
+    # Remove temp my.cnf
+    rm "${cnf_file}";
+}
+
+###################################
+## WPUTools - Option
+###################################
+
+function wputools_get_real_option(){
+    echo $( wputools_query_select "USE $(wputools__get_db_name);SELECT option_value FROM $(wputools__get_db_prefix)options WHERE option_name='${1}'");
+}
+
+###################################
 ## WPUTools get old URL
 ###################################
 
 function wputools_get_siteurl(){
-    echo $( mysql --skip-column-names -u "$(wputools__get_db_user)" -p"$(wputools__get_db_password)" -h "$(wputools__get_db_host)" -se "USE $(wputools__get_db_name);SELECT option_value FROM $(wputools__get_db_prefix)options WHERE option_name='siteurl'");
+    echo $(wputools_get_real_option 'siteurl');
 }
