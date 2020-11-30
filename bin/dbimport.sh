@@ -7,7 +7,7 @@ _tmp_folder="";
 
 # Check DB file
 if [[ ! -f "${_dbimport_file}" ]]; then
-    echo $(bashutilities_message 'The file does not exists' 'error');
+    bashutilities_message 'The file does not exists' 'error';
     return 0;
 fi;
 
@@ -35,7 +35,7 @@ fi;
 
 # Check DB format
 if [[ "${_dbimport_file}" != *.sql ]]; then
-    echo $(bashutilities_message 'The file should be an SQL dump' 'error');
+    bashutilities_message 'The file should be an SQL dump' 'error';
     return 0;
 fi;
 

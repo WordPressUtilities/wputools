@@ -22,7 +22,7 @@ _WPUTOOLS_BACKUP_DIR="${_CURRENT_DIR}../backups/";
 ###################################
 
 if [[ "${_WPUTOOLS_LOCAL_PATH}" == '-' ]];then
-    echo $(bashutilities_message "You did not choose an install path." 'error');
+    bashutilities_message "You did not choose an install path." 'error';
     return;
 fi
 
@@ -40,7 +40,7 @@ else
 fi;
 
 if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' ]];then
-    echo $(bashutilities_message "A wputools-local.sh file already exists" 'warning');
+    bashutilities_message "A wputools-local.sh file already exists" 'warning';
 else
     _WPUTOOLS_LOCAL_FILE="${_WPUTOOLS_LOCAL_PATH}wputools-local.sh";
     cp "${_TOOLSDIR}wputools-local.sh" "${_WPUTOOLS_LOCAL_FILE}";
@@ -61,7 +61,7 @@ else
 fi
 
 if [[ "${_wputools_test__file}" != '' ]];then
-    echo $(bashutilities_message "A wputools-urls.txt file already exists" 'warning');
+    bashutilities_message "A wputools-urls.txt file already exists" 'warning';
 else
     _WPUTOOLS_URL_LOCAL_FILE="${_WPUTOOLS_LOCAL_PATH}wputools-urls.txt";
     touch "${_WPUTOOLS_URL_LOCAL_FILE}";

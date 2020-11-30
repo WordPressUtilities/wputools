@@ -2,7 +2,7 @@
 
 echo "# SELF-UPDATE";
 
-_CURRENT_DIR="$( pwd )/";
+_CURRENT_DIR="${PWD}/";
 
 # Update WPUTools
 cd "${_SOURCEDIR}";

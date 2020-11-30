@@ -36,7 +36,7 @@ if [[ ! -z "$_PLUGIN_ID" ]];then
 
     # Check if plugin dir exists
     if [[ ! -d "${_PLUGIN_DIR}" ]];then
-        echo $(bashutilities_message "The plugin \"${_PLUGIN_ID}\" does not exists" 'error');
+        bashutilities_message "The plugin \"${_PLUGIN_ID}\" does not exists" 'error';
     else
         # Reset git status
         git reset;
@@ -120,7 +120,7 @@ echo "# Update is over !";
 if [ -f "${_DEBUGLOG_FILE}" ]; then
     _DEBUGLOG_FILE_SIZE_AFTER=$(wc -c "${_DEBUGLOG_FILE}");
     if [ "${_DEBUGLOG_FILE_SIZE}" != "${_DEBUGLOG_FILE_SIZE_AFTER}" ]; then
-        echo $(bashutilities_message "Debug log seems to have changed since the update. Please look at it ?" 'warning');
+        bashutilities_message "Debug log seems to have changed since the update. Please look at it ?" 'warning';
         tail -3 "${_DEBUGLOG_FILE}";
     fi;
 fi;

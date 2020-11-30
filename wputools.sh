@@ -2,10 +2,10 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.25.7';
+local _WPUTOOLS_VERSION='0.26.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1)
-local _CURRENT_DIR="$( pwd )/";
+local _CURRENT_DIR="${PWD}/";
 cat <<EOF
 
 ###################################
@@ -76,12 +76,12 @@ case "${_PHP_VERSIONS[@]}" in  *"${_PHP_VERSION}"*)
 esac
 
 if [ "${_PHP_VERSION_OK}" != 'y' ]; then
-    echo $(bashutilities_message "Wrong PHP Version : ${_PHP_VERSION}" 'error');
+    bashutilities_message "Wrong PHP Version : ${_PHP_VERSION}" 'error';
     return 0;
 fi;
 
 case "${_PHP_VERSIONS_OBSOLETES[@]}" in  *"${_PHP_VERSION}"*)
-    echo $(bashutilities_message "Your PHP Version is obsolete : ${_PHP_VERSION}" 'warning');
+    bashutilities_message "Your PHP Version is obsolete : ${_PHP_VERSION}" 'warning';
 esac
 
 ###################################
@@ -113,7 +113,7 @@ esac
 ###################################
 
 local _WORDPRESS_FOUND='n';
-local _SCRIPTSTARTDIR="$( pwd )/";
+local _SCRIPTSTARTDIR="${PWD}/";
 
 for (( c=1; c<=10; c++ )); do
     if [[ -d "wp-content" && -d "wp-includes" ]]; then
@@ -121,13 +121,13 @@ for (( c=1; c<=10; c++ )); do
         break;
     else
         cd ..;
-        _CURRENT_DIR="$( pwd )/";
+        _CURRENT_DIR="${PWD}/";
     fi;
 done
 
 if [ "${_WORDPRESS_FOUND}" == 'n' ]; then
     cd "${_SCRIPTSTARTDIR}";
-    echo $(bashutilities_message 'The script could not find a WordPress root dir' 'error');
+    bashutilities_message 'The script could not find a WordPress root dir' 'error';
     . "${_SOURCEDIR}inc/stop.sh";
     return 0;
 fi;

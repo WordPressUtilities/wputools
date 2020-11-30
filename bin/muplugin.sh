@@ -4,7 +4,7 @@ echo "# INSTALL MU-PLUGIN";
 
 _MUPLUGIN_ID="${1}";
 if [[ "${_MUPLUGIN_ID}" == '' ]];then
-    echo $(bashutilities_message "No mu-plugin specified." 'error');
+    bashutilities_message "No mu-plugin specified." 'error';
     return 0;
 fi
 _MUPLUGIN_LIST=($(cat ${_WPUTOOLS_MUPLUGIN_LIST} | tr "\n" " " ));
@@ -16,7 +16,7 @@ for muplugin_item in "${_MUPLUGIN_LIST[@]}"; do
 done
 
 if [[ "${_IS_WPU}" != '1' ]];then
-    echo $(bashutilities_message "The mu-plugin \"${_MUPLUGIN_ID}\" is not a WordPressUtilities mu-plugin." 'error');
+    bashutilities_message "The mu-plugin \"${_MUPLUGIN_ID}\" is not a WordPressUtilities mu-plugin." 'error';
     return;
 fi;
 

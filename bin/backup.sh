@@ -26,7 +26,7 @@ check_parameters "$@"
 ###################################
 
 if [[ ! $(_WPCLICOMMAND db check) ]];then
-    echo $(bashutilities_message 'MySQL is not available' 'error');
+    bashutilities_message 'MySQL is not available' 'error';
     return 0;
 fi;
 

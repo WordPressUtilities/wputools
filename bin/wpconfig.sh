@@ -3,7 +3,7 @@
 echo "# WP Config";
 
 if [[ -f "${_CURRENT_DIR}wp-config.php" || -f "${_CURRENT_DIR}../wp-config.php" ]];then
-    echo $(bashutilities_message "There is already a wp-config.php file available" 'error');
+    bashutilities_message "There is already a wp-config.php file available" 'error';
     return 0;
 fi;
 

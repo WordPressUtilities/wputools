@@ -92,34 +92,33 @@ function wputools_call_url(){
 
 wputools__get_db_prefix(){
     local _TMP_DB_PREFIX=$(bashutilities_search_extract_file "\$table_prefix" "';" "wp-config.php");
-    local _TMP_DB_PREFIX=${_TMP_DB_PREFIX/\'/};
-    local _TMP_DB_PREFIX=${_TMP_DB_PREFIX/=/};
-    local _TMP_DB_PREFIX=${_TMP_DB_PREFIX/ /};
-    echo "${_TMP_DB_PREFIX}";
+    _TMP_DB_PREFIX=${_TMP_DB_PREFIX/\'/};
+    _TMP_DB_PREFIX=${_TMP_DB_PREFIX/=/};
+    echo "${_TMP_DB_PREFIX/ /}";
 }
 
 wputools__get_db_user(){
-    echo $(bashutilities_search_extract_file__php_constant "DB_USER" "wp-config.php");
+    bashutilities_search_extract_file__php_constant "DB_USER" "wp-config.php";
 }
 
 wputools__get_db_password(){
-    echo $(bashutilities_search_extract_file__php_constant "DB_PASSWORD" "wp-config.php");
+    bashutilities_search_extract_file__php_constant "DB_PASSWORD" "wp-config.php";
 }
 
 wputools__get_db_host(){
-    echo $(bashutilities_search_extract_file__php_constant "DB_HOST" "wp-config.php");
+    bashutilities_search_extract_file__php_constant "DB_HOST" "wp-config.php";
 }
 
 wputools__get_db_name(){
-    echo $(bashutilities_search_extract_file__php_constant "DB_NAME" "wp-config.php");
+    bashutilities_search_extract_file__php_constant "DB_NAME" "wp-config.php";
 }
 
 ###################################
 ## WPUTools - Query
 ###################################
 
-function wputools_query_select(){
-    # Create temp my.cnf
+function wputools_query(){
+        # Create temp my.cnf
     local rand_cnf=$(bashutilities_rand_string 6);
     local cnf_file="my-${rand_cnf}-";
     local cnf_file_content=$(cat <<EOF
@@ -132,10 +131,23 @@ EOF
     echo "${cnf_file_content}" > "${cnf_file}";
 
     # Do query
-    echo $( mysql --defaults-extra-file="${cnf_file}" --skip-column-names -se "${1}");
+    case "${1}" in
+        "select")
+            mysql --defaults-extra-file="${cnf_file}" --skip-column-names -se "${2}";
+        ;;
+    esac
+
 
     # Remove temp my.cnf
     rm "${cnf_file}";
+}
+
+###################################
+## WPUTools - Query Select
+###################################
+
+function wputools_query_select(){
+    wputools_query "select" "USE $(wputools__get_db_name);${1}";
 }
 
 ###################################
@@ -143,7 +155,7 @@ EOF
 ###################################
 
 function wputools_get_real_option(){
-    echo $( wputools_query_select "USE $(wputools__get_db_name);SELECT option_value FROM $(wputools__get_db_prefix)options WHERE option_name='${1}'");
+    wputools_query_select "SELECT option_value FROM $(wputools__get_db_prefix)options WHERE option_name='${1}'";
 }
 
 ###################################
@@ -151,5 +163,5 @@ function wputools_get_real_option(){
 ###################################
 
 function wputools_get_siteurl(){
-    echo $(wputools_get_real_option 'siteurl');
+    wputools_get_real_option 'siteurl';
 }

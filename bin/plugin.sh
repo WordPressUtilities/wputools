@@ -4,7 +4,7 @@ echo "# INSTALL PLUGIN";
 
 _PLUGIN_ID="${1}";
 if [[ "${_PLUGIN_ID}" == '' ]];then
-    echo $(bashutilities_message "No plugin specified." 'error');
+    bashutilities_message "No plugin specified." 'error';
     return 0;
 fi
 

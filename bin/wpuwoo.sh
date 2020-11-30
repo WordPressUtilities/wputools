@@ -6,7 +6,7 @@ _WPUWOO_ACTION="${1}";
 _WPUWOO_ACTION_FILE="${_WPUWOO_ACTION_DIR}tasks/${_WPUWOO_ACTION}.php";
 
 if [[ ! -f "${_WPUWOO_ACTION_FILE}" ]]; then
-    echo $(bashutilities_message "The action \"${_WPUWOO_ACTION}\" is not available. Sorry !" 'error');
+    bashutilities_message "The action \"${_WPUWOO_ACTION}\" is not available. Sorry !" 'error';
     echo "Available commands :";
     for file in $(find "${_WPUWOO_ACTION_DIR}tasks/" -type f -maxdepth 1)
     do
