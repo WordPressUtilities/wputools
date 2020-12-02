@@ -90,26 +90,26 @@ function wputools_call_url(){
 ## WPUTools - Getters
 ###################################
 
-wputools__get_db_prefix(){
+function wputools__get_db_prefix(){
     local _TMP_DB_PREFIX=$(bashutilities_search_extract_file "\$table_prefix" "';" "wp-config.php");
     _TMP_DB_PREFIX=${_TMP_DB_PREFIX/\'/};
     _TMP_DB_PREFIX=${_TMP_DB_PREFIX/=/};
     echo "${_TMP_DB_PREFIX/ /}";
 }
 
-wputools__get_db_user(){
+function wputools__get_db_user(){
     bashutilities_search_extract_file__php_constant "DB_USER" "wp-config.php";
 }
 
-wputools__get_db_password(){
+function wputools__get_db_password(){
     bashutilities_search_extract_file__php_constant "DB_PASSWORD" "wp-config.php";
 }
 
-wputools__get_db_host(){
+function wputools__get_db_host(){
     bashutilities_search_extract_file__php_constant "DB_HOST" "wp-config.php";
 }
 
-wputools__get_db_name(){
+function wputools__get_db_name(){
     bashutilities_search_extract_file__php_constant "DB_NAME" "wp-config.php";
 }
 

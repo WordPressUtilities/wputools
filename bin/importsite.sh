@@ -193,3 +193,4 @@ cd ..;
 ###################################
 
 _WPUTOOLS_IMPORT__RESET;
+unset -f _WPUTOOLS_IMPORT__RESET;
