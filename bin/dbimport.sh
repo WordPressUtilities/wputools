@@ -5,6 +5,20 @@ echo "# DB Import";
 _dbimport_file="${1}";
 _tmp_folder="";
 
+# Try to find the latest backup on server
+if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && -n "${_WPDB_SSH_USER_AT_HOST}" ]];then
+
+    # Find latest backup on server and copy it
+    _latest_backup=$(ssh "${_WPDB_SSH_USER_AT_HOST}" "ls ${_WPDB_SSH_BACKUP_DIR}* -t1 | head -n 1");
+
+    # Copy latest file to current folder
+    _dbimport_file=$(basename "${_latest_backup}");
+    if [[ -n "${_dbimport_file}" && ! -f "${_dbimport_file}" ]];then
+        scp "${_WPDB_SSH_USER_AT_HOST}":"${_latest_backup}" .
+    fi;
+
+fi;
+
 # Check DB file
 if [[ ! -f "${_dbimport_file}" ]]; then
     bashutilities_message 'The file does not exists' 'error';

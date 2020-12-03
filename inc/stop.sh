@@ -4,9 +4,7 @@
 ## Remove old functions
 ###################################
 
-unset -f _EXTRA_CURL_ARGS
-unset -f _HOME_URL
-unset -f _WPCLICOMMAND
+unset -f _WPCLICOMMAND;
 unset -f check_parameters;
 unset -f commit_without_protect;
 unset -f run_test_after;
@@ -26,3 +24,11 @@ unset -f wputools_query;
 unset -f wputools_query_select;
 unset -f wputools_test_check_urls;
 unset -f wputools_update_available_message;
+unset -v _BACKUP_DIR;
+unset -v _BACKUP_UPLOADS;
+unset -v _EXTRA_CURL_ARGS;
+unset -v _HOME_URL;
+unset -v _WPDB_REPLACE_AFTER;
+unset -v _WPDB_REPLACE_BEFORE;
+unset -v _WPDB_SSH_BACKUP_DIR;
+unset -v _WPDB_SSH_USER_AT_HOST;

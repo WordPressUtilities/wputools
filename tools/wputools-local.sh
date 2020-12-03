@@ -13,6 +13,10 @@
 #_WPDB_REPLACE_BEFORE="http://example-before.com";
 #_WPDB_REPLACE_AFTER="http://example.com";
 
+# Distant server settings to retrieve latest backup
+#_WPDB_SSH_USER_AT_HOST="user@host";
+#_WPDB_SSH_BACKUP_DIR="~/backups/";
+
 # BACKUP DIRECTORY
 #_BACKUP_DIR="MYBACKUPDIR";
 
