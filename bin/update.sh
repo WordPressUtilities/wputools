@@ -103,6 +103,19 @@ else
     # Fix sub-sub-modules behavior.
     git submodule update --init --recursive;
 
+    ###################################
+    ## Fixes
+    ###################################
+
+    # Disable object cache for redis-cache if updated
+    if [[ -f "${_CURRENT_DIR}wp-content/plugins/redis-cache/includes/object-cache.php" && -f "${_CURRENT_DIR}wp-content/object-cache.php" ]];then
+        rm "${_CURRENT_DIR}wp-content/object-cache.php";
+    fi;
+
+    ###################################
+    ## Test
+    ###################################
+
     run_test_after;
 fi;
 

@@ -3,6 +3,7 @@
 echo "# DB Import";
 
 _dbimport_file="${1}";
+_dbimport_file_tmp="";
 _tmp_folder="";
 _latest_backup="";
 
@@ -14,6 +15,7 @@ if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && -n "${_
 
     # Copy latest file to current folder
     _dbimport_file=$(basename "${_latest_backup}");
+    _dbimport_file_tmp="${_dbimport_file}";
     if [[ -n "${_dbimport_file}" && ! -f "${_dbimport_file}" ]];then
         scp "${_WPDB_SSH_USER_AT_HOST}":"${_latest_backup}" .
     fi;
@@ -158,8 +160,8 @@ if [[ -d "${_tmp_folder}" ]];then
 fi;
 
 # Delete latest downloaded backup
-if [[ -f "${_latest_backup}" && "${_latest_backup}" != '' ]];then
-    rm "${_latest_backup}";
+if [[ "${_dbimport_file_tmp}" != '' && -f "${_dbimport_file_tmp}" ]];then
+    rm "${_dbimport_file_tmp}";
 fi;
 
 # Clear cache
