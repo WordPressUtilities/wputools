@@ -4,6 +4,7 @@ echo "# DB Import";
 
 _dbimport_file="${1}";
 _tmp_folder="";
+_latest_backup="";
 
 # Try to find the latest backup on server
 if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && -n "${_WPDB_SSH_USER_AT_HOST}" ]];then
@@ -151,8 +152,14 @@ wputools_execute_file "wputools-dbimport-after.sh";
 # Disable maintenance mode
 _WPCLICOMMAND maintenance-mode deactivate;
 
+# Delete temp folder
 if [[ -d "${_tmp_folder}" ]];then
     rm -rf "${_tmp_folder}";
+fi;
+
+# Delete latest downloaded backup
+if [[ -f "${_latest_backup}" && "${_latest_backup}" != '' ]];then
+    rm "${_latest_backup}";
 fi;
 
 # Clear cache
