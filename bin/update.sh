@@ -25,12 +25,30 @@ function commit_without_protect(){
     git commit --no-verify -m "${1}";
 }
 
+function wputools__update_core(){
+    echo '# Updating WordPress core';
+    _WPCLICOMMAND core check-update;
+    _WPCLICOMMAND core update;
+    rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
+
+    echo '# Updating WordPress core translations';
+    _WPCLICOMMAND language core update;
+
+    _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
+
+    commit_without_protect "Update WordPress to ${_LATEST_WORDPRESS}";
+}
+
 ###################################
 ## Update
 ###################################
 
 _PLUGIN_ID="$1";
-if [[ ! -z "$_PLUGIN_ID" ]];then
+if [[ "${1}" == 'core' ]];then
+    run_test_before;
+    wputools__update_core;
+    run_test_after;
+elif [[ ! -z "$_PLUGIN_ID" ]];then
     _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
     _PLUGIN_LANG="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
 
@@ -65,17 +83,7 @@ else
     ## CORE
     ###################################
 
-    echo '# Updating WordPress core';
-    _WPCLICOMMAND core check-update;
-    _WPCLICOMMAND core update;
-    rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
-
-    echo '# Updating WordPress core translations';
-    _WPCLICOMMAND language core update;
-
-    _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
-
-    commit_without_protect "Update WordPress to ${_LATEST_WORDPRESS}";
+    wputools__update_core;
 
     ###################################
     ## Plugins
