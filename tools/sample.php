@@ -78,10 +78,10 @@ foreach ($post_types as $pt => $post_type) {
         ));
         $_hasImport = true;
         foreach ($taxonomies as $tax_name) {
-            if (in_array($tax_name, array('post_format'))) {
+            if (in_array($tax_name, array('post_format', 'post_translations', 'language'))) {
                 continue;
             }
-            $nb_tax = mt_rand(2, $_samples_nb);
+            $nb_tax = mt_rand(2, min($_samples_nb, 10));
             $nb_start = mt_rand(1, $nb_tax);
             for ($y = $nb_start; $y <= $nb_tax; $y++) {
                 wp_set_object_terms($post_id, $tax_name . ' ' . $y, $tax_name, true);
