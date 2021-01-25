@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.27.6';
+local _WPUTOOLS_VERSION='0.27.7';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1)
 local _CURRENT_DIR="${PWD}/";
@@ -23,6 +23,7 @@ local _HOME_URL='';
 local _SITE_NAME='';
 local _BACKUP_DIR='';
 local _PHP_COMMAND='php';
+local _WPUTOOLS_CONNECT_TIMEOUT='5';
 local _HAS_WPUTOOLS_LOCAL='0';
 local _WPUTOOLS_NO_UPDATE='0';
 _WPUWOO_ACTION_DIR="${_TOOLSDIR}wpuwooimportexport/";

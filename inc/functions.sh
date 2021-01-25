@@ -83,7 +83,7 @@ function wputools_execute_file(){
 ###################################
 
 function wputools_call_url(){
-    curl --connect-timeout 5 -ksL ${_EXTRA_CURL_ARGS} "${1}";
+    curl --connect-timeout "${_WPUTOOLS_CONNECT_TIMEOUT}" -ksL ${_EXTRA_CURL_ARGS} "${1}";
 }
 
 ###################################
