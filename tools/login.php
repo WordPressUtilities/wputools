@@ -4,6 +4,9 @@
 define('WP_USE_THEMES', false);
 define('WP_ADMIN', true);
 
+/* Fool login check */
+$_SERVER['PHP_SELF'] = '/wp-admin/index.php';
+
 /* Disable maintenance */
 define('WPUMAINTENANCE_DISABLED', true);
 
