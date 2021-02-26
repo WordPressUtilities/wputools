@@ -3,6 +3,8 @@
 echo "# UPDATE";
 
 _ADMIN_PROTECT_FILE=$(find . -mount -name 'wputh_admin_protect.php');
+_ADMIN_PROTECT_FLAG=".disable_wpu_admin_protect";
+_ADMIN_PROTECT_FLAG_FILE="${_CURRENT_DIR}${_ADMIN_PROTECT_FLAG}";
 _DEBUGLOG_FILE=$(find . -mount -name 'debug.log');
 
 ###################################
@@ -13,6 +15,7 @@ if [ -f "${_DEBUGLOG_FILE}" ]; then
     _DEBUGLOG_FILE_SIZE=$(wc -c "${_DEBUGLOG_FILE}");
 fi;
 
+touch "${_ADMIN_PROTECT_FLAG_FILE}";
 if [ -f "${_ADMIN_PROTECT_FILE}" ]; then
     echo "# Disabling Admin Protect";
     mv "${_ADMIN_PROTECT_FILE}" "${_ADMIN_PROTECT_FILE}.txt";
@@ -21,6 +24,7 @@ fi;
 function commit_without_protect(){
     git reset;
     git add -A;
+    git reset -- "${_ADMIN_PROTECT_FLAG}";
     git restore --staged "${_ADMIN_PROTECT_FILE}" "${_ADMIN_PROTECT_FILE}.txt";
     git commit --no-verify -m "${1}";
 }
@@ -131,6 +135,7 @@ fi;
 ## Closing checks
 ###################################
 
+rm "${_ADMIN_PROTECT_FLAG_FILE}";
 if [ -f "${_ADMIN_PROTECT_FILE}.txt" ]; then
     echo "# Re-enabling Admin Protect";
     mv "${_ADMIN_PROTECT_FILE}.txt" "${_ADMIN_PROTECT_FILE}";
