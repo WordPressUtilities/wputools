@@ -65,6 +65,16 @@ do
     fi;
 done
 
+# Backup crontab
+if [ -x "$(command -v crontab)" ]; then
+    if [[ ! -z "${_NOBACKUP_CRONTABS}" && "${_NOBACKUP_CRONTABS}" == '1' ]];then
+        echo '- crontab ignored';
+    else
+        crontab -l > "${_BACKUP_PATH}crontab.txt";
+    fi;
+fi
+
+
 # Backup UPLOADS
 if [[ ! -z "${_BACKUP_UPLOADS}" ]];then
     backup_uploads="${_BACKUP_UPLOADS}";

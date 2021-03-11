@@ -23,6 +23,9 @@
 # DISABLE BACKUP FOR UPLOADS
 #_BACKUP_UPLOADS="n";
 
+# DISABLE BACKUP FOR CRONTAB
+#_NOBACKUP_CRONTABS="1";
+
 # Override WP-CLI Version or PHP binary
 #_PHP_COMMAND='/Applications/MAMP/bin/php/php5.4.45/bin/php';
 #_WPCLICOMMAND(){
