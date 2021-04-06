@@ -66,14 +66,26 @@ define('WP_POST_REVISIONS', 6);
 define('WP_MEMORY_LIMIT', '128M');
 define('WP_MAX_MEMORY_LIMIT', '256M');
 
+# Updates
+define('AUTOMATIC_UPDATER_DISABLED', true);
+define('WP_AUTO_UPDATE_CORE', true);
+
 # Debug
 define('WP_DEBUG', true);
 if (WP_DEBUG) {
     @ini_set('display_errors', 0);
-    if (!defined('WP_DEBUG_LOG')) { define('WP_DEBUG_LOG', 1); }
-    if (!defined('WP_DEBUG_DISPLAY')) { define('WP_DEBUG_DISPLAY', false); }
-    if (!defined('SCRIPT_DEBUG')) { define('SCRIPT_DEBUG', 1); }
-    if (!defined('SAVEQUERIES')) { define('SAVEQUERIES', 1); }
+    if (!defined('WP_DEBUG_LOG')) {
+        define('WP_DEBUG_LOG', 1);
+    }
+    if (!defined('WP_DEBUG_LOG')) {
+        define('WP_DEBUG_LOG', dirname(__FILE__) . '/../logs/debug-' . date('dmY') . '.log');
+    }
+    if (!defined('SCRIPT_DEBUG')) {
+        define('SCRIPT_DEBUG', 1);
+    }
+    if (!defined('SAVEQUERIES')) {
+        define('SAVEQUERIES', 1);
+    }
 }
 
 ##WPUINSTALLER##
