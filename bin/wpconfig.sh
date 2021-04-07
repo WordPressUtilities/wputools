@@ -74,8 +74,8 @@ define('WP_AUTO_UPDATE_CORE', true);
 define('WP_DEBUG', true);
 if (WP_DEBUG) {
     @ini_set('display_errors', 0);
-    if (!defined('WP_DEBUG_LOG')) {
-        define('WP_DEBUG_LOG', 1);
+    if (!defined('WP_DEBUG_DISPLAY')) {
+        define('WP_DEBUG_DISPLAY', false);
     }
     if (!defined('WP_DEBUG_LOG')) {
         define('WP_DEBUG_LOG', dirname(__FILE__) . '/../logs/debug-' . date('dmY') . '.log');
