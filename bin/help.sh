@@ -3,6 +3,7 @@
 echo "# HELP";
 
 cat <<EOF
+wputools adminer;      # Open an adminer session.
 wputools backup;       # Backup database + wp-config + htaccess + uploads (on demand).
 wputools bduser;       # Install SecuPress-Backdoor-User.
 wputools login;        # Login as the first available administrator.

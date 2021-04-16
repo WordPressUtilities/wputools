@@ -20,6 +20,10 @@ Add CLI shortcut :
 
 ## How to use
 
+### Open an adminer session.
+
+`wputools adminer;`
+
 ### Backup database + wp-config + htaccess + uploads (on demand).
 
 `wputools backup;`
