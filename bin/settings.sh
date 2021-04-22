@@ -1,6 +1,21 @@
 #!/bin/bash
 
 ###################################
+## Check existing iles
+###################################
+
+if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' ]];then
+    bashutilities_message "A wputools-local.sh file already exists." 'warning';
+fi;
+if [[ "${_wputools_test__file}" != '' ]];then
+    bashutilities_message "A wputools-urls.txt file already exists." 'warning';
+fi;
+if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' && "${_wputools_test__file}" != '' ]];then
+    bashutilities_message "All files already exists." 'error';
+    return 0;
+fi;
+
+###################################
 ## Asks
 ###################################
 
@@ -39,9 +54,7 @@ else
     wputools_use_backup_dir=$(bashutilities_get_yn "- Create the backups folder in the parent folder ?" 'y');
 fi;
 
-if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' ]];then
-    bashutilities_message "A wputools-local.sh file already exists" 'warning';
-else
+if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
     _WPUTOOLS_LOCAL_FILE="${_WPUTOOLS_LOCAL_PATH}wputools-local.sh";
     cp "${_TOOLSDIR}wputools-local.sh" "${_WPUTOOLS_LOCAL_FILE}";
     if [[ "${wputools_use_home_url}" == 'y' ]];then
@@ -60,9 +73,7 @@ else
     fi
 fi
 
-if [[ "${_wputools_test__file}" != '' ]];then
-    bashutilities_message "A wputools-urls.txt file already exists" 'warning';
-else
+if [[ "${_wputools_test__file}" == '' ]];then
     _WPUTOOLS_URL_LOCAL_FILE="${_WPUTOOLS_LOCAL_PATH}wputools-urls.txt";
     touch "${_WPUTOOLS_URL_LOCAL_FILE}";
     if [[ "${wputools_use_home_url}" == 'y' ]];then
