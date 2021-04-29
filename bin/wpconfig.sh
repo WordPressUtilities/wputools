@@ -35,6 +35,7 @@ fi;
 ###################################
 
 _WPCLICOMMAND core config \
+    --skip-check \
     --dbhost="${mysql_host}" \
     --dbname="${mysql_database}" \
     --dbuser="${mysql_user}" \
