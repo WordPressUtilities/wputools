@@ -64,6 +64,10 @@ Add CLI shortcut :
 
 `wputools importsite conf.sh;`
 
+### Export an SQL dump and replace URLs.
+
+`wputools dbexport https://github.com;`
+
 ### Import an SQL dump.
 
 `wputools dbimport dump.sql;`
