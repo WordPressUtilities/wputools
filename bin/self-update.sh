@@ -8,6 +8,7 @@ _CURRENT_DIR="${PWD}/";
 cd "${_SOURCEDIR}";
 git pull origin master;
 git submodule update --init --recursive;
+git fetch --tags;
 _WPUTOOLS_LATEST=$(git describe --tags $(git rev-list --tags --max-count=1));
 
 if [[ "${_WPUTOOLS_VERSION}" == "${_WPUTOOLS_LATEST}" ]]; then
