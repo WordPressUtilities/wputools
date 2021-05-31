@@ -18,7 +18,7 @@ done
 
 # Base vars
 _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
-_PLUGIN_LANG_DIR="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}";
+_PLUGIN_LANG_DIR="${_CURRENT_DIR}wp-content/languages/plugins/";
 
 # Install plugin and activate
 if [[ "${_IS_WPU}" == '1' ]];then
