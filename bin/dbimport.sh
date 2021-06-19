@@ -70,7 +70,7 @@ wputools_execute_file "wputools-dbimport-before-search-replace.sh";
 # Try to extract siteurl if not specified
 if [[ ! -n "${_WPDB_REPLACE_BEFORE}" ]];then
     _WPDB_REPLACE_BEFORE_TMP=$(wputools_get_siteurl);
-    if [[ "${_WPDB_REPLACE_BEFORE_TMP}" != '' ]];then
+    if [[ "${_WPDB_REPLACE_BEFORE_TMP}" != '' &&  "${_WPDB_REPLACE_BEFORE_TMP}" != "${_HOME_URL}" ]];then
         use__wpdb_replace_before_tmp=$(bashutilities_get_yn "- Use '${_WPDB_REPLACE_BEFORE_TMP}' as the URL to replace by '${_HOME_URL}' ?" 'y');
         if [[ "${use__wpdb_replace_before_tmp}" == 'y' ]];then
             _WPDB_REPLACE_BEFORE=${_WPDB_REPLACE_BEFORE_TMP};
