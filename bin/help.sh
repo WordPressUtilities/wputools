@@ -12,6 +12,7 @@ wputools cachewarm;    # Preload WordPress urls.
 wputools clean;        # Clean WordPress path & files.
 wputools dbexport;     # Export an SQL dump and replace URLs.
 wputools dbimport;     # Import an SQL dump.
+wputools go;           # Quickly go to a specific folder.
 wputools importsite;   # Import a distant website.
 wputools muplugin;     # Install a WordPressUtilities mu-plugin.
 wputools plugin;       # Install a WordPressUtilities plugin.

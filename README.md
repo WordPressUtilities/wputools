@@ -72,6 +72,10 @@ Add CLI shortcut :
 
 `wputools dbimport dump.sql;`
 
+### Quickly go to a specific folder.
+
+`wputools go mu-plugins;`
+
 ### Import posts from a CSV File.
 
 `wputools wpuwoo import-csv file.csv`
