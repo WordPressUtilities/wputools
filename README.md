@@ -151,6 +151,11 @@ _WPCLICOMMAND(){
     $_PHP_COMMAND $_WPCLISRC $@;
 }
 
+# Clean some folders before backup with uploads
+function wputools_backup_uploads_cleanup(){
+    rm -rf "${1}/wpufilecache";
+}
+
 ```
 
 ## Thanks

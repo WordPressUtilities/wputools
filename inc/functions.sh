@@ -165,3 +165,11 @@ function wputools_get_real_option(){
 function wputools_get_siteurl(){
     wputools_get_real_option 'siteurl';
 }
+
+###################################
+## Actions on backup dir
+###################################
+
+function wputools_backup_uploads_cleanup(){
+    echo '- No cleanup';
+}

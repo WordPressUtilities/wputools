@@ -89,6 +89,8 @@ if [[ "${backup_uploads}" == 'y' ]]; then
     find "${_BACKUP_PATH}uploads" -name '.DS_Store' -type f -delete;
     # Delete logs
     find "${_BACKUP_PATH}uploads" -name '*.log' -type f -delete;
+
+    wputools_backup_uploads_cleanup "${_BACKUP_PATH}uploads";
 fi;
 
 # Zip TMP DIR
