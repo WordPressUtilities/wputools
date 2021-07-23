@@ -30,6 +30,7 @@ wpupopin
 wpupostmetas
 wpuposttypestaxos
 wpupostvalidationrules
+wpupostviews
 wpursstoposts
 wpusavevideos
 wpuseo

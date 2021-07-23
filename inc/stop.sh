@@ -15,6 +15,7 @@ unset -f wputools__get_db_password;
 unset -f wputools__get_db_prefix;
 unset -f wputools__get_db_user;
 unset -f wputools_cache_warming;
+unset -f wputools_backup_uploads_cleanup;
 unset -f wputools_call_url;
 unset -f wputools_check_update;
 unset -f wputools_execute_file;
