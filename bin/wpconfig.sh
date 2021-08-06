@@ -71,6 +71,13 @@ define('WP_MAX_MEMORY_LIMIT', '256M');
 define('AUTOMATIC_UPDATER_DISABLED', true);
 define('WP_AUTO_UPDATE_CORE', true);
 
+# Block external access
+#define('WP_HTTP_BLOCK_EXTERNAL', true);
+
+# Block file edit
+#define('DISALLOW_FILE_EDIT', true);
+#define('DISALLOW_FILE_MODS', true);
+
 # Debug
 define('WP_DEBUG', true);
 if (WP_DEBUG) {
@@ -88,6 +95,4 @@ if (WP_DEBUG) {
         define('SAVEQUERIES', 1);
     }
 }
-
-##WPUINSTALLER##
 PHP
