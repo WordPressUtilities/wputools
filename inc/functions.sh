@@ -30,7 +30,7 @@ function wputools_test_check_urls(){
 }
 
 function run_test_before(){
-    if [[ -f "${_wputools_test__file}" ]];then
+    if [[ -z "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : BEFORE ACTION';
         _wputools_test_before_content=$(wputools_test_check_urls);
         _wputools_test_before_length=${#_wputools_test_before_content};
@@ -38,7 +38,7 @@ function run_test_before(){
 }
 
 function run_test_after(){
-    if [[ -f "${_wputools_test__file}" ]];then
+    if [[ -z "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : AFTER ACTION';
         _wputools_test_after_content=$(wputools_test_check_urls);
         _wputools_test_after_length=${#_wputools_test_after_content};
