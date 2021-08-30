@@ -54,6 +54,7 @@ else
     wputools_use_backup_dir=$(bashutilities_get_yn "- Create the backups folder in the parent folder ?" 'y');
 fi;
 
+# Generate settings file
 if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
     _WPUTOOLS_LOCAL_FILE="${_WPUTOOLS_LOCAL_PATH}wputools-local.sh";
     cp "${_TOOLSDIR}wputools-local.sh" "${_WPUTOOLS_LOCAL_FILE}";
@@ -73,10 +74,33 @@ if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
     fi
 fi
 
+# Generate URL file
 if [[ "${_wputools_test__file}" == '' ]];then
     _WPUTOOLS_URL_LOCAL_FILE="${_WPUTOOLS_LOCAL_PATH}wputools-urls.txt";
+    _WPUTOOLS_URL_LOCAL_FILE_TMP="${_WPUTOOLS_LOCAL_PATH}wputools-url-tmp.txt";
+    touch "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
     touch "${_WPUTOOLS_URL_LOCAL_FILE}";
     if [[ "${wputools_use_home_url}" == 'y' ]];then
-        echo "${_HOME_URL}" > "${_WPUTOOLS_URL_LOCAL_FILE}";
+        echo "${_HOME_URL}" > "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
     fi
+
+    # Extract all links from menus
+    _menu_list=$(_WPCLICOMMAND menu list --fields=term_id --format=csv);
+    for _menu_id in $_menu_list; do
+        if [[ "${_menu_id}" == 'term_id' ]];then
+            continue;
+        fi;
+        _menu_links=$(_WPCLICOMMAND menu item list "${_menu_id}" --fields=link --format=csv)
+        for _menu_link in $_menu_links;do
+            if [[ "${_menu_link}" == 'link' ]];then
+                continue;
+            fi;
+            echo "${_menu_link}" >> "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
+        done;
+    done
+
+    # Sort & deduplicate results
+    # Thanks to https://unix.stackexchange.com/a/190055
+    sort -u "${_WPUTOOLS_URL_LOCAL_FILE_TMP}" > "${_WPUTOOLS_URL_LOCAL_FILE}";
+    rm "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
 fi
