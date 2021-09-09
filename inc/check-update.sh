@@ -31,8 +31,8 @@ if [[ ! -f "${_UPDATE_CONTROL_FILE}" ]];then
 fi;
 
 # If the file is older than our control duration : trigger update.
-_last_check_age=$(( $(date +%s) - $( date -r "${_UPDATE_CONTROL_FILE}" +%s) ))
-if [[ "${_last_check_age}" -gt "${_UPDATE_CHECK_EVERY_SEC}" ]];then
+_wputools_last_check_age=$(( $(date +%s) - $( date -r "${_UPDATE_CONTROL_FILE}" +%s) ))
+if [[ "${_wputools_last_check_age}" -gt "${_UPDATE_CHECK_EVERY_SEC}" ]];then
     echo "# Checking for WPUTools updates";
     wputools_check_update;
     return 0;
