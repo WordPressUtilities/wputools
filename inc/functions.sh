@@ -30,7 +30,7 @@ function wputools_test_check_urls(){
 }
 
 function run_test_before(){
-    if [[ -z "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
+    if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : BEFORE ACTION';
         _wputools_test_before_content=$(wputools_test_check_urls);
         _wputools_test_before_length=${#_wputools_test_before_content};
@@ -38,7 +38,7 @@ function run_test_before(){
 }
 
 function run_test_after(){
-    if [[ -z "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
+    if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : AFTER ACTION';
         _wputools_test_after_content=$(wputools_test_check_urls);
         _wputools_test_after_length=${#_wputools_test_after_content};
@@ -137,7 +137,6 @@ EOF
         ;;
     esac
 
-
     # Remove temp my.cnf
     rm "${cnf_file}";
 }
@@ -155,7 +154,7 @@ function wputools_query_select(){
 ###################################
 
 function wputools_get_real_option(){
-    wputools_query_select "SELECT option_value FROM $(wputools__get_db_prefix)options WHERE option_name='${1}'";
+    wputools_query_select "SELECT option_value FROM $(wputools__get_db_prefix)options WHERE option_name='${1}' LIMIT 0,1";
 }
 
 ###################################
