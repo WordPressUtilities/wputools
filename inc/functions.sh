@@ -17,8 +17,12 @@ _wputools_test_after_content='';
 _wputools_test_before_length=0;
 _wputools_test_after_length=0;
 
+function wputools_call_route(){
+    . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}" "${5}";
+}
+
 function wputools_test_check_urls(){
-    WPUTools cache > /dev/null;
+    wputools_call_route cache > /dev/null;
     while read line; do
         echo "";
         echo "####################";

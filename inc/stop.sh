@@ -19,6 +19,7 @@ unset -f wputools__update_core;
 unset -f wputools_backup_uploads_cleanup;
 unset -f wputools_cache_warming;
 unset -f wputools_call_url;
+unset -f wputools_call_route;
 unset -f wputools_check_update;
 unset -f wputools_execute_file;
 unset -f wputools_get_real_option;

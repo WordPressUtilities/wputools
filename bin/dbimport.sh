@@ -166,4 +166,4 @@ if [[ "${_dbimport_file_tmp}" != '' && -f "${_dbimport_file_tmp}" ]];then
 fi;
 
 # Clear cache
-WPUTools cache;
+wputools_call_route cache > /dev/null;
