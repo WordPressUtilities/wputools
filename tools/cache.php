@@ -24,9 +24,15 @@ if (function_exists('opcache_reset') && ($cache_type == 'all' || $cache_type == 
 }
 
 // WP Rocket
-if (function_exists('rocket_clean_domain') && ($cache_type == 'all' || $cache_type == 'wprocket')) {
-    echo '# Clearing WP Rocket cache' . "\n";
-    rocket_clean_domain();
+if ($cache_type == 'all' || $cache_type == 'wprocket') {
+    if (function_exists('rocket_clean_domain')) {
+        echo '# Clearing WP Rocket cache' . "\n";
+        rocket_clean_domain();
+    }
+    if (function_exists('rocket_clean_minify')) {
+        echo '# Clearing WP Rocket minify' . "\n";
+        rocket_clean_minify();
+    }
 }
 
 // W3TC
