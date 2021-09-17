@@ -37,11 +37,11 @@ function wputools__update_core(){
     _WPCLICOMMAND core check-update;
     _WPCLICOMMAND core update;
     rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
+    _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
     commit_without_protect "Update WordPress to ${_LATEST_WORDPRESS}";
 
     echo '# Updating WordPress core translations';
     _WPCLICOMMAND language core update;
-    _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
 
     commit_without_protect "Update WordPress core languages";
 }
