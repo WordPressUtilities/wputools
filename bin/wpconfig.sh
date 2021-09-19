@@ -86,7 +86,7 @@ if (WP_DEBUG) {
         define('WP_DEBUG_DISPLAY', false);
     }
     if (!defined('WP_DEBUG_LOG')) {
-        define('WP_DEBUG_LOG', dirname(__FILE__) . '/../logs/debug-' . date('dmY') . '.log');
+        define('WP_DEBUG_LOG', dirname(__FILE__) . '/../logs/debug-' . date('Ymd') . '.log');
     }
     if (!defined('SCRIPT_DEBUG')) {
         define('SCRIPT_DEBUG', 1);
