@@ -96,8 +96,6 @@ unset -v _wputools_last_check_age;
 unset -v _WPUTOOLS_LATEST;
 unset -v _WPUTOOLS_LOCAL_PATH;
 unset -v _WPUTOOLS_LOCAL_PATH_ASK;
-unset -v _WPUTOOLS_MUPLUGIN_LIST;
-unset -v _WPUTOOLS_PLUGIN_LIST;
 unset -v _wputools_test__file;
 unset -v _wputools_test_after_content;
 unset -v _wputools_test_after_length;
