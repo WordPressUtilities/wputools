@@ -99,11 +99,14 @@ else
     echo '# Updating WordPress plugins';
     _WPCLICOMMAND plugin update --all;
 
+    # Update
+    commit_without_protect "Update plugins";
+
     echo '# Updating WordPress plugins translations';
     _WPCLICOMMAND language plugin update --all;
 
     # Update
-    commit_without_protect "Update plugins";
+    commit_without_protect "Update plugins translations";
 
     ###################################
     ## Submodules
