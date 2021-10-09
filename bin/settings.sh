@@ -92,9 +92,21 @@ if [[ "${_wputools_test__file}" == '' ]];then
         fi;
         _menu_links=$(_WPCLICOMMAND menu item list "${_menu_id}" --fields=link --format=csv)
         for _menu_link in $_menu_links;do
+            # Exclude invalid links
             if [[ "${_menu_link}" == 'link' ]];then
                 continue;
             fi;
+            # Exclude duplicate home URL
+            if [[ "${wputools_use_home_url}" == 'y' ]];then
+                if [[ "${_menu_link}" == "${_HOME_URL}" || "${_menu_link}" == "${_HOME_URL}/" ]];then
+                    continue;
+                fi;
+            fi;
+            # Exclude external links
+            if [[ "${_menu_link}" != "${_HOME_URL}"* ]];then
+                continue;
+            fi;
+            # Add link to file
             echo "${_menu_link}" >> "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
         done;
     done
