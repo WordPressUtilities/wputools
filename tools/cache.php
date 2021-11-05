@@ -14,6 +14,7 @@ wp();
 
 $cache_type = isset($_GET['cache_type']) ? $_GET['cache_type'] : 'all';
 $cache_arg = isset($_GET['cache_arg']) ? $_GET['cache_arg'] : '';
+$rocket_settings = get_option('wp_rocket_settings');
 
 echo "# Cache type : " . htmlentities($cache_type) . "\n";
 
@@ -54,11 +55,13 @@ if (function_exists('wp_cache_flush') && ($cache_type == 'all' || $cache_type ==
     wp_cache_flush();
 }
 
-// Object Cache
+// Cloudflare
 if ($cache_type == 'all' || $cache_type == 'cloudflare') {
     if (function_exists('rocket_purge_cloudflare')) {
-        echo '# Purging Cloudflare via WP Rocket' . "\n";
-        rocket_purge_cloudflare();
+        if (is_array($rocket_settings) && isset($rocket_settings['cloudflare_api_key']) && $rocket_settings['cloudflare_api_key']) {
+            echo '# Purging Cloudflare via WP Rocket' . "\n";
+            rocket_purge_cloudflare();
+        }
     } elseif (function_exists('wpucloudflare_purge_everything')) {
         echo '# Purging Cloudflare via WPU Cloudflare' . "\n";
         wpucloudflare_purge_everything();
