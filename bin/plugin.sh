@@ -49,7 +49,7 @@ if [[ -d "${_PLUGIN_LANG_DIR}" ]];then
     git add "${_PLUGIN_LANG_DIR}*";
 fi;
 if [[ -f "${_CURRENT_DIR}.gitmodules" ]];then
-    git add  "${_CURRENT_DIR}.gitmodules";
+    git add "${_CURRENT_DIR}.gitmodules";
 fi;
 
 # Commit

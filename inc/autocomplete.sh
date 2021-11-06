@@ -31,7 +31,7 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_MUPLUGIN_LIST}")" -- $cur) )
             ;;
             "plugin")
-                COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_PLUGIN_LIST}")" -- $cur) )
+                COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_PLUGIN_LIST}" "${_WPUTOOLS_PLUGIN_FAV_LIST}")" -- $cur) )
             ;;
             "update")
                 _reply=$(ls -1 "${_CURRENT_DIR}wp-content/plugins" | awk -F'/' '{print $NF}');

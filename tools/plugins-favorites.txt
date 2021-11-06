@@ -1,0 +1,13 @@
+acf-extended
+duplicate-post
+google-sitemap-generator
+limit-login-attempts-reloaded
+polylang
+query-monitor
+redirection
+redis-cache
+relevanssi
+safe-svg
+taxonomy-terms-order
+w3-total-cache
+wp-crontrol
