@@ -5,6 +5,8 @@ echo "# UPDATE";
 _ADMIN_PROTECT_FILE=$(find . -mount -name 'wputh_admin_protect.php');
 _ADMIN_PROTECT_FLAG=".disable_wpu_admin_protect";
 _ADMIN_PROTECT_FLAG_FILE="${_CURRENT_DIR}${_ADMIN_PROTECT_FLAG}";
+_MAINTENANCE_FILE=".maintenance";
+_MAINTENANCE_FILE_PATH="${_CURRENT_DIR}${_MAINTENANCE_FILE}";
 _DEBUGLOG_FILE=$(find . -mount -name 'debug.log');
 
 ###################################
@@ -21,9 +23,15 @@ if [ -f "${_ADMIN_PROTECT_FILE}" ]; then
     mv "${_ADMIN_PROTECT_FILE}" "${_ADMIN_PROTECT_FILE}.txt";
 fi;
 
+_WPCLICOMMAND maintenance-mode activate;
+
 function commit_without_protect(){
     git reset;
     git add -A;
+    # Maintenance
+    git reset -- "${_MAINTENANCE_FILE}";
+    git restore --staged "${_MAINTENANCE_FILE_PATH}";
+    # Admin protect
     git reset -- "${_ADMIN_PROTECT_FLAG}";
     if [[ -n "${_ADMIN_PROTECT_FILE}" ]];then
         git restore --staged "${_ADMIN_PROTECT_FILE}";
@@ -146,6 +154,8 @@ if [ -f "${_ADMIN_PROTECT_FILE}.txt" ]; then
     echo "# Re-enabling Admin Protect";
     mv "${_ADMIN_PROTECT_FILE}.txt" "${_ADMIN_PROTECT_FILE}";
 fi;
+
+_WPCLICOMMAND maintenance-mode deactivate;
 
 echo "# Update is over !";
 
