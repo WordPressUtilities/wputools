@@ -17,6 +17,9 @@ if [ -f "${_DEBUGLOG_FILE}" ]; then
     _DEBUGLOG_FILE_SIZE=$(wc -c "${_DEBUGLOG_FILE}");
 fi;
 
+git add -u . && git add .;
+git stash;
+
 touch "${_ADMIN_PROTECT_FLAG_FILE}";
 if [ -f "${_ADMIN_PROTECT_FILE}" ]; then
     echo "# Disabling Admin Protect";
@@ -156,6 +159,7 @@ if [ -f "${_ADMIN_PROTECT_FILE}.txt" ]; then
 fi;
 
 _WPCLICOMMAND maintenance-mode deactivate;
+git stash apply;
 
 echo "# Update is over !";
 
