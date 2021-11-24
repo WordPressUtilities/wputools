@@ -17,6 +17,8 @@ if [ -f "${_DEBUGLOG_FILE}" ]; then
     _DEBUGLOG_FILE_SIZE=$(wc -c "${_DEBUGLOG_FILE}");
 fi;
 
+run_test_before;
+
 git add -u . && git add .;
 git stash;
 
@@ -63,9 +65,7 @@ function wputools__update_core(){
 
 _PLUGIN_ID="$1";
 if [[ "${1}" == 'core' ]];then
-    run_test_before;
     wputools__update_core;
-    run_test_after;
 elif [[ ! -z "$_PLUGIN_ID" ]];then
     _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
     _PLUGIN_LANG="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
@@ -95,7 +95,6 @@ elif [[ ! -z "$_PLUGIN_ID" ]];then
         git commit -m "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
     fi;
 else
-    run_test_before;
 
     ###################################
     ## CORE
@@ -145,7 +144,7 @@ else
     ## Test
     ###################################
 
-    run_test_after;
+
 fi;
 
 ###################################
@@ -160,6 +159,8 @@ fi;
 
 _WPCLICOMMAND maintenance-mode deactivate;
 git stash apply;
+
+run_test_after;
 
 echo "# Update is over !";
 
