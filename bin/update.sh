@@ -10,6 +10,72 @@ _MAINTENANCE_FILE_PATH="${_CURRENT_DIR}${_MAINTENANCE_FILE}";
 _DEBUGLOG_FILE=$(find . -mount -name 'debug.log');
 
 ###################################
+## Check if ACF Pro license is available
+###################################
+
+function wputools__check_acf_pro_install(){
+    local _license_opt;
+    local _license_wpc;
+    local _version_info;
+
+    # Check if ACF is installed
+    if [[ ! -f "${_CURRENT_DIR}wp-content/plugins/advanced-custom-fields-pro/acf.php" ]];then
+        return 0;
+    fi;
+
+    # Check if this is a version which does not support the license in constant.
+    _version_info=$(_WPCLICOMMAND plugin get advanced-custom-fields-pro --fields=version --format=csv);
+    _version_info=$(echo $_version_info | xargs);
+    _version_info="${_version_info/Field,Value version,/}";
+
+    local requiredver='5.11.0';
+    local currentver="${_version_info}";
+    local wpoption_needed;
+
+    # https://unix.stackexchange.com/a/285928
+    if [ "$(printf '%s\n' "$requiredver" "$currentver" | sort -V | head -n1)" = "$requiredver" ]; then
+        wpoption_needed='0';
+    else
+        wpoption_needed='1';
+    fi
+
+    # Check if the license is defined
+    _license_opt=$(_WPCLICOMMAND option --quiet get acf_pro_license 2> /dev/null);
+    if [[ "${_license_opt}" != "" ]];then
+        return 0;
+    fi;
+    _license_wpc=$(_WPCLICOMMAND config --quiet get ACF_PRO_LICENSE 2> /dev/null);
+    if [[ "${wpoption_needed}" == "0" && "${_license_wpc}" != "" ]];then
+        return 0;
+    fi;
+
+    # Not defined : pause
+    bashutilities_message "You seem to have installed ACF Pro, but no license is defined.";
+    if [[ "${wpoption_needed}" == '0' ]];then
+        echo "Please add your license in the wp-config file.";
+        echo "define('ACF_PRO_LICENSE','LICENSE').";
+    else
+        echo "Please add your license in the admin area.";
+    fi;
+    echo "If you ignore this, ACF Pro wont be updated.";
+    read -p "Press enter to continue or ignore :";
+
+
+    local _license_opt=$(_WPCLICOMMAND --quiet option get acf_pro_license 2> /dev/null);
+    local _license_wpc=$(_WPCLICOMMAND --quiet config get ACF_PRO_LICENSE 2> /dev/null);
+
+    if [[ "${_license_opt}" == "" && "${_license_wpc}" == "" ]];then
+        bashutilities_message "ACF Pro wont be updated.";
+    else
+        bashutilities_message "ACF Pro will be updated." 'success';
+    fi;
+}
+
+if [[ "$1" == "" ]];then
+    wputools__check_acf_pro_install;
+fi;
+
+###################################
 ## Initial checks
 ###################################
 
@@ -95,6 +161,8 @@ elif [[ ! -z "$_PLUGIN_ID" ]];then
         git commit -m "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
     fi;
 else
+
+    wputools__check_acf_pro_install;
 
     ###################################
     ## CORE
