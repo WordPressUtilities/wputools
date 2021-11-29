@@ -40,6 +40,23 @@ for _cache_dir in "${_CACHE_DIRS[@]}"; do
 done;
 
 ###################################
+## Extra directories
+###################################
+
+if [ -z "${_EXTRA_CACHE_DIRS}" ];then
+    _EXTRA_CACHE_DIRS='';
+fi;
+
+for _cache_dir in "${_EXTRA_CACHE_DIRS[@]}"; do
+    if [[ -d "${_CURRENT_DIR}${_cache_dir}/" ]];then
+        echo "# Clearing extra cache dir “${_cache_dir}”";
+        rm -rf "${_CURRENT_DIR}${_cache_dir}/";
+    fi;
+done;
+
+_EXTRA_CACHE_DIRS='';
+
+###################################
 ## Clearing Static Cache
 ###################################
 

@@ -145,6 +145,9 @@ _BACKUP_UPLOADS="n";
 # DISABLE BACKUP FOR CRONTAB
 _NOBACKUP_CRONTABS="1";
 
+# EXTRA CACHE DIRECTORIES
+_EXTRA_CACHE_DIRS=(wp-content/uploads/wpufilecache)
+
 # Override WP-CLI Version or PHP binary
 _PHP_COMMAND='/Applications/MAMP/bin/php/php5.4.45/bin/php';
 _WPCLICOMMAND(){
