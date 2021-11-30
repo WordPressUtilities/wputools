@@ -48,7 +48,7 @@ if [ -z "${_EXTRA_CACHE_DIRS}" ];then
 fi;
 
 for _cache_dir in "${_EXTRA_CACHE_DIRS[@]}"; do
-    if [[ -d "${_CURRENT_DIR}${_cache_dir}/" ]];then
+    if [[ "${_cache_dir}" != '' && -d "${_CURRENT_DIR}${_cache_dir}/" ]];then
         echo "# Clearing extra cache dir “${_cache_dir}”";
         rm -rf "${_CURRENT_DIR}${_cache_dir}/";
     fi;
