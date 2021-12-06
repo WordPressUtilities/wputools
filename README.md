@@ -64,6 +64,10 @@ Add CLI shortcut :
 
 `wputools importsite conf.sh;`
 
+### Checks that your installation can work properly.
+
+`wputools diagnostic;`
+
 ### Export an SQL dump and replace URLs.
 
 `wputools dbexport https://github.com;`
