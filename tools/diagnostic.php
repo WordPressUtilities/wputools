@@ -4,6 +4,41 @@ $is_cli = php_sapi_name() == 'cli';
 $errors = array();
 
 /* ----------------------------------------------------------
+  Test folders
+---------------------------------------------------------- */
+
+$folders = array('.', 'wp-content', 'wp-content/uploads');
+foreach ($folders as $folder) {
+    if (!is_dir($folder)) {
+        $errors[] = sprintf('The %s folder should exist !', $folder);
+        continue;
+    }
+    $tmp_file = $folder . '/tmp-' . uniqid();
+    $file_creation = file_put_contents($tmp_file, '1');
+    unlink($tmp_file);
+    if (!$file_creation) {
+        $errors[] = sprintf('The folder %s should be writable !', $folder);
+        continue;
+    }
+}
+
+/* ----------------------------------------------------------
+  Test files
+---------------------------------------------------------- */
+
+$files = array('wp-config.php', '.htaccess');
+foreach ($files as $file) {
+    if (!file_exists($file)) {
+        $errors[] = sprintf('The %s file should exist !', $file);
+        continue;
+    }
+    if (!is_writable($file)) {
+        $errors[] = sprintf('The file %s should be writable !', $file);
+        continue;
+    }
+}
+
+/* ----------------------------------------------------------
   Test functions
 ---------------------------------------------------------- */
 
@@ -66,4 +101,6 @@ if (empty($errors)) {
 if (!$is_cli) {
     echo "</pre>";
 }
+echo "\n";
+echo "Dont forget to delete this file :\nrm " . basename(__FILE__);
 echo "\n";
