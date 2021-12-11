@@ -19,6 +19,9 @@ _wputools_complete() {
             "cache")
                 COMPREPLY=( $(compgen -W "all opcache wprocket w3tc object url" -- $cur) )
             ;;
+            "diagnostic")
+                COMPREPLY=( $(compgen -W "now view" -- $cur) )
+            ;;
             "go")
                 COMPREPLY=( $(compgen -W "current_theme mu-plugins plugins themes uploads" -- $cur) )
             ;;

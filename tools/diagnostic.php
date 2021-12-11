@@ -4,6 +4,26 @@ $is_cli = php_sapi_name() == 'cli';
 $errors = array();
 
 /* ----------------------------------------------------------
+  Env
+---------------------------------------------------------- */
+
+/* PHP
+-------------------------- */
+
+$phpversion = phpversion();
+if (version_compare($phpversion, '7.4.10', '<')) {
+    $errors[] = sprintf('PHP version %s is too old !', $phpversion);
+}
+
+/* Mail
+-------------------------- */
+
+$sentmail = mail('test@example.com', 'subject', 'message');
+if (!$sentmail) {
+    $errors[] = sprintf('PHP mail function doesn’t seem to work !', $phpversion);
+}
+
+/* ----------------------------------------------------------
   Test folders
 ---------------------------------------------------------- */
 
@@ -102,5 +122,7 @@ if (!$is_cli) {
     echo "</pre>";
 }
 echo "\n";
-echo "Dont forget to delete this file :\nrm " . basename(__FILE__);
-echo "\n";
+if (!$is_cli) {
+    echo "Dont forget to delete this file :\nrm " . basename(__FILE__);
+    echo "\n";
+}

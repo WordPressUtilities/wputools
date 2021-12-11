@@ -20,21 +20,26 @@ cp "${_TOOLSDIR}diagnostic.php" "${_WPUDIAG_PATH}";
 chmod 0644 "${_WPUDIAG_PATH}";
 
 ###################################
-## Information
+## Launch
 ###################################
 
-# Open in a new window if it exists
-_WPUTOOLS_TEXT_MESSAGE="Please follow the link below";
-echo "${_WPUTOOLS_TEXT_MESSAGE} :";
-echo "${_HOME_URL}/${_WPUDIAG_FILE}";
-echo "or open it via terminal :";
-echo "php ${_WPUDIAG_FILE}";
-
-
-echo "";
-echo "###################################";
-echo "## WARNING"
-echo "###################################";
-echo "Remember to delete the adminer file.";
-echo "rm ${_WPUDIAG_FILE}";
-echo "rm diagnostic-*";
+# Direct launch
+if [[ "${1}" == 'now' ]];then
+    echo "";
+    $_PHP_COMMAND "${_WPUDIAG_FILE}";
+    rm "${_WPUDIAG_FILE}";
+else
+    # Open in a new window if it exists
+    _WPUTOOLS_TEXT_MESSAGE="Please follow the link below";
+    echo "${_WPUTOOLS_TEXT_MESSAGE} :";
+    echo "${_HOME_URL}/${_WPUDIAG_FILE}";
+    echo "or open it via terminal :";
+    echo "php ${_WPUDIAG_FILE}";
+    echo "";
+    echo "###################################";
+    echo "## WARNING"
+    echo "###################################";
+    echo "Remember to delete the diagnostic file.";
+    echo "rm ${_WPUDIAG_FILE}";
+    echo "rm diagnostic-*";
+fi;
