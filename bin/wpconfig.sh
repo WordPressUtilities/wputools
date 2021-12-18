@@ -92,7 +92,7 @@ if (WP_DEBUG) {
         define('SCRIPT_DEBUG', 1);
     }
     if (!defined('SAVEQUERIES')) {
-        define('SAVEQUERIES', 1);
+        define('SAVEQUERIES', (php_sapi_name() !== 'cli'));
     }
 }
 PHP
