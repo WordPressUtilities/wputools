@@ -98,12 +98,12 @@ $required_extensions = array(
 
 foreach ($required_extensions as $ext) {
     if (!in_array($ext, $extensions)) {
-        $wputools_errors[] = sprintf('The PHP extension %s should be enabled !', $ext);
+        $wputools_errors[] = sprintf('The "%s" PHP extension should be enabled !', $ext);
     }
 }
 
 if (!in_array('gd', $extensions) && !in_array('imagick', $extensions)) {
-    $wputools_errors[] = sprintf('One of the following PHP extensions should be enabled : %s or %s', 'gd', 'imagick');
+    $wputools_errors[] = sprintf('One of the following PHP extensions should be enabled : "%s" or "%s"', 'gd', 'imagick');
 }
 
 /* ----------------------------------------------------------
@@ -129,7 +129,7 @@ if (file_exists($bootstrap)) {
     $php_constants = array('WP_CACHE_KEY_SALT');
     foreach ($php_constants as $constant) {
         if (!defined($constant)) {
-            $wputools_errors[] = 'WordPress : the constant %s should be defined.';
+            $wputools_errors[] = sprintf('WordPress : the constant %s should be defined.', $constant);
         }
     }
 
