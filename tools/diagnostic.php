@@ -43,6 +43,15 @@ foreach ($folders as $folder) {
 }
 
 /* ----------------------------------------------------------
+  Test disk space
+---------------------------------------------------------- */
+
+$free_space = disk_free_space('.') / 1024 / 1024 / 1024;
+if ($free_space < 20) {
+    $wputools_errors[] = sprintf('There is only %sgb of disk space left on the server !', round($free_space));
+}
+
+/* ----------------------------------------------------------
   Test files
 ---------------------------------------------------------- */
 
@@ -118,6 +127,15 @@ while (!is_file($bootstrap)) {
 }
 
 if (file_exists($bootstrap)) {
+
+    /* Disable default environment */
+    define('WP_USE_THEMES', false);
+
+    /* Fix for qtranslate and other plugins */
+    define('WP_ADMIN', true);
+    $_SERVER['PHP_SELF'] = '/wp-admin/index.php';
+
+    /* Include wp load */
     require_once $bootstrap;
 
     /* Check SAVEQUERIES */
@@ -132,7 +150,6 @@ if (file_exists($bootstrap)) {
             $wputools_errors[] = sprintf('WordPress : the constant %s should be defined.', $constant);
         }
     }
-
 }
 
 /* ----------------------------------------------------------
@@ -145,7 +162,10 @@ if (!$wputools_is_cli) {
 if (empty($wputools_errors)) {
     echo "No errors !";
 } else {
-    echo implode("\n", $wputools_errors);
+    $wputools_errors = array_map(function ($i) {
+        return '- ' . $i;
+    }, $wputools_errors);
+    echo "Errors:\n" . implode("\n", $wputools_errors);
 }
 if (!$wputools_is_cli) {
     echo "</pre>";
