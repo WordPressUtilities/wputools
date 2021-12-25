@@ -15,9 +15,10 @@ if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && -n "${_
 
     # Copy latest file to current folder
     _dbimport_file=$(basename "${_latest_backup}");
+    _dbimport_file="../${_dbimport_file}";
     _dbimport_file_tmp="${_dbimport_file}";
     if [[ -n "${_dbimport_file}" && ! -f "${_dbimport_file}" ]];then
-        scp "${_WPDB_SSH_USER_AT_HOST}":"${_latest_backup}" .
+        scp "${_WPDB_SSH_USER_AT_HOST}":"${_latest_backup}" "${_dbimport_file}";
     fi;
 
 fi;
@@ -162,7 +163,10 @@ fi;
 
 # Delete latest downloaded backup
 if [[ "${_dbimport_file_tmp}" != '' && -f "${_dbimport_file_tmp}" ]];then
-    rm "${_dbimport_file_tmp}";
+    _delete_dbimport_file=$(bashutilities_get_yn "- Delete imported backup file (${_dbimport_file_tmp}) ?" 'y');
+    if [[ "${_delete_dbimport_file}" == 'y' ]];then
+        rm "${_dbimport_file_tmp}";
+    fi;
 fi;
 
 # Clear cache
