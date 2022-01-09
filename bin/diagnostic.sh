@@ -26,7 +26,11 @@ chmod 0644 "${_WPUDIAG_PATH}";
 # Direct launch
 if [[ "${1}" == 'now' ]];then
     echo "";
+    echo "### Diagnostic CLI";
     $_PHP_COMMAND "${_WPUDIAG_FILE}";
+    echo "### Diagnostic WEB";
+    wget -qO- "${_HOME_URL}/${_WPUDIAG_FILE}";
+    echo "### END";
     rm "${_WPUDIAG_FILE}";
 else
     # Open in a new window if it exists
