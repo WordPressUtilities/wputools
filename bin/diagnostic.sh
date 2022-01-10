@@ -29,7 +29,7 @@ if [[ "${1}" == 'now' ]];then
     echo "### Diagnostic CLI";
     $_PHP_COMMAND "${_WPUDIAG_FILE}";
     echo "### Diagnostic WEB";
-    wget -qO- "${_HOME_URL}/${_WPUDIAG_FILE}";
+    wputools_call_url "${_HOME_URL}/${_WPUDIAG_FILE}?from_cli=1";
     echo "### END";
     rm "${_WPUDIAG_FILE}";
 else
