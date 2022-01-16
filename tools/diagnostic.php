@@ -53,7 +53,7 @@ if ($free_space < 20) {
 }
 
 /* ----------------------------------------------------------
-  Test files
+  Test files which should exist and be writable
 ---------------------------------------------------------- */
 
 $files = array('wp-config.php', '.htaccess');
@@ -65,6 +65,33 @@ foreach ($files as $file) {
     if (!is_writable($file)) {
         $wputools_errors[] = sprintf('The file %s should be writable !', $file);
         continue;
+    }
+}
+
+/* ----------------------------------------------------------
+  Test files which should not exist at source
+---------------------------------------------------------- */
+
+$files = array_diff(scandir('.'), array('.', '..'));
+$current_file = basename(__FILE__);
+$matches = array(
+    '/^adminer(.*).php/',
+    '/^cache-(.*).php/',
+    '/^diagnostic-(.*).php/',
+    '/^login-(.*).php/'
+);
+foreach ($files as $file) {
+    if (!is_file($file)) {
+        continue;
+    }
+    if ($file == $current_file) {
+        continue;
+    }
+    foreach ($matches as $match) {
+        if (!preg_match($match, $file)) {
+            continue;
+        }
+        $wputools_errors[] = sprintf('The file %s should not be here !', $file);
     }
 }
 
@@ -155,7 +182,7 @@ if (file_exists($bootstrap)) {
     /* Some URLs should not be publicly accessible */
     $uris = array(
         '/.git/config',
-        '/wp-admin/index.php',
+        '/wp-admin/index.php'
     );
     foreach ($uris as $uri) {
         $response_code = wp_remote_retrieve_response_code(wp_remote_get(site_url() . $uri));
