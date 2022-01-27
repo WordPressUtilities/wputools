@@ -5,9 +5,13 @@ echo "# UPDATE";
 _ADMIN_PROTECT_FILE=$(find . -mount -name 'wputh_admin_protect.php');
 _ADMIN_PROTECT_FLAG=".disable_wpu_admin_protect";
 _ADMIN_PROTECT_FLAG_FILE="${_CURRENT_DIR}${_ADMIN_PROTECT_FLAG}";
-_MAINTENANCE_FILE=".maintenance";
-_MAINTENANCE_FILE_PATH="${_CURRENT_DIR}${_MAINTENANCE_FILE}";
+_WPUTOOLS_MAINTENANCE_FILE=".maintenance";
+_WPUTOOLS_MAINTENANCE_FILE_PATH="${_CURRENT_DIR}${_WPUTOOLS_MAINTENANCE_FILE}";
 _DEBUGLOG_FILE=$(find . -mount -name 'debug.log');
+
+if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == '' ]];then
+    _WPUTOOLS_CORE_UPDATE_TYPE='major';
+fi;
 
 ###################################
 ## Check if ACF Pro license is available
@@ -100,8 +104,8 @@ function commit_without_protect(){
     git reset;
     git add -A;
     # Maintenance
-    git reset -- "${_MAINTENANCE_FILE}";
-    git restore --staged "${_MAINTENANCE_FILE_PATH}";
+    git reset -- "${_WPUTOOLS_MAINTENANCE_FILE}";
+    git restore --staged "${_WPUTOOLS_MAINTENANCE_FILE_PATH}";
     # Admin protect
     git reset -- "${_ADMIN_PROTECT_FLAG}";
     if [[ -n "${_ADMIN_PROTECT_FILE}" ]];then
@@ -114,7 +118,11 @@ function commit_without_protect(){
 function wputools__update_core(){
     echo '# Updating WordPress core';
     _WPCLICOMMAND core check-update;
-    _WPCLICOMMAND core update;
+    if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
+        _WPCLICOMMAND core update;
+    else
+        _WPCLICOMMAND core update --minor;
+    fi;
     rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
     _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
     commit_without_protect "Update WordPress to ${_LATEST_WORDPRESS}";
@@ -125,16 +133,10 @@ function wputools__update_core(){
     commit_without_protect "Update WordPress core languages";
 }
 
-###################################
-## Update
-###################################
-
-_PLUGIN_ID="$1";
-if [[ "${1}" == 'core' ]];then
-    wputools__update_core;
-elif [[ ! -z "$_PLUGIN_ID" ]];then
-    _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
-    _PLUGIN_LANG="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
+function wputools__update_plugin() {
+    local _PLUGIN_ID="${1}";
+    local _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
+    local _PLUGIN_LANG="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
 
     # Check if plugin dir exists
     if [[ ! -d "${_PLUGIN_DIR}" ]];then
@@ -154,12 +156,47 @@ elif [[ ! -z "$_PLUGIN_ID" ]];then
             _WPCLICOMMAND language plugin update "${_PLUGIN_ID}";
         fi;
         # Commit plugin update
-        _PLUGIN_VERSION=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=version);
-        _PLUGIN_TITLE=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=title);
+        local _PLUGIN_VERSION=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=version);
+        local _PLUGIN_TITLE=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=title);
         git add "${_PLUGIN_DIR}";
         git add "${_PLUGIN_LANG}";
-        git commit -m "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
+        commit_without_protect "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
     fi;
+}
+
+function wputools__update_all_plugins() {
+    echo '# Updating WordPress plugins';
+    local _plugin_id;
+    for _plugin_id in $(_WPCLICOMMAND plugin list --field=name); do
+       wputools__update_plugin "${_plugin_id}";
+    done
+}
+
+function wputools__update_all_submodules() {
+   echo '# Updating submodules';
+   git submodule foreach 'git checkout master; git checkout main; git pull origin';
+
+   # Update
+   commit_without_protect "Update submodules";
+
+   # Fix sub-sub-modules behavior.
+   git submodule update --init --recursive;
+}
+
+###################################
+## Update
+###################################
+
+_PLUGIN_ID="$1";
+if [[ "${1}" == 'core' ]];then
+    wputools__update_core;
+elif [[ "${1}" == 'all-plugins' ]];then
+    wputools__check_acf_pro_install;
+    wputools__update_all_plugins;
+elif [[ "${1}" == 'all-submodules' ]];then
+    wputools__update_all_submodules;
+elif [[ ! -z "${_PLUGIN_ID}" ]];then
+    wputools__update_plugin "${_PLUGIN_ID}"
 else
 
     wputools__check_acf_pro_install;
@@ -174,30 +211,13 @@ else
     ## Plugins
     ###################################
 
-    echo '# Updating WordPress plugins';
-    _WPCLICOMMAND plugin update --all;
-
-    # Update
-    commit_without_protect "Update plugins";
-
-    echo '# Updating WordPress plugins translations';
-    _WPCLICOMMAND language plugin update --all;
-
-    # Update
-    commit_without_protect "Update plugins translations";
+    wputools__update_all_plugins;
 
     ###################################
     ## Submodules
     ###################################
 
-    echo '# Updating submodules';
-    git submodule foreach 'git checkout master; git checkout main; git pull origin';
-
-    # Update
-    commit_without_protect "Update submodules";
-
-    # Fix sub-sub-modules behavior.
-    git submodule update --init --recursive;
+    wputools__update_all_submodules;
 
     ###################################
     ## Fixes
@@ -207,11 +227,6 @@ else
     if [[ -f "${_CURRENT_DIR}wp-content/plugins/redis-cache/includes/object-cache.php" && -f "${_CURRENT_DIR}wp-content/object-cache.php" ]];then
         rm "${_CURRENT_DIR}wp-content/object-cache.php";
     fi;
-
-    ###################################
-    ## Test
-    ###################################
-
 
 fi;
 
