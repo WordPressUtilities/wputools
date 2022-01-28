@@ -187,7 +187,23 @@ if (file_exists($bootstrap)) {
     foreach ($uris as $uri) {
         $response_code = wp_remote_retrieve_response_code(wp_remote_get(site_url() . $uri));
         if ($response_code == 200) {
-            $wputools_errors[] = sprintf('WordPress : the URI %s should not return a code 200.', site_url() . $uri);
+            $wputools_errors[] = sprintf('WordPress : the URL %s should not return a code 200.', site_url() . $uri);
+        }
+    }
+
+    /* Compare WP Version */
+    global $wp_version;
+    $request = wp_remote_get('https://api.wordpress.org/core/stable-check/1.0/');
+    if (!is_wp_error($request)) {
+        $data = json_decode(wp_remote_retrieve_body($request), true);
+        if (is_array($data) && isset($data[$wp_version]) && $data[$wp_version] != 'latest') {
+            $latest_version = '';
+            foreach ($data as $version_key => $status) {
+                if ($status == 'latest') {
+                    $latest_version = $version_key;
+                }
+            }
+            $wputools_errors[] = sprintf('Your WordPress v%s is %s ! The latest version is %s.', $wp_version, $data[$wp_version], $latest_version);
         }
     }
 
