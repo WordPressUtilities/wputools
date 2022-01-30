@@ -182,12 +182,19 @@ if (file_exists($bootstrap)) {
     /* Some URLs should not be publicly accessible */
     $uris = array(
         '/.git/config',
-        '/wp-admin/index.php'
+        '/wp-login.php',
+        '/wp-admin/index.php',
+        '/wp-includes/version.php'
     );
+    $all_themes = wp_get_themes();
+    foreach ($all_themes as $theme_id => $theme_values) {
+        $uris[] = '/wp-content/themes/' . $theme_id . '/index.php';
+        $uris[] = '/wp-content/themes/' . $theme_id . '/functions.php';
+    }
     foreach ($uris as $uri) {
-        $response_code = wp_remote_retrieve_response_code(wp_remote_get(site_url() . $uri));
-        if ($response_code == 200) {
-            $wputools_errors[] = sprintf('WordPress : the URL %s should not return a code 200.', site_url() . $uri);
+        $response_code = wp_remote_retrieve_response_code(wp_remote_head(site_url() . $uri));
+        if (in_array($response_code, array(200, 500, 503))) {
+            $wputools_errors[] = sprintf('WordPress : the URL %s should not return a code %s.', site_url() . $uri, $response_code);
         }
     }
 
@@ -206,7 +213,6 @@ if (file_exists($bootstrap)) {
             $wputools_errors[] = sprintf('Your WordPress v%s is %s ! The latest version is %s.', $wp_version, $data[$wp_version], $latest_version);
         }
     }
-
 }
 
 /* ----------------------------------------------------------
