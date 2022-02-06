@@ -13,6 +13,8 @@ if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == '' ]];then
     _WPUTOOLS_CORE_UPDATE_TYPE='major';
 fi;
 
+wputools_add_files_to_excludes "${_ADMIN_PROTECT_FLAG}";
+
 ###################################
 ## Check if ACF Pro license is available
 ###################################

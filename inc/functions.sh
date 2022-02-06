@@ -59,6 +59,26 @@ function run_test_after(){
     fi;
 }
 
+function wputools_add_files_to_excludes(){
+    local _excluded_git_file="${_CURRENT_DIR}/.git/info/exclude";
+    local _excluded_git_file_content=$(cat "${_excluded_git_file}");
+    local _excluded_content=$(cat "${_TOOLSDIR}/git-excluded-files.txt");
+    local _tmpf=$(mktemp);
+
+    # Load arg
+    if [[ "${1}" != '' ]];then
+        _excluded_content="${_excluded_content}
+${1}";
+    fi;
+    _excluded_content="${_excluded_git_file_content}
+${_excluded_content}";
+
+    # Deduplicate lines in excludes
+    echo "${_excluded_content}" > "${_excluded_git_file}";
+    sort "${_excluded_git_file}" | uniq > "${_tmpf}";
+    mv "${_tmpf}" "${_excluded_git_file}";
+}
+
 ###################################
 ## Execute if file exists
 ###################################
