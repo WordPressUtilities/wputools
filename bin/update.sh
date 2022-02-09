@@ -105,9 +105,6 @@ _WPCLICOMMAND maintenance-mode activate;
 function commit_without_protect(){
     git reset;
     git add -A;
-    # Maintenance
-    git reset -- "${_WPUTOOLS_MAINTENANCE_FILE}";
-    git restore --staged "${_WPUTOOLS_MAINTENANCE_FILE_PATH}";
     # Admin protect
     git reset -- "${_ADMIN_PROTECT_FLAG}";
     if [[ -n "${_ADMIN_PROTECT_FILE}" ]];then
@@ -119,15 +116,16 @@ function commit_without_protect(){
 
 function wputools__update_core(){
     echo '# Updating WordPress core';
+    _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
     _WPCLICOMMAND core check-update;
     if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
-        _WPCLICOMMAND core update;
+        _WPCLICOMMAND core update --skip-themes;
     else
         _WPCLICOMMAND core update --minor;
     fi;
     rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
     _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
-    commit_without_protect "Update WordPress to ${_LATEST_WORDPRESS}";
+    commit_without_protect "Update WordPress from ${_CURRENT_WORDPRESS} to ${_LATEST_WORDPRESS}";
 
     echo '# Updating WordPress core translations';
     _WPCLICOMMAND language core update;

@@ -1,4 +1,5 @@
-wpu_local_overrides.php
 .maintenance
-diff-before.txt
 diff-after.txt
+diff-before.txt
+wp-rocket/licence-data.php
+wpu_local_overrides.php
