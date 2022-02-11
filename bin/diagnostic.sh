@@ -14,7 +14,7 @@ _WPUDIAG_PATH="${_CURRENT_DIR}${_WPUDIAG_FILE}";
 ## Copy file
 ###################################
 
-cp "${_TOOLSDIR}diagnostic.php" "${_WPUDIAG_PATH}";
+echo "<?php \$wpudiag_file='${_WPUDIAG_FILE}';include '${_TOOLSDIR}diagnostic/header.php'; " > "${_WPUDIAG_PATH}";
 
 # File will be deleted after use so lets ensure rights are ok.
 chmod 0644 "${_WPUDIAG_PATH}";
