@@ -111,3 +111,16 @@ $autoloaded_weight = intval($wpdb->get_var("SELECT SUM(LENGTH(option_value)) as 
 if ($autoloaded_weight > 1024 * 200) {
     $wputools_errors[] = sprintf('The autoloaded options may be too heavy (%skb). It could be slowing down your website.', round($autoloaded_weight / 1024));
 }
+
+/* ----------------------------------------------------------
+  Check forbidden user slugs
+---------------------------------------------------------- */
+
+$forbidden_slugs = array('admin', 'editor');
+foreach ($forbidden_slugs as $user_slug) {
+    $user_admin = get_user_by('slug', $user_slug);
+    if (!$user_admin) {
+        continue;
+    }
+    $wputools_errors[] = sprintf('You should not have an user with the ID “%s”.', $user_slug);
+}
