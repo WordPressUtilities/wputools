@@ -51,6 +51,7 @@ foreach ($php_constants as $constant) {
 $uris = array(
     '/.git/config',
     '/wp-login.php',
+    '/wp-json/wp/v2/users',
     '/wp-admin/index.php',
     '/wp-includes/version.php'
 );
