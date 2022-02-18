@@ -34,6 +34,16 @@ if ($wputools_is_cli && defined('SAVEQUERIES') && SAVEQUERIES) {
 }
 
 /* ----------------------------------------------------------
+  Check MySQL version
+---------------------------------------------------------- */
+
+global $wpdb;
+$mysqlVersion = $wpdb->db_version();
+if (version_compare($mysqlVersion, '8.0', '<')) {
+    $wputools_errors[] = sprintf('MySQL version %s is too old !', $mysqlVersion);
+}
+
+/* ----------------------------------------------------------
   Check some constants
 ---------------------------------------------------------- */
 
@@ -117,7 +127,7 @@ if ($autoloaded_weight > 1024 * 200) {
   Check forbidden user slugs
 ---------------------------------------------------------- */
 
-$forbidden_slugs = array('admin', 'editor');
+$forbidden_slugs = array('admin', 'editor', get_stylesheet());
 foreach ($forbidden_slugs as $user_slug) {
     $user_admin = get_user_by('slug', $user_slug);
     if (!$user_admin) {
