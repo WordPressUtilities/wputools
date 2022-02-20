@@ -38,8 +38,8 @@ if ($wputools_is_cli && defined('SAVEQUERIES') && SAVEQUERIES) {
 ---------------------------------------------------------- */
 
 global $wpdb;
-$mysqlVersion = $wpdb->db_version();
-if (version_compare($mysqlVersion, '8.0', '<')) {
+$mysqlVersion = $wpdb->db_server_info();
+if (strpos($mysqlVersion, 'MariaDB') === false && version_compare($mysqlVersion, '8.0', '<')) {
     $wputools_errors[] = sprintf('MySQL version %s is too old !', $mysqlVersion);
 }
 
