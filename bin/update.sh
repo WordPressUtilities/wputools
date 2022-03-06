@@ -15,6 +15,12 @@ fi;
 
 wputools_add_files_to_excludes "${_ADMIN_PROTECT_FLAG}";
 
+# Allow a relaunch of the page test
+if [[ "${1}" == 'relaunch-test' ]];then
+    run_test_after_regenerate;
+    return;
+fi;
+
 ###################################
 ## Check if ACF Pro license is available
 ###################################

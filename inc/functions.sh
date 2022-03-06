@@ -33,6 +33,15 @@ function wputools_test_check_urls(){
     done < "${_wputools_test__file}"
 }
 
+function run_test_after_regenerate(){
+    echo '# RUNNING TESTS : AFTER ACTION';
+    local _wputools_test_simple_content=$(wputools_test_check_urls);
+    echo "${_wputools_test_simple_content}" > diff-after.txt;
+    if [[ -f "/usr/bin/opendiff" ]];then
+        opendiff diff-before.txt diff-after.txt;
+    fi;
+}
+
 function run_test_before(){
     if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : BEFORE ACTION';

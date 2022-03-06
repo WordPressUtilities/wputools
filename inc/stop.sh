@@ -10,6 +10,7 @@ unset -f check_parameters;
 unset -f commit_without_protect;
 unset -f run_test_after;
 unset -f run_test_before;
+unset -f run_test_after_regenerate;
 unset -f wputools__check_acf_pro_install;
 unset -f wputools__get_db_host;
 unset -f wputools__get_db_name;
