@@ -69,7 +69,7 @@ define('WP_MAX_MEMORY_LIMIT', '256M');
 
 # Updates
 define('AUTOMATIC_UPDATER_DISABLED', true);
-define('WP_AUTO_UPDATE_CORE', true);
+define('WP_AUTO_UPDATE_CORE', false);
 
 # Block external access
 #define('WP_HTTP_BLOCK_EXTERNAL', true);
@@ -79,7 +79,6 @@ define('WP_AUTO_UPDATE_CORE', true);
 #define('DISALLOW_FILE_MODS', true);
 
 # Debug
-define('WP_DEBUG', true);
 if (WP_DEBUG) {
     @ini_set('display_errors', 0);
     if (!defined('WP_DEBUG_DISPLAY')) {
