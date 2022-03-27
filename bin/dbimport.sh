@@ -133,24 +133,31 @@ fi;
 if [[ "${dbimport_wpulocaloverrides}" == 'y' ]];then
     dbimport_muplugins_dir="${_CURRENT_DIR}wp-content/mu-plugins";
     dbimport_wpulocaloverrides_file="${dbimport_muplugins_dir}/wpu_local_overrides.php";
+
     # Ensure dir is available
     if [[ ! -d "${dbimport_muplugins_dir}" ]];then
         mkdir -p "${dbimport_muplugins_dir}";
     fi;
 
     # Ensure file does not exists
+    dbimport_wpulocaloverrides_can_import='n';
     dbimport_wpulocaloverrides_file_delete='n';
     if [[ -f "${dbimport_wpulocaloverrides_file}" ]];then
-        dbimport_wpulocaloverrides_file_delete=$(bashutilities_get_yn "- Delete old wpu_local_overrides file ?" 'y');
+        dbimport_wpulocaloverrides_file_delete=$(bashutilities_get_yn "- An old wpu_local_overrides file exists: override it ?" 'n');
+    else
+        dbimport_wpulocaloverrides_can_import='y';
     fi;
     if [[ "${dbimport_wpulocaloverrides_file_delete}" == 'y' ]];then
         rm "${dbimport_wpulocaloverrides_file}";
         echo "# Old wpu_local_overrides file deleted";
+        dbimport_wpulocaloverrides_can_import='y';
     fi;
 
-    mv "${overrides_file}" "${dbimport_wpulocaloverrides_file}";
-    echo "# wpu_local_overrides imported"
-
+    # If import is allowed
+    if [[ "${dbimport_wpulocaloverrides_can_import}" == 'y' ]];then
+        mv "${overrides_file}" "${dbimport_wpulocaloverrides_file}";
+        echo "# wpu_local_overrides imported"
+    fi;
 fi;
 
 wputools_execute_file "wputools-dbimport-after.sh";
