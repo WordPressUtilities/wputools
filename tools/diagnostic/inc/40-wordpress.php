@@ -25,12 +25,30 @@ $_SERVER['PHP_SELF'] = '/wp-admin/index.php';
 /* Include wp load */
 require_once $bootstrap;
 
+$is_debug_env = in_array(wp_get_environment_type(), array('local', 'development'));
+
 /* ----------------------------------------------------------
   Check SAVEQUERIES
 ---------------------------------------------------------- */
 
 if ($wputools_is_cli && defined('SAVEQUERIES') && SAVEQUERIES) {
     $wputools_errors[] = 'WordPress : SAVEQUERIES should not be enabled on CLI, because it can induce some memory leaks.';
+}
+
+/* ----------------------------------------------------------
+  Check SCRIPT_DEBUG
+---------------------------------------------------------- */
+
+if (!$is_debug_env && defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
+    $wputools_errors[] = 'WordPress : SCRIPT_DEBUG should only be enabled on a local or dev environment.';
+}
+
+/* ----------------------------------------------------------
+  Check commits hooks
+---------------------------------------------------------- */
+
+if ($is_debug_env && file_exists('.git/config') && !file_exists('.git/hooks/pre-commit')) {
+    $wputools_errors[] = 'Git : You should have a pre-commit hook installed.';
 }
 
 /* ----------------------------------------------------------
@@ -60,11 +78,13 @@ foreach ($php_constants as $constant) {
 
 $uris = array(
     '/.git/config',
-    '/wp-login.php',
     '/wp-json/wp/v2/users',
     '/wp-admin/index.php',
     '/wp-includes/version.php'
 );
+if (!$is_debug_env) {
+    $uris[] = '/wp-login.php';
+}
 $all_themes = wp_get_themes();
 foreach ($all_themes as $theme_id => $theme_values) {
     $uris[] = '/wp-content/themes/' . $theme_id . '/index.php';
