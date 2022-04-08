@@ -38,6 +38,6 @@ if (!$wputools_is_public) {
 }
 echo "\n";
 if (!$wputools_is_public) {
-    echo "Dont forget to delete this file :\nrm " . basename(__FILE__);
+    echo "Dont forget to delete this file :\nrm " . $wpudiag_file;
     echo "\n";
 }
