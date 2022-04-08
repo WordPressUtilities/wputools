@@ -107,7 +107,8 @@ $ignored_extensions = array('test', 'local', 'dev', 'localhost');
 $is_https = isset($url_parts['scheme']) && $url_parts['scheme'] == 'https';
 $host_extension = '';
 if (isset($url_parts['host'])) {
-    $host_extension = end(explode(".", $url_parts['host']));
+    $url_parts_host = explode(".", $url_parts['host']);
+    $host_extension = end($url_parts_host);
 }
 $is_test_extension = $host_extension && in_array($host_extension, $ignored_extensions);
 if (!$is_https && !$is_test_extension) {
