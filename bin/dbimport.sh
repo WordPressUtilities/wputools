@@ -66,6 +66,7 @@ _WPCLICOMMAND maintenance-mode activate;
 _WPCLICOMMAND db reset --yes;
 
 # Import DB File
+echo '- Importing db file';
 _WPCLICOMMAND db import "${_dbimport_file}";
 
 wputools_execute_file "wputools-dbimport-before-search-replace.sh";
@@ -84,7 +85,7 @@ fi;
 
 if [[ -n "${_WPDB_REPLACE_BEFORE}" && -n "${_WPDB_REPLACE_AFTER}" ]];then
     # Search replace
-    _WPCLICOMMAND search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}";
+    _WPCLICOMMAND search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}"  --skip-columns=autoload,comment_status,display_name,meta_key,option_name,ping_status,pinged,post_mime_type,post_name,post_password,post_status,post_title,post_type,to_ping,user_email,user_login --skip-tables=*_comments,*_commentmeta,*_links,*_terms,*_term_taxonomy,*_users,*_usermeta;
 fi;
 
 wputools_execute_file "wputools-dbimport-after-search-replace.sh";
@@ -104,7 +105,7 @@ if [[ -d "${_tmp_folder}" ]];then
         dbimport_uploads=$(bashutilities_get_yn "- Import uploads ?" 'y');
     fi
     # Ask to import override
-    if [[ -f "${overrides_file}" ]];then
+    if [[ -f "${overrides_file}" && "${_WPUTOOLS_DBIMPORT_IGNORE_LOCALOVERRIDES}" == '0' ]];then
         dbimport_wpulocaloverrides=$(bashutilities_get_yn "- Import wpu_local_overrides ?" 'y');
     fi;
 fi;
@@ -179,4 +180,5 @@ if [[ "${_dbimport_file_tmp}" != '' && -f "${_dbimport_file_tmp}" ]];then
 fi;
 
 # Clear cache
+echo '- Purging cache';
 wputools_call_route cache > /dev/null;
