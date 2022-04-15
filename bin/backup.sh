@@ -67,7 +67,16 @@ done
 
 # Backup crontab
 if [ -x "$(command -v crontab)" ]; then
+    _HAS_CRONTAB='1';
+    # Empty crontab
+    if [ $(crontab -l | wc -c) -eq 0 ]; then
+        _HAS_CRONTAB='0';
+    fi
+    # No need to backup
     if [[ ! -z "${_NOBACKUP_CRONTABS}" && "${_NOBACKUP_CRONTABS}" == '1' ]];then
+        _HAS_CRONTAB='0';
+    fi;
+    if [[ "${_HAS_CRONTAB}" == '0' ]];then
         echo '- crontab ignored';
     else
         crontab -l > "${_BACKUP_PATH}crontab.txt";

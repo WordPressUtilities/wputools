@@ -32,3 +32,6 @@ fi
 
 echo "${_WPUTOOLS_TEXT_MESSAGE} to login :";
 echo "${_HOME_URL}/${_WPULOG_FILE}";
+
+# Go back to initial dir
+cd "${_SCRIPTSTARTDIR}";
