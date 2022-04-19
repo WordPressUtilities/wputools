@@ -38,6 +38,9 @@ if (!$user) {
     die('Could not load the user!');
 }
 
+/* Avoid unwanted redirects or else */
+remove_all_actions('wp_logout');
+
 /* Logout */
 wp_logout();
 
