@@ -2,12 +2,14 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.48.3';
+local _WPUTOOLS_VERSION='0.48.4';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3)
 local _CURRENT_DIR="${PWD}/";
+local _IS_QUIET_MODE="1";
 
 if [[ $* != *--quiet* ]];then
+local _IS_QUIET_MODE="0";
 cat <<EOF
 
 ###################################
@@ -99,7 +101,7 @@ if [[ "${_WPUTOOLS_NO_UPDATE}" != '1' ]];then
 fi
 
 . "${_SOURCEDIR}inc/autocomplete.sh";
-if [[ "$1" != "self-update" && "${_WPUTOOLS_NO_UPDATE}" != '1' ]];then
+if [[ "$1" != "self-update" && "${_WPUTOOLS_NO_UPDATE}" != '1' && "${_IS_QUIET_MODE}" == '0' ]];then
     . "${_SOURCEDIR}inc/check-update.sh";
 fi;
 
