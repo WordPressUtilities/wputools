@@ -52,6 +52,7 @@ $files = array_diff(scandir('.'), array('.', '..'));
 $matches = array(
     '/^adminer(.*).php/',
     '/^cache-(.*).php/',
+    '/^detecthack-(.*).php/',
     '/^diagnostic-(.*).php/',
     '/^login-(.*).php/'
 );

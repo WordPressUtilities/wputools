@@ -68,6 +68,10 @@ Add CLI shortcut :
 
 `wputools diagnostic;`
 
+### Try to detect hacked files.
+
+`wputools detecthack;`
+
 ### Export an SQL dump and replace URLs.
 
 `wputools dbexport https://github.com;`
