@@ -36,6 +36,29 @@ function line_display_clear($line) {
 }
 
 /* ----------------------------------------------------------
+  Extract arguments
+---------------------------------------------------------- */
+
+$tmp_wp_dir = false;
+foreach ($argv as $arg) {
+    if (substr($arg, 0, 6) == '--dir=') {
+        $arg_dir = str_replace('--dir=', '', $arg);
+        if (is_dir($arg_dir)) {
+            $tmp_wp_dir = $arg_dir;
+        }
+    }
+}
+
+/* ----------------------------------------------------------
+  Testing current directory
+---------------------------------------------------------- */
+
+if (!$tmp_wp_dir) {
+    wputh_echo('Missing temporary WordPress version. Cannot continue');
+    return;
+}
+
+/* ----------------------------------------------------------
   Values
 ---------------------------------------------------------- */
 
@@ -57,6 +80,7 @@ $suspect_functions = array(
   Build results
 ---------------------------------------------------------- */
 
+$invalid_compared_files = array();
 $suspect_results = array();
 foreach ($suspect_strings as $str) {
     $suspect_results[$str] = array(
@@ -87,14 +111,40 @@ foreach ($suspect_functions as $str) {
     );
 }
 
+$most_suspect_files = array();
+function add_to_suspect_files($f) {
+    global $most_suspect_files;
+    if (!isset($most_suspect_files[$f])) {
+        $most_suspect_files[$f] = 0;
+    }
+    $most_suspect_files[$f]++;
+}
+
 /* ----------------------------------------------------------
   Parse files
 ---------------------------------------------------------- */
 
 foreach ($files as $f) {
-    line_display_clear($f);
+    # Ignore current file
     if ($f == $current_file) {
         continue;
+    }
+    # Ignore tmp directory
+    if (strpos($f, $tmp_wp_dir) !== false) {
+        continue;
+    }
+    # If test file exists : compare to it
+    $tmp_f = $tmp_wp_dir . '/' . $f;
+    if (file_exists($tmp_f)) {
+        # Ignore file
+        if (hash_file('md5', $tmp_f) == hash_file('md5', $f)) {
+            continue;
+        }
+        # Mark as invalid WP
+        else {
+            $invalid_compared_files[] = $f;
+            add_to_suspect_files($f);
+        }
     }
     $iterator_object = wpudhk_readfile($f);
     foreach ($iterator_object as $file_line) {
@@ -102,10 +152,12 @@ foreach ($files as $f) {
             foreach ($func['tests'] as $test_string) {
                 if (strpos($file_line, $test_string) !== false) {
                     $suspect_results[$str]['values'][] = $f;
+                    add_to_suspect_files($f);
                 }
             }
         }
     }
+    line_display_clear($f);
 }
 
 /* Clear after displaying all files */
@@ -123,5 +175,28 @@ foreach ($suspect_results as $str => $files) {
     wputh_echo("\n" . '# Detecting : "' . $str . '"');
     foreach ($files['values'] as $val) {
         wputh_echo(' - ' . $val);
+    }
+}
+
+if (!empty($invalid_compared_files)) {
+    wputh_echo("\n" . '# These files have a different content than the original version. Maybe look at it ?');
+    foreach ($invalid_compared_files as $val) {
+        wputh_echo(' - ' . $val);
+    }
+}
+
+/* ----------------------------------------------------------
+  Most suspect files
+---------------------------------------------------------- */
+
+wputh_echo("\n" . '# These files contains the most red flags :');
+natsort($most_suspect_files);
+$most_suspect_files = array_reverse($most_suspect_files);
+$i = 0;
+foreach ($most_suspect_files as $file => $nb_flags) {
+    $i++;
+    wputh_echo(' - ' . $file . ' : ' . $nb_flags . ' flags.');
+    if ($i > 20) {
+        break;
     }
 }
