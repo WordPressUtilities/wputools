@@ -12,13 +12,26 @@ _WPUDHK_PATH="${_CURRENT_DIR}${_WPUDHK_FILE}";
 _WPUDHK_DIR="tmpwp${_WPUDHK_RAND}";
 
 ###################################
+## Questions
+###################################
+
+_WPUDHK_COMPARE_WP=$(bashutilities_get_yn "- Compare core code to a fresh WordPress install?" 'y');
+_WPUDHK_COMPARE_PLUG=$(bashutilities_get_yn "- Compare each plugin code to a fresh plugin install?" 'y');
+
+###################################
 ## Loading WordPress
 ###################################
+
+mkdir "${_WPUDHK_DIR}";
+
+# Copy wp-config to allow plugin install to work
+cp wp-config.php "${_WPUDHK_DIR}";
 
 # Extract version
 _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
 
 # Downloading test version
+if [[ "${_WPUDHK_COMPARE_WP}" == 'y' ]];then
 echo "# Downloading core WordPress to have a clean base to compare";
 _WPCLICOMMAND core download \
     --quiet \
@@ -26,10 +39,9 @@ _WPCLICOMMAND core download \
     --skip-themes \
     --path="${_WPUDHK_DIR}" \
     --version="${_CURRENT_WORDPRESS}";
+fi;
 
-# Copy wp-config to allow plugin install to work
-cp wp-config.php "${_WPUDHK_DIR}";
-
+if [[ "${_WPUDHK_COMPARE_PLUG}" == 'y' ]];then
 echo "# Downloading plugins to have a clean base to compare";
 _WPPLUGINSTMPCOUNT=0;
 _WPPLUGINSTMPLIST=$(_WPCLICOMMAND plugin list --format=csv --fields=name,version);
@@ -46,6 +58,7 @@ for line in ${_WPPLUGINSTMPLIST}; do
             --quiet;
     fi;
 done
+fi;
 
 ###################################
 ## Prepare file

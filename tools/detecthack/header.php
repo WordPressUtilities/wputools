@@ -1,5 +1,13 @@
 <?php
 
+$nbcols_cli = 0;
+if (function_exists('exec')) {
+    $nbcols_cli = exec('tput cols');
+}
+if (!is_numeric($nbcols_cli)) {
+    $nbcols_cli = 99;
+}
+
 /* ----------------------------------------------------------
   Helpers
 ---------------------------------------------------------- */
@@ -27,7 +35,10 @@ function wputh_echo($string) {
 
 $old_line = '';
 function line_display_clear($line) {
-    global $old_line;
+    global $old_line, $nbcols_cli;
+    if (strlen($line) > $nbcols_cli) {
+        $line = substr($line, 0 - $nbcols_cli, $nbcols_cli);
+    }
     if ($old_line) {
         echo str_repeat(' ', strlen($old_line)) . "\r";
     }

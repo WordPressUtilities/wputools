@@ -96,6 +96,8 @@ unset -v _WPUADM_URL;
 unset -v _WPPLUGINSTMPLIST;
 unset -v _WPPLUGINSTMPCOUNT;
 unset -v _WPPLUGINSTMPLISTSIZE;
+unset -v _WPUDHK_COMPARE_PLUG;
+unset -v _WPUDHK_COMPARE_WP;
 unset -v _WPUDHK_DIR;
 unset -v _WPUDHK_FILE;
 unset -v _WPUDHK_PATH;
