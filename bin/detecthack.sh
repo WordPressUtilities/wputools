@@ -65,7 +65,7 @@ fi;
 ###################################
 
 # Copy file
-echo "<?php \$detecthack_file='${_WPUDIAG_FILE}';include '${_TOOLSDIR}detecthack/header.php'; " > "${_WPUDHK_PATH}";
+echo "<?php \$detecthack_file='${_WPUDHK_FILE}';include '${_TOOLSDIR}detecthack/header.php'; " > "${_WPUDHK_PATH}";
 
 # File will be deleted after use so lets ensure rights are ok.
 chmod 0644 "${_WPUDHK_PATH}";

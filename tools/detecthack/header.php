@@ -74,6 +74,9 @@ if (!$tmp_wp_dir) {
 ---------------------------------------------------------- */
 
 $current_file = basename(__FILE__);
+if (isset($detecthack_file)) {
+    $current_file = $detecthack_file;
+}
 $files = wpudhk_rglob('*.php');
 $suspect_strings = array(
     'x29'
@@ -91,7 +94,24 @@ $suspect_functions = array(
   Build results
 ---------------------------------------------------------- */
 
-$invalid_compared_files = array();
+$global_tests = array(
+    'invalid_compared_files' => array(
+        'info' => '# These files have a different content than the original version.',
+        'values' => array()
+    ),
+    'suspect_directories_files' => array(
+        'info' => '# These files are in a suspect directory.',
+        'values' => array()
+    ),
+    'suspect_recent_files' => array(
+        'info' => '# These files have been edited recently.',
+        'values' => array()
+    )
+);
+
+$start_time = time();
+$compare_time = 86400 * 2;
+
 $suspect_results = array();
 foreach ($suspect_strings as $str) {
     $suspect_results[$str] = array(
@@ -123,12 +143,12 @@ foreach ($suspect_functions as $str) {
 }
 
 $most_suspect_files = array();
-function add_to_suspect_files($f) {
+function add_to_suspect_files($f, $score_plus = 1) {
     global $most_suspect_files;
     if (!isset($most_suspect_files[$f])) {
         $most_suspect_files[$f] = 0;
     }
-    $most_suspect_files[$f]++;
+    $most_suspect_files[$f] += $score_plus;
 }
 
 /* ----------------------------------------------------------
@@ -144,6 +164,16 @@ foreach ($files as $f) {
     if (strpos($f, $tmp_wp_dir) !== false) {
         continue;
     }
+    # If suspect directory detected
+    if (strpos($f, 'wp-content/uploads') !== false) {
+        $global_tests['suspect_directories_files']['values'][] = $f;
+        add_to_suspect_files($f, 10);
+    }
+    # If recently edited
+    if ($start_time - filemtime($f) < $compare_time) {
+        $global_tests['suspect_recent_files']['values'][] = $f;
+        add_to_suspect_files($f, 5);
+    }
     # If test file exists : compare to it
     $tmp_f = $tmp_wp_dir . '/' . $f;
     if (file_exists($tmp_f)) {
@@ -153,8 +183,8 @@ foreach ($files as $f) {
         }
         # Mark as invalid WP
         else {
-            $invalid_compared_files[] = $f;
-            add_to_suspect_files($f);
+            $global_tests['invalid_compared_files']['values'][] = $f;
+            add_to_suspect_files($f, 5);
         }
     }
     $iterator_object = wpudhk_readfile($f);
@@ -189,9 +219,12 @@ foreach ($suspect_results as $str => $files) {
     }
 }
 
-if (!empty($invalid_compared_files)) {
-    wputh_echo("\n" . '# These files have a different content than the original version. Maybe look at it ?');
-    foreach ($invalid_compared_files as $val) {
+foreach ($global_tests as $test_id => $var_test) {
+    if (empty($var_test['values'])) {
+        continue;
+    }
+    wputh_echo("\n" . $var_test['info']);
+    foreach ($var_test['values'] as $val) {
         wputh_echo(' - ' . $val);
     }
 }
@@ -206,7 +239,7 @@ $most_suspect_files = array_reverse($most_suspect_files);
 $i = 0;
 foreach ($most_suspect_files as $file => $nb_flags) {
     $i++;
-    wputh_echo(' - ' . $file . ' : ' . $nb_flags . ' flags.');
+    wputh_echo(' - ' . $file . ' : ' . $nb_flags . ' red flags.');
     if ($i > 20) {
         break;
     }
