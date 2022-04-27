@@ -27,12 +27,31 @@ require_once $bootstrap;
 
 $is_debug_env = in_array(wp_get_environment_type(), array('local', 'development'));
 
+$site_url = get_site_url();
+$url_parts = parse_url($site_url);
+$ignored_extensions = array('test', 'local', 'dev', 'localhost');
+$is_https = isset($url_parts['scheme']) && $url_parts['scheme'] == 'https';
+$host_extension = '';
+if (isset($url_parts['host'])) {
+    $url_parts_host = explode(".", $url_parts['host']);
+    $host_extension = end($url_parts_host);
+}
+$is_test_extension = $host_extension && in_array($host_extension, $ignored_extensions);
+
 /* ----------------------------------------------------------
   Check SAVEQUERIES
 ---------------------------------------------------------- */
 
 if ($wputools_is_cli && defined('SAVEQUERIES') && SAVEQUERIES) {
     $wputools_errors[] = 'WordPress : SAVEQUERIES should not be enabled on CLI, because it can induce some memory leaks.';
+}
+
+/* ----------------------------------------------------------
+  Check invalid WP environment
+---------------------------------------------------------- */
+
+if ($host_extension && ($is_test_extension xor $is_debug_env)) {
+    $wputools_errors[] = sprintf('WordPress : The environment is defined as %s, which is not normal for a website with an extension in .%s.', wp_get_environment_type(), $host_extension);
 }
 
 /* ----------------------------------------------------------
@@ -101,16 +120,6 @@ foreach ($uris as $uri) {
   Check https
 ---------------------------------------------------------- */
 
-$site_url = get_site_url();
-$url_parts = parse_url($site_url);
-$ignored_extensions = array('test', 'local', 'dev', 'localhost');
-$is_https = isset($url_parts['scheme']) && $url_parts['scheme'] == 'https';
-$host_extension = '';
-if (isset($url_parts['host'])) {
-    $url_parts_host = explode(".", $url_parts['host']);
-    $host_extension = end($url_parts_host);
-}
-$is_test_extension = $host_extension && in_array($host_extension, $ignored_extensions);
 if (!$is_https && !$is_test_extension) {
     $wputools_errors[] = sprintf('The %s site url should use https !', $site_url);
 }

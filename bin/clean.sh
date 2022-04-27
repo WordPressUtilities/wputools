@@ -52,6 +52,9 @@ _WPCLICOMMAND db query "DELETE FROM ${_db_prefix}termmeta WHERE NOT EXISTS (SELE
 # Delete orphaned user metas
 _WPCLICOMMAND db query "DELETE FROM ${_db_prefix}usermeta WHERE NOT EXISTS (SELECT * FROM ${_db_prefix}users WHERE ${_db_prefix}usermeta.user_id = ${_db_prefix}users.ID)";
 
+# Delete orphaned comment metas
+_WPCLICOMMAND db query "DELETE FROM ${_db_prefix}commentmeta WHERE NOT EXISTS (SELECT * FROM ${_db_prefix}comments WHERE ${_db_prefix}commentmeta.comment_id = ${_db_prefix}comments.comment_ID)";
+
 ## Clean
 ###################################
 

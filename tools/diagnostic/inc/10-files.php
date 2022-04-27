@@ -45,6 +45,18 @@ foreach ($files as $file) {
 }
 
 /* ----------------------------------------------------------
+  Test folders which should exist and be writable
+---------------------------------------------------------- */
+
+$folders = array('wp-content', 'wp-content/uploads', 'wp-content/uploads/' . date('Y'));
+foreach ($folders as $folder) {
+    if (!is_writable($folder)) {
+        $wputools_errors[] = sprintf('The folder %s should be writable !', $folder);
+        continue;
+    }
+}
+
+/* ----------------------------------------------------------
   Test files which should not exist at source
 ---------------------------------------------------------- */
 
