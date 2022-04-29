@@ -24,16 +24,22 @@ require_once $bootstrap;
 
 /* Start WP */
 wp();
-$users = get_users(array(
-    'role' => 'administrator',
-    'fields' => 'id'
-));
 
-if (empty($users) || !isset($users[0]) || !is_numeric($users[0])) {
-    die('Could not find an admin user!');
+$user = false;
+if (isset($_GET['user_id'])) {
+    $user = get_user_by(is_numeric($_GET['user_id']) ? 'id' : 'slug', $_GET['user_id']);
+} else {
+    $users = get_users(array(
+        'role' => 'administrator',
+        'fields' => 'id'
+    ));
+
+    if (empty($users) || !isset($users[0]) || !is_numeric($users[0])) {
+        die('Could not find an admin user!');
+    }
+    $user = get_user_by('id', $users[0]);
 }
 
-$user = get_user_by('id', $users[0]);
 if (!$user) {
     die('Could not load the user!');
 }
@@ -45,8 +51,8 @@ remove_all_actions('wp_logout');
 wp_logout();
 
 /* Login as user */
-wp_set_current_user($users[0], $user->user_login);
-wp_set_auth_cookie($users[0]);
+wp_set_current_user($user->ID, $user->user_login);
+wp_set_auth_cookie($user->ID);
 do_action('wp_login', $user->user_login, $user);
 
 /* Redirect to admin home */
