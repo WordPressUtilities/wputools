@@ -32,8 +32,8 @@ require_once $bootstrap;
 /* Debug
 -------------------------- */
 
-if(!function_exists('wp_get_environment_type')){
-    function wp_get_environment_type(){
+if (!function_exists('wp_get_environment_type')) {
+    function wp_get_environment_type() {
         return '';
     }
 }
@@ -90,9 +90,11 @@ if ($is_debug_env && file_exists('.git/config') && !file_exists('.git/hooks/pre-
 ---------------------------------------------------------- */
 
 global $wpdb;
-$mysqlVersion = $wpdb->db_server_info();
-if (strpos($mysqlVersion, 'MariaDB') === false && version_compare($mysqlVersion, '8.0', '<')) {
-    $wputools_errors[] = sprintf('MySQL version %s is too old !', $mysqlVersion);
+if (method_exists($wpdb, 'db_server_info')) {
+    $mysqlVersion = $wpdb->db_server_info();
+    if (strpos($mysqlVersion, 'MariaDB') === false && version_compare($mysqlVersion, '8.0', '<')) {
+        $wputools_errors[] = sprintf('MySQL version %s is too old !', $mysqlVersion);
+    }
 }
 
 /* ----------------------------------------------------------
