@@ -25,7 +25,22 @@ $_SERVER['PHP_SELF'] = '/wp-admin/index.php';
 /* Include wp load */
 require_once $bootstrap;
 
+/* ----------------------------------------------------------
+  Initial checks
+---------------------------------------------------------- */
+
+/* Debug
+-------------------------- */
+
+if(!function_exists('wp_get_environment_type')){
+    function wp_get_environment_type(){
+        return '';
+    }
+}
 $is_debug_env = in_array(wp_get_environment_type(), array('local', 'development'));
+
+/* Parts
+-------------------------- */
 
 $site_url = get_site_url();
 $url_parts = parse_url($site_url);
@@ -47,7 +62,7 @@ if ($wputools_is_cli && defined('SAVEQUERIES') && SAVEQUERIES) {
 }
 
 /* ----------------------------------------------------------
-  Check invalid WP environment
+  Check Debug env
 ---------------------------------------------------------- */
 
 if ($host_extension && ($is_test_extension xor $is_debug_env)) {
