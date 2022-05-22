@@ -1,6 +1,6 @@
 #!/bin/bash
 
-_SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/../";
+_SOURCEDIR="$(dirname "${BASH_SOURCE[0]}" )/../";
 _SCRIPTDIR=$(cd "${_SOURCEDIR}";pwd);
 _SCRIPTNAME="${_SCRIPTDIR}/wputools.sh";
 
@@ -41,5 +41,9 @@ fi;
 ## Install
 ###################################
 
+echo '- Loading dependencies';
+$(cd "${_SOURCEDIR}";git submodule update --init --recursive);
+echo '- Creating alias';
 echo "alias wputools=\". ${_SCRIPTNAME}\"" >> "${_FILEINSTALL}";
+
 echo "WPUTools is installed !";
