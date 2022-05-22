@@ -45,5 +45,5 @@ echo '- Loading dependencies';
 $(cd "${_SOURCEDIR}";git submodule update --init --recursive);
 echo '- Creating alias';
 echo "alias wputools=\". ${_SCRIPTNAME}\"" >> "${_FILEINSTALL}";
-
+alias wputools=". ${_SCRIPTNAME}";
 echo "WPUTools is installed !";
