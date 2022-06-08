@@ -4,12 +4,14 @@
 ## Autocomplete commands
 ###################################
 
-_WPUTOOLS_AUTOCOMPLETE_CURRENT_DIR="${_CURRENT_DIR}";
 _WPUTOOLS_AUTOCOMPLETE_WPUWOO_ACTION_DIR="${_WPUWOO_ACTION_DIR}";
 
 # Thanks : https://stackoverflow.com/a/5303225
 _wputools_complete() {
     local cur prev prev2
+
+    local _base_wp_dir=$(awk -F '/wp-content'  '{print $1}'  <<<  "${PWD}");
+    local _base_wp_dir_plugins="${_base_wp_dir}/wp-content/plugins";
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -40,8 +42,10 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_PLUGIN_LIST}" "${_WPUTOOLS_PLUGIN_FAV_LIST}")" -- $cur) )
             ;;
             "update")
-                _reply=$(ls -1 "${_WPUTOOLS_AUTOCOMPLETE_CURRENT_DIR}wp-content/plugins" | awk -F'/' '{print $NF}');
-                COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
+                if [[ -d "${_base_wp_dir_plugins}" ]];then
+                    _reply=$(ls -1 "${_base_wp_dir_plugins}" | awk -F'/' '{print $NF}');
+                    COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
+                fi;
             ;;
             "wpuwoo")
                 _reply=$(ls -1 "${_WPUTOOLS_AUTOCOMPLETE_WPUWOO_ACTION_DIR}tasks/"*.php | awk -F'/' '{print $NF}');
