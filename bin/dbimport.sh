@@ -63,7 +63,7 @@ fi;
 _WPCLICOMMAND maintenance-mode activate;
 
 # Purge DB
-_WPCLICOMMAND db reset --yes;
+_WPCLICOMMAND db clean --yes;
 
 # Import DB File
 echo '- Importing db file';
