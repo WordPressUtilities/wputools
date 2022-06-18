@@ -65,7 +65,7 @@ function wputools__check_acf_pro_install(){
     bashutilities_message "You seem to have installed ACF Pro, but no license is defined.";
     if [[ "${wpoption_needed}" == '0' ]];then
         echo "Please add your license in the wp-config file.";
-        echo "define('ACF_PRO_LICENSE','LICENSE').";
+        echo "define('ACF_PRO_LICENSE','LICENSE');";
     else
         echo "Please add your license in the admin area.";
     fi;
@@ -148,6 +148,7 @@ function wputools__update_plugin() {
     if [[ ! -d "${_PLUGIN_DIR}" ]];then
         bashutilities_message "The plugin \"${_PLUGIN_ID}\" does not exists" 'error';
     else
+        local _PLUGIN_VERSION_OLD=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=version);
         # Reset git status
         git reset;
         # Update
@@ -166,7 +167,7 @@ function wputools__update_plugin() {
         local _PLUGIN_TITLE=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=title);
         git add "${_PLUGIN_DIR}";
         git add "${_PLUGIN_LANG}";
-        commit_without_protect "Plugin Update : ${_PLUGIN_TITLE} v${_PLUGIN_VERSION}";
+        commit_without_protect "Update Plugin ${_PLUGIN_TITLE} from v${_PLUGIN_VERSION_OLD} to v${_PLUGIN_VERSION}";
     fi;
 }
 
