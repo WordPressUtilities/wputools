@@ -1,3 +1,8 @@
 /wp-cli.phar
 /control.txt
 /wputools-local.sh
+/wputools-backup-after-db-export.sh
+/wputools-dbimport-before-all.sh
+/wputools-dbimport-before-search-replace.sh
+/wputools-dbimport-after-search-replace.sh
+/wputools-dbimport-after.sh

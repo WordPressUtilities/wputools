@@ -51,6 +51,15 @@ mkdir "${_BACKUP_NAME}";
 # Backup DATABASE
 _WPCLICOMMAND db export - > "${_BACKUP_FILE}";
 
+# Hook
+wputools_execute_file "wputools-backup-after-db-export.sh" "${_BACKUP_FILE}";
+
+# Check dump filesize
+_dump_filesize=$(wc -c "${_BACKUP_FILE}" | awk '{print $1}')
+if [ "${_dump_filesize}" -lt "5000" ]; then
+    bashutilities_message 'The MySQL dump looks corrupted' 'error';
+fi
+
 # Backup files
 for ix in ${!_BACKUP_FILES[*]}
 do

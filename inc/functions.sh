@@ -94,16 +94,14 @@ ${_excluded_content}";
 
 function wputools_execute_file(){
     local _STR_FOUND="“${1}” found. Executing ...";
-    if [[ -f "${1}" ]];then
-        echo "${_STR_FOUND}";
-        . "${1}" "${2}";
-        return 1;
-    fi;
-    if [[ -f "${_CURRENT_DIR}../${1}" ]];then
-        echo "${_STR_FOUND}";
-        . "${_CURRENT_DIR}../${1}" "${2}";
-        return 1;
-    fi;
+    local _test_files=( "${1}" "${_CURRENT_DIR}../${1}" "${_SOURCEDIR}${1}" )
+    for i in "${_test_files[@]}"; do
+        if [[ -f "${i}" ]];then
+            echo "${_STR_FOUND}";
+            . "${i}" "${2}";
+            return 1;
+        fi;
+    done
 }
 
 ###################################
