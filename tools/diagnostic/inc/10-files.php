@@ -82,3 +82,15 @@ foreach ($files as $file) {
         $wputools_errors[] = sprintf('The file %s should not be here !', $file);
     }
 }
+
+/* ----------------------------------------------------------
+  Find files which should not be in a WordPress directory
+---------------------------------------------------------- */
+
+$files = glob('{*,wp-content/*,wp-content/uploads/*}.{log,sql,zip,sql.gz}', GLOB_BRACE);
+foreach ($files as $file) {
+    if (!is_file($file)) {
+        continue;
+    }
+    $wputools_errors[] = sprintf('The file %s should not be present in the WordPress directory !', $file);
+}

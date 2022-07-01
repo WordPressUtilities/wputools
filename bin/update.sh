@@ -125,7 +125,7 @@ function wputools__update_core(){
     _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
     _WPCLICOMMAND core check-update;
     if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
-        _WPCLICOMMAND core update --skip-themes;
+        _WPCLICOMMAND core update --skip-themes --version=5.9.3;
     else
         _WPCLICOMMAND core update --minor;
     fi;
