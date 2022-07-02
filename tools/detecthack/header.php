@@ -79,10 +79,14 @@ if (isset($detecthack_file)) {
 }
 $files = wpudhk_rglob('*.php');
 $suspect_strings = array(
+    'str_split(rawurldecode(str_rot13',
+    'array_slice(str_split(str_repeat',
+    '@$_COOKIE',
     'x29'
 );
 
 $suspect_functions = array(
+    '<?php' . str_repeat(' ', 100),
     'str_rot13',
     'pack',
     'gzinflate',
@@ -123,6 +127,7 @@ foreach ($suspect_strings as $str) {
 foreach ($suspect_functions as $str) {
     $tests = array();
     $before = array(
+        "",
         "\n",
         ' ',
         '('

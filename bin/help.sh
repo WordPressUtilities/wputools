@@ -10,7 +10,7 @@ wputools login;        # Login as the first available administrator.
 wputools cache;        # Clear WordPress cache.
 wputools cachewarm;    # Preload WordPress urls.
 wputools clean;        # Clean WordPress path & files.
-wputools diagnostic;   # Try to detect hacked files.
+wputools detecthack;   # Try to detect hacked files.
 wputools diagnostic;   # Checks that your installation can work properly.
 wputools dbexport;     # Export an SQL dump and replace URLs.
 wputools dbimport;     # Import an SQL dump.
