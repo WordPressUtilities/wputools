@@ -79,19 +79,49 @@ if (isset($detecthack_file)) {
 }
 $files = wpudhk_rglob('*.php');
 $suspect_strings = array(
-    'str_split(rawurldecode(str_rot13',
-    'array_slice(str_split(str_repeat',
-    '@$_COOKIE',
-    'x29'
+    array(
+        'flags' => 10,
+        'string' => 'str_split(rawurldecode(str_rot13',
+    ),
+    array(
+        'flags' => 10,
+        'string' => 'array_slice(str_split(str_repeat',
+    ),
+    array(
+        'flags' => 10,
+        'string' => '@$_COOKIE',
+    ),
+    array(
+        'flags' => 10,
+        'string' => '\x29\\'
+    ),
 );
 
 $suspect_functions = array(
-    '<?php' . str_repeat(' ', 100),
-    'str_rot13',
-    'pack',
-    'gzinflate',
-    'eval',
-    'base64_decode'
+    array(
+        'flags' => 10,
+        'string' => '<?php' . str_repeat(' ', 100),
+    ),
+    array(
+        'flags' => 1,
+        'string' => 'str_rot13',
+    ),
+    array(
+        'flags' => 1,
+        'string' => 'pack',
+    ),
+    array(
+        'flags' => 1,
+        'string' => 'gzinflate',
+    ),
+    array(
+        'flags' => 1,
+        'string' => 'eval',
+    ),
+    array(
+        'flags' => 1,
+        'string' => 'base64_decode'
+    ),
 );
 
 /* ----------------------------------------------------------
@@ -118,13 +148,14 @@ $compare_time = 86400 * 2;
 
 $suspect_results = array();
 foreach ($suspect_strings as $str) {
-    $suspect_results[$str] = array(
-        'tests' => array($str),
+    $suspect_results[$str['string']] = array(
+        'tests' => array($str['string']),
+        'flags' => $str['flags'],
         'values' => array()
     );
 }
 
-foreach ($suspect_functions as $str) {
+foreach ($suspect_functions as $str_item) {
     $tests = array();
     $before = array(
         "",
@@ -138,11 +169,12 @@ foreach ($suspect_functions as $str) {
     );
     foreach ($before as $before_val) {
         foreach ($after as $after_val) {
-            $tests[] = $before_val . $str . $after_val;
+            $tests[] = $before_val . $str_item['string'] . $after_val;
         }
     }
-    $suspect_results[$str] = array(
+    $suspect_results[$str_item['string']] = array(
         'tests' => $tests,
+        'flags' => $str_item['flags'],
         'values' => array()
     );
 }
@@ -198,7 +230,7 @@ foreach ($files as $f) {
             foreach ($func['tests'] as $test_string) {
                 if (strpos($file_line, $test_string) !== false) {
                     $suspect_results[$str]['values'][] = $f;
-                    add_to_suspect_files($f);
+                    add_to_suspect_files($f,$func['flags']);
                 }
             }
         }
