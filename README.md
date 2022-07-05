@@ -72,6 +72,10 @@ Add CLI shortcut :
 
 `wputools detecthack;`
 
+### Try to clean hacked files.
+
+`wputools cleanhack;`
+
 ### Export an SQL dump and replace URLs.
 
 `wputools dbexport https://github.com;`

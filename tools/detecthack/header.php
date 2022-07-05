@@ -95,6 +95,10 @@ $suspect_strings = array(
         'flags' => 10,
         'string' => '\x29\\'
     ),
+    array(
+        'flags' => 10,
+        'string' => '@include "\\'
+    ),
 );
 
 $suspect_functions = array(

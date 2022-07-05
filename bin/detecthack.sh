@@ -16,7 +16,7 @@ _WPUDHK_DIR="tmpwp${_WPUDHK_RAND}";
 ###################################
 
 _WPUDHK_COMPARE_WP=$(bashutilities_get_yn "- Compare core code to a fresh WordPress install?" 'y');
-_WPUDHK_COMPARE_PLUG=$(bashutilities_get_yn "- Compare each plugin code to a fresh plugin install?" 'y');
+_WPUDHK_COMPARE_PLUG=$(bashutilities_get_yn "- Compare each plugin code to a fresh plugin install?" "${_WPUDHK_COMPARE_WP}");
 
 ###################################
 ## Loading WordPress
