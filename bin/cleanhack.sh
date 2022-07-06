@@ -7,7 +7,6 @@ echo "# CLEAN HACK";
 # - Clean PHP root files (wp-config.php or non WordPress)
 # - Clean mu-plugins dir
 # - Clean plugins dir
-# - Clean uploads dir (remove all non medias files)
 # - Clean themes dir
 
 ###################################
@@ -23,6 +22,13 @@ _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
 
 echo '# Purge cache dir';
 rm -rf wp-content/cache/*;
+
+###################################
+## Delete invalid PHP Files
+###################################
+
+echo '# Delete invalid PHP Files';
+grep -Ril "<?php" wp-content/{uploads,languages} | xargs rm
 
 ###################################
 ## Reinstall WordPress Core
