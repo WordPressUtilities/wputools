@@ -31,6 +31,13 @@ echo '# Delete invalid PHP Files';
 grep -Ril "<?php" wp-content/{uploads,languages} | xargs rm
 
 ###################################
+## Clean PHP files
+###################################
+
+echo '# Clean PHP files';
+grep -Ril "<?php       " . | xargs sed -i "" "s/^<\?php         .*/<\?php/";
+
+###################################
 ## Reinstall WordPress Core
 ###################################
 

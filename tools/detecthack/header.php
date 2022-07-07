@@ -97,15 +97,31 @@ $suspect_strings = array(
     ),
     array(
         'flags' => 10,
+        'string' => '"]()'
+    ),
+    array(
+        'flags' => 10,
+        'string' => '${"\\'
+    ),
+    array(
+        'flags' => 10,
+        'string' => '["\x'
+    ),
+    array(
+        'flags' => 10,
         'string' => '@include "\\'
+    ),
+    array(
+        'flags' => 20,
+        'string' => '<?php' . str_repeat(' ', 100),
+    ),
+    array(
+        'flags' => 50,
+        'string' => 'eval/*'
     ),
 );
 
 $suspect_functions = array(
-    array(
-        'flags' => 10,
-        'string' => '<?php' . str_repeat(' ', 100),
-    ),
     array(
         'flags' => 1,
         'string' => 'str_rot13',
@@ -213,7 +229,7 @@ foreach ($files as $f) {
     # If recently edited
     if ($start_time - filemtime($f) < $compare_time) {
         $global_tests['suspect_recent_files']['values'][] = $f;
-        add_to_suspect_files($f, 5);
+        add_to_suspect_files($f, 1);
     }
     # If test file exists : compare to it
     $tmp_f = $tmp_wp_dir . '/' . $f;
@@ -225,7 +241,7 @@ foreach ($files as $f) {
         # Mark as invalid WP
         else {
             $global_tests['invalid_compared_files']['values'][] = $f;
-            add_to_suspect_files($f, 5);
+            add_to_suspect_files($f, 20);
         }
     }
     $iterator_object = wpudhk_readfile($f);
@@ -281,7 +297,7 @@ $i = 0;
 foreach ($most_suspect_files as $file => $nb_flags) {
     $i++;
     wputh_echo(' - ' . $file . ' : ' . $nb_flags . ' red flags.');
-    if ($i > 20) {
+    if ($i > 50) {
         break;
     }
 }
