@@ -17,30 +17,37 @@ echo "# CLEAN HACK";
 _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
 
 ###################################
-## Purge cache dir
+## Purging cache dir
 ###################################
 
-echo '# Purge cache dir';
+echo '# Purging cache dir';
 rm -rf wp-content/cache/*;
 
 ###################################
-## Delete invalid PHP Files
+## Deleting invalid PHP Files
 ###################################
 
-echo '# Delete invalid PHP Files';
+echo '# Deleting invalid PHP Files';
 grep -Ril "<?php" wp-content/{uploads,languages} | xargs rm
 
 ###################################
-## Clean PHP files
+## Deleting non-PHP files containing PHP
 ###################################
 
-echo '# Clean PHP files';
+echo '# Deleting non-PHP files containing PHP'
+grep -Ril "<?php" --exclude=\*.{php,md,txt,rst,txt,js,phar,dist} | xargs rm
+
+###################################
+## Cleaning PHP files
+###################################
+
+echo '# Cleaning PHP files';
 grep -Ril "<?php       " . | xargs sed -i "" "s/^<\?php         .*/<\?php/";
 
 ###################################
-## Reinstall WordPress Core
+## Reinstalling WordPress Core
 ###################################
 
-echo '# Reinstall WordPress Core';
+echo '# Reinstalling WordPress Core';
 rm -rf wp-admin wp-includes;
 _WPCLICOMMAND core download --force --skip-content --version="${_CURRENT_WORDPRESS}";
