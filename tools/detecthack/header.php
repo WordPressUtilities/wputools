@@ -81,15 +81,19 @@ $files = wpudhk_rglob('*.php');
 $suspect_strings = array(
     array(
         'flags' => 10,
-        'string' => 'str_split(rawurldecode(str_rot13',
+        'string' => 'str_split(rawurldecode(str_rot13'
     ),
     array(
         'flags' => 10,
-        'string' => 'array_slice(str_split(str_repeat',
+        'string' => 'array_slice(str_split(str_repeat'
     ),
     array(
         'flags' => 10,
-        'string' => '@$_COOKIE',
+        'string' => '@$_COOKIE'
+    ),
+    array(
+        'flags' => 10,
+        'string' => '@copy($_FILES'
     ),
     array(
         'flags' => 10,
@@ -109,39 +113,63 @@ $suspect_strings = array(
     ),
     array(
         'flags' => 10,
+        'string' => '\x41\x42\x43'
+    ),
+    array(
+        'flags' => 10,
         'string' => '@include "\\'
     ),
     array(
+        'flags' => 10,
+        'string' => '{ goto'
+    ),
+    array(
         'flags' => 20,
-        'string' => '<?php' . str_repeat(' ', 100),
+        'string' => '<?php' . str_repeat(' ', 100)
+    ),
+    array(
+        'flags' => 20,
+        'string' => '($_COOKIE, $_POST)'
+    ),
+    array(
+        'flags' => 20,
+        'string' => 'unlink($_SERVER[\'SCRIPT_FILENAME\'])'
+    ),
+    array(
+        'flags' => 50,
+        'string' => 'wp_create_user(\''
+    ),
+    array(
+        'flags' => 50,
+        'string' => '@eval'
     ),
     array(
         'flags' => 50,
         'string' => 'eval/*'
-    ),
+    )
 );
 
 $suspect_functions = array(
     array(
         'flags' => 1,
-        'string' => 'str_rot13',
+        'string' => 'str_rot13'
     ),
     array(
         'flags' => 1,
-        'string' => 'pack',
+        'string' => 'pack'
     ),
     array(
         'flags' => 1,
-        'string' => 'gzinflate',
+        'string' => 'gzinflate'
     ),
     array(
         'flags' => 1,
-        'string' => 'eval',
+        'string' => 'eval'
     ),
     array(
         'flags' => 1,
         'string' => 'base64_decode'
-    ),
+    )
 );
 
 /* ----------------------------------------------------------
@@ -250,7 +278,7 @@ foreach ($files as $f) {
             foreach ($func['tests'] as $test_string) {
                 if (strpos($file_line, $test_string) !== false) {
                     $suspect_results[$str]['values'][] = $f;
-                    add_to_suspect_files($f,$func['flags']);
+                    add_to_suspect_files($f, $func['flags']);
                 }
             }
         }

@@ -43,6 +43,7 @@ grep -Ril "<?php" --exclude=\*.{php,md,txt,rst,txt,js,phar,dist} | xargs rm
 
 echo '# Cleaning PHP files';
 grep -Ril "<?php       " . | xargs sed -i "" "s/^<\?php         .*/<\?php/";
+grep -Ril "wp_create_user(\'" . | xargs sed -i "" "s/wp_create_user('.*/false;/";
 
 ###################################
 ## Reinstalling WordPress Core
@@ -50,4 +51,4 @@ grep -Ril "<?php       " . | xargs sed -i "" "s/^<\?php         .*/<\?php/";
 
 echo '# Reinstalling WordPress Core';
 rm -rf wp-admin wp-includes;
-_WPCLICOMMAND core download --force --skip-content --version="${_CURRENT_WORDPRESS}";
+_WPCLICOMMAND core download --force --version="${_CURRENT_WORDPRESS}";
