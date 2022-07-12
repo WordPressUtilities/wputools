@@ -80,12 +80,16 @@ if (isset($detecthack_file)) {
 $files = wpudhk_rglob('*.php');
 $suspect_strings = array(
     array(
-        'flags' => 10,
+        'flags' => 20,
         'string' => 'str_split(rawurldecode(str_rot13'
     ),
     array(
-        'flags' => 10,
+        'flags' => 20,
         'string' => 'array_slice(str_split(str_repeat'
+    ),
+    array(
+        'flags' => 10,
+        'string' => 'base64_decode("\\'
     ),
     array(
         'flags' => 10,
@@ -98,6 +102,10 @@ $suspect_strings = array(
     array(
         'flags' => 10,
         'string' => '\x29\\'
+    ),
+    array(
+        'flags' => 10,
+        'string' => '${"\x'
     ),
     array(
         'flags' => 10,
@@ -121,7 +129,19 @@ $suspect_strings = array(
     ),
     array(
         'flags' => 10,
+        'string' => '@include($'
+    ),
+    array(
+        'flags' => 10,
         'string' => '{ goto'
+    ),
+    array(
+        'flags' => 10,
+        'string' => 'str_rot13(@pack'
+    ),
+    array(
+        'flags' => 10,
+        'string' => 'file_put_contents($_SERVER'
     ),
     array(
         'flags' => 20,
@@ -129,7 +149,11 @@ $suspect_strings = array(
     ),
     array(
         'flags' => 20,
-        'string' => '($_COOKIE, $_POST)'
+        'string' => '$_COOKIE, $_POST'
+    ),
+    array(
+        'flags' => 20,
+        'string' => 'CURLOPT_TIMEOUT,round'
     ),
     array(
         'flags' => 20,
@@ -138,6 +162,10 @@ $suspect_strings = array(
     array(
         'flags' => 50,
         'string' => 'wp_create_user(\''
+    ),
+    array(
+        'flags' => 50,
+        'string' => 'return @$'
     ),
     array(
         'flags' => 50,
@@ -240,6 +268,7 @@ function add_to_suspect_files($f, $score_plus = 1) {
   Parse files
 ---------------------------------------------------------- */
 
+$clean_files = array();
 foreach ($files as $f) {
     # Ignore current file
     if ($f == $current_file) {
@@ -264,12 +293,13 @@ foreach ($files as $f) {
     if (file_exists($tmp_f)) {
         # Ignore file
         if (hash_file('md5', $tmp_f) == hash_file('md5', $f)) {
+            $clean_files[] = $f;
             continue;
         }
         # Mark as invalid WP
         else {
             $global_tests['invalid_compared_files']['values'][] = $f;
-            add_to_suspect_files($f, 20);
+            add_to_suspect_files($f, 10);
         }
     }
     $iterator_object = wpudhk_readfile($f);
@@ -310,6 +340,9 @@ foreach ($global_tests as $test_id => $var_test) {
     }
     wputh_echo("\n" . $var_test['info']);
     foreach ($var_test['values'] as $val) {
+        if (in_array($val, $clean_files)) {
+            continue;
+        }
         wputh_echo(' - ' . $val);
     }
 }
@@ -323,9 +356,12 @@ natsort($most_suspect_files);
 $most_suspect_files = array_reverse($most_suspect_files);
 $i = 0;
 foreach ($most_suspect_files as $file => $nb_flags) {
+    if (in_array($file, $clean_files)) {
+        continue;
+    }
     $i++;
     wputh_echo(' - ' . $file . ' : ' . $nb_flags . ' red flags.');
-    if ($i > 50) {
+    if ($i > 100 && $nb_flags <= 1) {
         break;
     }
 }

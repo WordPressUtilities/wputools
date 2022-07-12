@@ -28,7 +28,20 @@ rm -rf wp-content/cache/*;
 ###################################
 
 echo '# Deleting invalid PHP Files';
+
+# Bad place
 grep -Ril "<?php" wp-content/{uploads,languages} | xargs rm
+
+# Bad content
+grep -Ril "eval\/\*" . | xargs rm
+grep -Ril "str_split(rawurldecode(str_rot13" . | xargs rm
+grep -Ril "array_slice(str_split(str_repeat" . | xargs rm
+grep -Ril "\@\$_COOKIE" . | xargs rm
+grep -Ril 'base64_decode("\\' . | xargs rm
+grep -Ril 'str_rot13(@pack' . | xargs rm
+grep -Ril '@eval(@' . | xargs rm
+grep -Ril '($_COOKIE, $_POST)' . | xargs rm
+grep -Ril 'unlink(\$_SERVER\[' . | xargs rm
 
 ###################################
 ## Deleting non-PHP files containing PHP
