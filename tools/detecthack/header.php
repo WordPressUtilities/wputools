@@ -20,6 +20,13 @@ function wpudhk_readfile($path) {
     fclose($handle);
 }
 
+function wpudhk_is_php($path) {
+    $handle = fopen($path, "r");
+    $return = strpos(trim(fgets($handle)), '<?php');
+    fclose($handle);
+    return $return !== false;
+}
+
 /* https://stackoverflow.com/a/12109100 */
 function wpudhk_rglob($pattern, $flags = 0) {
     $files = glob($pattern, $flags);
@@ -77,7 +84,7 @@ $current_file = basename(__FILE__);
 if (isset($detecthack_file)) {
     $current_file = $detecthack_file;
 }
-$files = wpudhk_rglob('*.php');
+$files = wpudhk_rglob('*');
 $suspect_strings = array(
     array(
         'flags' => 20,
@@ -88,8 +95,20 @@ $suspect_strings = array(
         'string' => 'array_slice(str_split(str_repeat'
     ),
     array(
-        'flags' => 10,
-        'string' => 'base64_decode("\\'
+        'flags' => 20,
+        'string' => 'base64_decode("'
+    ),
+    array(
+        'flags' => 20,
+        'string' => 'base64_decode(chr('
+    ),
+    array(
+        'flags' => 20,
+        'string' => '${"\x'
+    ),
+    array(
+        'flags' => 20,
+        'string' => '${"\\'
     ),
     array(
         'flags' => 10,
@@ -105,15 +124,7 @@ $suspect_strings = array(
     ),
     array(
         'flags' => 10,
-        'string' => '${"\x'
-    ),
-    array(
-        'flags' => 10,
         'string' => '"]()'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '${"\\'
     ),
     array(
         'flags' => 10,
@@ -144,6 +155,10 @@ $suspect_strings = array(
         'string' => 'file_put_contents($_SERVER'
     ),
     array(
+        'flags' => 10,
+        'string' => 'round(0+'
+    ),
+    array(
         'flags' => 20,
         'string' => '<?php' . str_repeat(' ', 100)
     ),
@@ -170,6 +185,18 @@ $suspect_strings = array(
     array(
         'flags' => 50,
         'string' => '@eval'
+    ),
+    array(
+        'flags' => 50,
+        'string' => 'eval ($'
+    ),
+    array(
+        'flags' => 50,
+        'string' => 'eval(\'?>'
+    ),
+    array(
+        'flags' => 50,
+        'string' => 'eval(str_rot13'
     ),
     array(
         'flags' => 50,
@@ -268,18 +295,58 @@ function add_to_suspect_files($f, $score_plus = 1) {
   Parse files
 ---------------------------------------------------------- */
 
+$authorized_file_types = array(
+    'text/x-php',
+    'text/plain'
+);
+
+$ignored_file_types = array(
+    'directory',
+    'text/troff',
+    'text/html',
+    'text/xml'
+);
+
+$ignored_file_main_types = array(
+    'application',
+    'image',
+    'video',
+    'font'
+);
+
+$ignored_extensions = array(
+    'css',
+    'js'
+);
+
 $clean_files = array();
 foreach ($files as $f) {
     # Ignore current file
     if ($f == $current_file) {
         continue;
     }
-    # Ignore tmp directory
-    if (strpos($f, $tmp_wp_dir) !== false) {
+    # Ignore tmp & unsupported directories
+    if (strpos($f, $tmp_wp_dir) !== false || strpos($f, 'node_modules/') !== false) {
         continue;
     }
-    # If suspect directory detected
-    if (strpos($f, 'wp-content/uploads') !== false) {
+    /* Ignore some extensions */
+    $ext = pathinfo($f, PATHINFO_EXTENSION);
+    if (in_array($ext, $ignored_extensions)) {
+        continue;
+    }
+    # Types detection
+    $file_type = mime_content_type($f);
+    $file_type_parts = explode('/', $file_type);
+    # Ignore some unsupported file types
+    if (in_array($file_type, $ignored_file_types) || (isset($file_type_parts[0]) && in_array($file_type_parts[0], $ignored_file_main_types))) {
+        continue;
+    }
+    # Ignore bad mime types
+    if (substr($file_type, 0, 7) == 'text/x-' && !in_array($file_type, $authorized_file_types)) {
+        continue;
+    }
+    # If PHP detected in a suspect directory
+    if (strpos($f, 'wp-content/uploads') !== false && wpudhk_is_php($f)) {
         $global_tests['suspect_directories_files']['values'][] = $f;
         add_to_suspect_files($f, 10);
     }
