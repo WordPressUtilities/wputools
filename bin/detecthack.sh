@@ -30,6 +30,12 @@ cp wp-config.php "${_WPUDHK_DIR}";
 # Extract version
 _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
 
+# Extract local package
+_WPUDHK_LOCAL_PACKAGE=$(bashutilities_search_extract_file "\$wp_local_package = '" "';" "wp-includes/version.php");
+if [[ "${_WPUDHK_LOCAL_PACKAGE}" == '' ]];then
+    _WPUDHK_LOCAL_PACKAGE='en_US';
+fi;
+
 # Downloading test version
 if [[ "${_WPUDHK_COMPARE_WP}" == 'y' ]];then
 echo "# Downloading core WordPress to have a clean base to compare";
@@ -37,6 +43,7 @@ _WPCLICOMMAND core download \
     --quiet \
     --skip-plugins \
     --skip-themes \
+    --locale="${_WPUDHK_LOCAL_PACKAGE}" \
     --path="${_WPUDHK_DIR}" \
     --version="${_CURRENT_WORDPRESS}";
 fi;
