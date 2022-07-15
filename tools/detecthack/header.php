@@ -120,6 +120,10 @@ $suspect_strings = array(
     ),
     array(
         'flags' => 10,
+        'string' => 'if(copy($_FILES[\''
+    ),
+    array(
+        'flags' => 10,
         'string' => '\x29\\'
     ),
     array(
@@ -196,6 +200,10 @@ $suspect_strings = array(
     ),
     array(
         'flags' => 50,
+        'string' => 'eval("?'
+    ),
+    array(
+        'flags' => 50,
         'string' => 'eval(str_rot13'
     ),
     array(
@@ -242,6 +250,10 @@ $global_tests = array(
     ),
     'suspect_recent_files' => array(
         'info' => '# These files have been edited recently.',
+        'values' => array()
+    ),
+    'invalid_extension' => array(
+        'info' => '# These files contains PHP but have the wrong extension.',
         'values' => array()
     )
 );
@@ -330,7 +342,7 @@ foreach ($files as $f) {
         continue;
     }
     /* Ignore some extensions */
-    $ext = pathinfo($f, PATHINFO_EXTENSION);
+    $ext = strtolower(pathinfo($f, PATHINFO_EXTENSION));
     if (in_array($ext, $ignored_extensions)) {
         continue;
     }
@@ -345,8 +357,13 @@ foreach ($files as $f) {
     if (substr($file_type, 0, 7) == 'text/x-' && !in_array($file_type, $authorized_file_types)) {
         continue;
     }
+    $is_php = wpudhk_is_php($f);
+    if ($ext != 'php' && $is_php) {
+        $global_tests['invalid_extension']['values'][] = $f;
+        add_to_suspect_files($f, 5);
+    }
     # If PHP detected in a suspect directory
-    if (strpos($f, 'wp-content/uploads') !== false && wpudhk_is_php($f)) {
+    if (strpos($f, 'wp-content/uploads') !== false && $is_php) {
         $global_tests['suspect_directories_files']['values'][] = $f;
         add_to_suspect_files($f, 10);
     }
