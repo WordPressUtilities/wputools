@@ -86,153 +86,46 @@ if (isset($detecthack_file)) {
 }
 $files = wpudhk_rglob('*');
 $suspect_strings = array(
-    array(
-        'flags' => 20,
-        'string' => 'str_split(rawurldecode(str_rot13'
-    ),
-    array(
-        'flags' => 20,
-        'string' => 'array_slice(str_split(str_repeat'
-    ),
-    array(
-        'flags' => 20,
-        'string' => 'base64_decode("'
-    ),
-    array(
-        'flags' => 20,
-        'string' => 'base64_decode(chr('
-    ),
-    array(
-        'flags' => 20,
-        'string' => '${"\x'
-    ),
-    array(
-        'flags' => 20,
-        'string' => '${"\\'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '@$_COOKIE'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '@copy($_FILES'
-    ),
-    array(
-        'flags' => 10,
-        'string' => 'if(copy($_FILES[\''
-    ),
-    array(
-        'flags' => 10,
-        'string' => '\x29\\'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '"]()'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '["\x'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '\x41\x42\x43'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '@include "\\'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '@include($'
-    ),
-    array(
-        'flags' => 10,
-        'string' => '{ goto'
-    ),
-    array(
-        'flags' => 10,
-        'string' => 'str_rot13(@pack'
-    ),
-    array(
-        'flags' => 10,
-        'string' => 'file_put_contents($_SERVER'
-    ),
-    array(
-        'flags' => 10,
-        'string' => 'round(0+'
-    ),
-    array(
-        'flags' => 20,
-        'string' => '<?php' . str_repeat(' ', 100)
-    ),
-    array(
-        'flags' => 20,
-        'string' => '$_COOKIE, $_POST'
-    ),
-    array(
-        'flags' => 20,
-        'string' => 'CURLOPT_TIMEOUT,round'
-    ),
-    array(
-        'flags' => 20,
-        'string' => 'unlink($_SERVER[\'SCRIPT_FILENAME\'])'
-    ),
-    array(
-        'flags' => 50,
-        'string' => 'wp_create_user(\''
-    ),
-    array(
-        'flags' => 50,
-        'string' => 'return @$'
-    ),
-    array(
-        'flags' => 50,
-        'string' => '@eval'
-    ),
-    array(
-        'flags' => 50,
-        'string' => 'eval ($'
-    ),
-    array(
-        'flags' => 50,
-        'string' => 'eval(\'?>'
-    ),
-    array(
-        'flags' => 50,
-        'string' => 'eval("?'
-    ),
-    array(
-        'flags' => 50,
-        'string' => 'eval(str_rot13'
-    ),
-    array(
-        'flags' => 50,
-        'string' => 'eval/*'
-    )
+    array('flags' => 20, 'string' => 'str_split(rawurldecode(str_rot13'),
+    array('flags' => 20, 'string' => 'array_slice(str_split(str_repeat'),
+    array('flags' => 20, 'string' => 'base64_decode("'),
+    array('flags' => 20, 'string' => 'base64_decode(chr('),
+    array('flags' => 20, 'string' => '${"\x'),
+    array('flags' => 20, 'string' => '${"\\'),
+    array('flags' => 10, 'string' => '@copy($_FILES'),
+    array('flags' => 10, 'string' => 'if(copy($_FILES[\''),
+    array('flags' => 10, 'string' => '\x29\\'),
+    array('flags' => 10, 'string' => '"]()'),
+    array('flags' => 10, 'string' => '["\x'),
+    array('flags' => 10, 'string' => '\x41\x42\x43'),
+    array('flags' => 10, 'string' => 'window[_'),
+    array('flags' => 10, 'string' => '@include "\\'),
+    array('flags' => 10, 'string' => '@include($'),
+    array('flags' => 10, 'string' => '{ goto'),
+    array('flags' => 10, 'string' => 'str_rot13(@pack'),
+    array('flags' => 10, 'string' => 'file_put_contents($_SERVER'),
+    array('flags' => 10, 'string' => 'round(0+'),
+    array('flags' => 20, 'string' => '<?php' . str_repeat(' ', 100)),
+    array('flags' => 20, 'string' => '$_COOKIE, $_POST'),
+    array('flags' => 20, 'string' => 'CURLOPT_TIMEOUT,round'),
+    array('flags' => 20, 'string' => '@$'),
+    array('flags' => 20, 'string' => 'unlink($_SERVER[\'SCRIPT_FILENAME\'])'),
+    array('flags' => 50, 'string' => 'wp_create_user(\''),
+    array('flags' => 50, 'string' => 'return @$'),
+    array('flags' => 50, 'string' => '@eval'),
+    array('flags' => 50, 'string' => 'eval ($'),
+    array('flags' => 50, 'string' => 'eval(\'?>'),
+    array('flags' => 50, 'string' => 'eval("?'),
+    array('flags' => 50, 'string' => 'eval(str_rot13'),
+    array('flags' => 50, 'string' => 'eval/*')
 );
 
 $suspect_functions = array(
-    array(
-        'flags' => 1,
-        'string' => 'str_rot13'
-    ),
-    array(
-        'flags' => 1,
-        'string' => 'pack'
-    ),
-    array(
-        'flags' => 1,
-        'string' => 'gzinflate'
-    ),
-    array(
-        'flags' => 1,
-        'string' => 'eval'
-    ),
-    array(
-        'flags' => 1,
-        'string' => 'base64_decode'
-    )
+    array('flags' => 1, 'string' => 'str_rot13'),
+    array('flags' => 1, 'string' => 'pack'),
+    array('flags' => 1, 'string' => 'gzinflate'),
+    array('flags' => 1, 'string' => 'eval'),
+    array('flags' => 1, 'string' => 'base64_decode')
 );
 
 /* ----------------------------------------------------------
@@ -357,6 +250,7 @@ foreach ($files as $f) {
     if (substr($file_type, 0, 7) == 'text/x-' && !in_array($file_type, $authorized_file_types)) {
         continue;
     }
+    # Invalid extension
     $is_php = wpudhk_is_php($f);
     if ($ext != 'php' && $is_php) {
         $global_tests['invalid_extension']['values'][] = $f;
