@@ -25,6 +25,19 @@ if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && -n "${_
 
 fi;
 
+# Try to find the latest backup on a local directory
+if [[ "${_dbimport_file}" == 'latestlocal' && -n "${_WPDB_BACKUP_LOCAL_DIR}" ]];then
+
+    # Find latest backup
+    _latest_backup=$(ls -t ${_WPDB_BACKUP_LOCAL_DIR}*  | head -n 1);
+
+    # Use it if it's ok
+    if [[ -f "${_latest_backup}" ]];then
+        _dbimport_file="${_latest_backup}";
+    fi;
+
+fi;
+
 # Check DB file
 if [[ ! -f "${_dbimport_file}" ]]; then
     bashutilities_message 'The file does not exists' 'error';
