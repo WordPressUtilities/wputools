@@ -12,15 +12,19 @@ wputools_execute_file "wputools-dbimport-before-all.sh" "${1}";
 # Try to find the latest backup on server
 if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && -n "${_WPDB_SSH_USER_AT_HOST}" ]];then
 
+    if [[ "${_WPDB_SSH_PORT}" == "" ]];then
+        _WPDB_SSH_PORT=22;
+    fi;
+
     # Find latest backup on server and copy it
-    _latest_backup=$(ssh "${_WPDB_SSH_USER_AT_HOST}" "ls ${_WPDB_SSH_BACKUP_DIR}* -t1 | head -n 1");
+    _latest_backup=$(ssh -p "${_WPDB_SSH_PORT}" "${_WPDB_SSH_USER_AT_HOST}" "ls ${_WPDB_SSH_BACKUP_DIR}* -t1 | head -n 1");
 
     # Copy latest file to current folder
     _dbimport_file=$(basename "${_latest_backup}");
     _dbimport_file="../${_dbimport_file}";
     _dbimport_file_tmp="${_dbimport_file}";
     if [[ -n "${_dbimport_file}" && ! -f "${_dbimport_file}" ]];then
-        scp "${_WPDB_SSH_USER_AT_HOST}":"${_latest_backup}" "${_dbimport_file}";
+        scp -P "${_WPDB_SSH_PORT}" "${_WPDB_SSH_USER_AT_HOST}":"${_latest_backup}" "${_dbimport_file}";
     fi;
 
 fi;
