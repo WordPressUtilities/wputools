@@ -110,6 +110,7 @@ unset -v _WPULOG_RAND;
 unset -v _WPUSAMPLE_FILE;
 unset -v _WPUSAMPLE_PATH;
 unset -v _WPUSAMPLE_RAND;
+unset -v _WPUTOOLS_ACF_PRO_LICENSE;
 unset -v _WPUTOOLS_BACKUP_DIR;
 unset -v _WPUTOOLS_CORE_UPDATE_TYPE;
 unset -v _wputools_last_check_age;

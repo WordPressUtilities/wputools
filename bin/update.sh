@@ -65,7 +65,7 @@ function wputools__check_acf_pro_install(){
     bashutilities_message "You seem to have installed ACF Pro, but no license is defined.";
     if [[ "${wpoption_needed}" == '0' ]];then
         echo "Please add your license in the wp-config file.";
-        echo "define('ACF_PRO_LICENSE','LICENSE');";
+        echo "define('ACF_PRO_LICENSE','${_WPUTOOLS_ACF_PRO_LICENSE}');";
     else
         echo "Please add your license in the admin area.";
     fi;
