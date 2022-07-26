@@ -78,6 +78,25 @@ if (!$is_debug_env && defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
 }
 
 /* ----------------------------------------------------------
+  Check for enabled auto file modification
+---------------------------------------------------------- */
+
+if (!$is_debug_env) {
+    if (!AUTOMATIC_UPDATER_DISABLED) {
+        $wputools_errors[] = 'WordPress : AUTOMATIC_UPDATER_DISABLED should be set to TRUE on a non-debug environment.';
+    }
+    if (WP_AUTO_UPDATE_CORE) {
+        $wputools_errors[] = 'WordPress : WP_AUTO_UPDATE_CORE should be set to FALSE on a non-debug environment.';
+    }
+    if (!DISALLOW_FILE_EDIT) {
+        $wputools_errors[] = 'WordPress : DISALLOW_FILE_EDIT should be set to TRUE on a non-debug environment.';
+    }
+    if (!DISALLOW_FILE_MODS) {
+        $wputools_errors[] = 'WordPress : DISALLOW_FILE_MODS should be set to TRUE on a non-debug environment.';
+    }
+}
+
+/* ----------------------------------------------------------
   Check commits hooks
 ---------------------------------------------------------- */
 
