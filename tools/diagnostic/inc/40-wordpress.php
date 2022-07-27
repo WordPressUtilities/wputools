@@ -62,6 +62,14 @@ if ($wputools_is_cli && defined('SAVEQUERIES') && SAVEQUERIES) {
 }
 
 /* ----------------------------------------------------------
+  Check debug.log settings
+---------------------------------------------------------- */
+
+if(defined('WP_DEBUG_LOG') && WP_DEBUG_LOG && strlen(WP_DEBUG_LOG) < 6){
+    $wputools_errors[] = 'WordPress : WP_DEBUG_LOG should not be a boolean, but a dynamic file path.';
+}
+
+/* ----------------------------------------------------------
   Check Debug env
 ---------------------------------------------------------- */
 
