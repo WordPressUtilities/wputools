@@ -122,7 +122,7 @@ function commit_without_protect(){
 
 function wputools__update_core(){
     echo '# Updating WordPress core';
-    _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
+    local _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
     _WPCLICOMMAND core check-update;
     if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
         _WPCLICOMMAND core update --skip-themes;
@@ -131,7 +131,12 @@ function wputools__update_core(){
     fi;
     rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
     _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
-    commit_without_protect "Update WordPress from ${_CURRENT_WORDPRESS} to ${_LATEST_WORDPRESS}";
+
+    local _WP_UPDATE_TEXT="Update WordPress from ${_CURRENT_WORDPRESS} to ${_LATEST_WORDPRESS}";
+    if [[ "${_CURRENT_WORDPRESS}" == "${_LATEST_WORDPRESS}" ]];then
+        local _WP_UPDATE_TEXT="Update WordPress";
+    fi;
+    commit_without_protect "${_WP_UPDATE_TEXT}";
 
     echo '# Updating WordPress core translations';
     _WPCLICOMMAND language core update;
@@ -165,9 +170,13 @@ function wputools__update_plugin() {
         # Commit plugin update
         local _PLUGIN_VERSION=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=version);
         local _PLUGIN_TITLE=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=title);
+        local _PLUGIN_COMMIT_TEXT="Update Plugin ${_PLUGIN_TITLE} from v${_PLUGIN_VERSION_OLD} to v${_PLUGIN_VERSION}";
+        if [[ "${_PLUGIN_VERSION_OLD}" == "${_PLUGIN_VERSION}" ]];then
+            local _PLUGIN_COMMIT_TEXT="Update Plugin ${_PLUGIN_TITLE}";
+        fi;
         git add "${_PLUGIN_DIR}";
         git add "${_PLUGIN_LANG}";
-        commit_without_protect "Update Plugin ${_PLUGIN_TITLE} from v${_PLUGIN_VERSION_OLD} to v${_PLUGIN_VERSION}";
+        commit_without_protect "${_PLUGIN_COMMIT_TEXT}";
     fi;
 }
 
