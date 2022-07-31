@@ -60,6 +60,10 @@ Add CLI shortcut :
 
 `wputools clean;`
 
+### Check your code.
+
+`wputools codechecker;`
+
 ### Import a distant website.
 
 `wputools importsite conf.sh;`

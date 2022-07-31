@@ -3,7 +3,6 @@
 echo "# CLEAN HACK";
 
 ## TODO
-# - Reinstall same language
 # - Clean PHP root files (wp-config.php or non WordPress)
 # - Clean mu-plugins dir
 # - Clean plugins dir
