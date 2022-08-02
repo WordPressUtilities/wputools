@@ -65,7 +65,7 @@ if ($wputools_is_cli && defined('SAVEQUERIES') && SAVEQUERIES) {
   Check debug.log settings
 ---------------------------------------------------------- */
 
-if(defined('WP_DEBUG_LOG') && WP_DEBUG_LOG && strlen(WP_DEBUG_LOG) < 6){
+if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG && strlen(WP_DEBUG_LOG) < 6) {
     $wputools_errors[] = 'WordPress : WP_DEBUG_LOG should not be a boolean, but a dynamic file path.';
 }
 
@@ -90,16 +90,16 @@ if (!$is_debug_env && defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
 ---------------------------------------------------------- */
 
 if (!$is_debug_env) {
-    if (!AUTOMATIC_UPDATER_DISABLED) {
+    if (!defined('AUTOMATIC_UPDATER_DISABLED') || !AUTOMATIC_UPDATER_DISABLED) {
         $wputools_errors[] = 'WordPress : AUTOMATIC_UPDATER_DISABLED should be set to TRUE on a non-debug environment.';
     }
-    if (WP_AUTO_UPDATE_CORE) {
+    if (!defined('WP_AUTO_UPDATE_CORE') || WP_AUTO_UPDATE_CORE) {
         $wputools_errors[] = 'WordPress : WP_AUTO_UPDATE_CORE should be set to FALSE on a non-debug environment.';
     }
-    if (!DISALLOW_FILE_EDIT) {
+    if (!defined('DISALLOW_FILE_EDIT') || !DISALLOW_FILE_EDIT) {
         $wputools_errors[] = 'WordPress : DISALLOW_FILE_EDIT should be set to TRUE on a non-debug environment.';
     }
-    if (!DISALLOW_FILE_MODS) {
+    if (!defined('DISALLOW_FILE_MODS') || !DISALLOW_FILE_MODS) {
         $wputools_errors[] = 'WordPress : DISALLOW_FILE_MODS should be set to TRUE on a non-debug environment.';
     }
 }
