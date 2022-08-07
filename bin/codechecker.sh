@@ -14,20 +14,35 @@ function _wputools_code_checker__dir_contains(){
     fi;
 }
 
+# Detect common errors
+function _wputools_code_checker_common_tests(){
+    echo "# Checking '${1}'";
+    _wputools_code_checker__dir_contains "><?php" "${1}";
+    _wputools_code_checker__dir_contains "lorem" "${1}";
+    _wputools_code_checker__dir_contains "'wputh'" "${1}";
+    _wputools_code_checker__dir_contains "echo get_post_meta" "${1}";
+    _wputools_code_checker__dir_contains "echo get_option" "${1}";
+    _wputools_code_checker__dir_contains "echo get_field" "${1}";
+    _wputools_code_checker__dir_contains "wp_footer(" "${1}";
+}
+
 function _wputools_code_checker_theme(){
     local _theme_path=$(_WPCLICOMMAND theme path);
     local _theme_name=$(_WPCLICOMMAND option get stylesheet);
     local _theme_dir="${_theme_path}/${_theme_name}";
     _theme_dir="${_theme_dir/"$(pwd)"/.}";
-
-    # Detect common errors
-    _wputools_code_checker__dir_contains "lorem" "${_theme_dir}";
-    _wputools_code_checker__dir_contains "'wputh'" "${_theme_dir}";
-    _wputools_code_checker__dir_contains "echo get_post_meta" "${_theme_dir}";
-    _wputools_code_checker__dir_contains "echo get_option" "${_theme_dir}";
-    _wputools_code_checker__dir_contains "echo get_field" "${_theme_dir}";
-    _wputools_code_checker__dir_contains "wp_footer(" "${_theme_dir}";
-
+    _wputools_code_checker_common_tests "${_theme_dir}";
 }
+
+function _wputools_code_checker_muplugins(){
+    local _theme_name=$(_WPCLICOMMAND option get stylesheet);
+    local _muplugins_dir="./wp-content/mu-plugins/${_theme_name}";
+    if [[ ! -d "${_muplugins_dir}" ]];then
+        return 0;
+    fi;
+    _wputools_code_checker_common_tests "${_muplugins_dir}";
+}
+
 _wputools_code_checker_theme;
+_wputools_code_checker_muplugins;
 
