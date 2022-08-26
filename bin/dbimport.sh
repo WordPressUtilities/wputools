@@ -4,6 +4,7 @@ echo "# DB Import";
 
 _dbimport_file="${1}";
 _dbimport_file_tmp="";
+_dbimport_file_isdownloaded="0";
 _tmp_folder="";
 _latest_backup="";
 
@@ -24,6 +25,7 @@ if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && -n "${_
     _dbimport_file="../${_dbimport_file}";
     _dbimport_file_tmp="${_dbimport_file}";
     if [[ -n "${_dbimport_file}" && ! -f "${_dbimport_file}" ]];then
+        _dbimport_file_isdownloaded="1";
         scp -P "${_WPDB_SSH_PORT}" "${_WPDB_SSH_USER_AT_HOST}":"${_latest_backup}" "${_dbimport_file}";
     fi;
 
@@ -102,7 +104,7 @@ fi;
 
 if [[ -n "${_WPDB_REPLACE_BEFORE}" && -n "${_WPDB_REPLACE_AFTER}" ]];then
     # Search replace
-    _WPCLICOMMAND search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}"  --skip-columns=autoload,comment_status,display_name,meta_key,option_name,ping_status,pinged,post_mime_type,post_name,post_password,post_status,post_title,post_type,to_ping,user_email,user_login --skip-tables=*_comments,*_commentmeta,*_links,*_terms,*_term_taxonomy,*_users,*_usermeta;
+    _WPCLICOMMAND search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}"  --skip-columns=autoload,comment_status,display_name,meta_key,option_name,ping_status,pinged,post_mime_type,post_name,post_password,post_status,post_title,post_type,to_ping,user_email,user_login --skip-tables=*_actionscheduler*,*_comments,*_commentmeta,*_links,*_terms,*_term_taxonomy,*_users,*_usermeta,*_wc_product*,*_wc_tax*,*_woocommerce_payment_tokenmeta;
 fi;
 
 wputools_execute_file "wputools-dbimport-after-search-replace.sh";
@@ -190,7 +192,11 @@ fi;
 
 # Delete latest downloaded backup
 if [[ "${_dbimport_file_tmp}" != '' && -f "${_dbimport_file_tmp}" ]];then
-    _delete_dbimport_file=$(bashutilities_get_yn "- Delete imported backup file (${_dbimport_file_tmp}) ?" 'y');
+    _delete_dbimport_file_default='y';
+    if [[ "${_dbimport_file_isdownloaded}" == '0' ]];then
+        _delete_dbimport_file_default='n';
+    fi;
+    _delete_dbimport_file=$(bashutilities_get_yn "- Delete imported backup file (${_dbimport_file_tmp}) ?" "${_delete_dbimport_file_default}");
     if [[ "${_delete_dbimport_file}" == 'y' ]];then
         rm "${_dbimport_file_tmp}";
     fi;
