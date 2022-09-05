@@ -65,8 +65,29 @@ if ($wputools_is_cli && defined('SAVEQUERIES') && SAVEQUERIES) {
   Check debug.log settings
 ---------------------------------------------------------- */
 
-if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG && strlen(WP_DEBUG_LOG) < 6) {
-    $wputools_errors[] = 'WordPress : WP_DEBUG_LOG should not be a boolean, but a dynamic file path.';
+if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+    if (strlen(WP_DEBUG_LOG) < 6) {
+        $wputools_errors[] = 'WordPress : WP_DEBUG_LOG should not be a boolean, but a dynamic file path.';
+    }
+    if (strlen(WP_DEBUG_LOG) > 6 && is_dir(dirname(WP_DEBUG_LOG))) {
+        $logs = glob(dirname(WP_DEBUG_LOG) . '/*.log');
+        $logs_count = 0;
+        $logs_weight = 0;
+        if (is_array($logs)) {
+            foreach ($logs as $log) {
+                $logs_count++;
+                $logs_weight += filesize($log);
+            }
+        }
+        $max_weight = 30 * 1024 * 1024;
+        if ($logs_weight > $max_weight) {
+            $wputools_errors[] = sprintf('WordPress : The log folder size is bigger than %sMB.', round($max_weight / 1024 / 1024));
+        }
+        $max_count = 30;
+        if ($logs_count > $max_count) {
+            $wputools_errors[] = sprintf('WordPress : There is more than %s files in the logs folder.', $max_count);
+        }
+    }
 }
 
 /* ----------------------------------------------------------
