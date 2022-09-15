@@ -95,18 +95,21 @@ foreach ($post_types as $pt => $post_type) {
   Images
 ---------------------------------------------------------- */
 
-$images = array(
-    'http://source.unsplash.com/random/1280x720',
-    'http://source.unsplash.com/random/720x1280',
-    'http://source.unsplash.com/random/1280x1280'
-);
-$images_nb = count($images);
-$images_list = array();
-for ($i = 0; $i < $_samples_nb; $i++) {
-    $images_list[] = $images[$i % $images_nb] . '?t=' . time() . $i;
-}
-
 if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
+
+    $orientations = array('landscape', 'portrait', 'squarish');
+    $nb_orientations = count($orientations);
+    $images_list = array();
+    if ($_GET['unsplash_api_key']) {
+        for ($i = 0; $i < $_samples_nb; $i++) {
+            $orientation = $orientations[$i % $nb_orientations];
+            $image = json_decode(wp_remote_retrieve_body(wp_remote_get('https://api.unsplash.com/photos/random?orientation=' . $orientation . '&client_id=' . $_GET['unsplash_api_key'])), true);
+            if (isset($image['urls'])) {
+                $images_list[] = $image['urls']['regular'];
+            }
+        }
+    }
+
     require_once ABSPATH . 'wp-admin/includes/file.php';
     require_once ABSPATH . 'wp-admin/includes/image.php';
     require_once ABSPATH . 'wp-admin/includes/media.php';
@@ -128,6 +131,9 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
         }
         @flush();
         @ob_flush();
+    }
+    if(!$images_list){
+        echo "You need an Unsplash API KEY to import images. Please add a _WPUTOOLS_UNSPLASH_API_KEY in your wputools-local.sh file.\n";
     }
 }
 
