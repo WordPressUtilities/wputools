@@ -24,6 +24,10 @@ function _wputools_code_checker_common_tests(){
     _wputools_code_checker__dir_contains "echo get_option" "${1}";
     _wputools_code_checker__dir_contains "echo get_field" "${1}";
     _wputools_code_checker__dir_contains "wp_footer(" "${1}";
+    _wputools_code_checker__dir_contains "\$wpdb->get_var(\"" "${1}";
+    _wputools_code_checker__dir_contains "\$wpdb->get_col(\"" "${1}";
+    _wputools_code_checker__dir_contains "\$wpdb->get_row(\"" "${1}";
+    _wputools_code_checker__dir_contains "\$wpdb->get_results(\"" "${1}";
 }
 
 function _wputools_code_checker_theme(){

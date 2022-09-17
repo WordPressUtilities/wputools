@@ -174,8 +174,10 @@ function wputools__update_plugin() {
         if [[ "${_PLUGIN_VERSION_OLD}" == "${_PLUGIN_VERSION}" ]];then
             local _PLUGIN_COMMIT_TEXT="Update Plugin ${_PLUGIN_TITLE}";
         fi;
-        git add "${_PLUGIN_DIR}";
         git add "${_PLUGIN_LANG}";
+        if [[ -d "${_PLUGIN_LANG}" ]];then
+            git add "${_PLUGIN_LANG}";
+        fi;
         commit_without_protect "${_PLUGIN_COMMIT_TEXT}";
     fi;
 }
