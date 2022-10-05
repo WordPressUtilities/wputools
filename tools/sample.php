@@ -1,7 +1,9 @@
 <?php
 
 // Load WordPress.
-set_time_limit(0);
+if (function_exists('set_time_limit')) {
+    set_time_limit(0);
+}
 ini_set('memory_limit', '512M');
 
 /* Disable maintenance */
