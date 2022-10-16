@@ -48,18 +48,6 @@ _BACKUP_FILES=(".htaccess" "wp-content/mu-plugins/wpu_local_overrides.php" "wp-c
 # Create TMP DIR
 mkdir "${_BACKUP_NAME}";
 
-# Backup DATABASE
-_WPCLICOMMAND db export - > "${_BACKUP_FILE}";
-
-# Hook
-wputools_execute_file "wputools-backup-after-db-export.sh" "${_BACKUP_FILE}";
-
-# Check dump filesize
-_dump_filesize=$(wc -c "${_BACKUP_FILE}" | awk '{print $1}')
-if [ "${_dump_filesize}" -lt "5000" ]; then
-    bashutilities_message 'The MySQL dump looks corrupted' 'error';
-fi
-
 # Backup files
 for ix in ${!_BACKUP_FILES[*]}
 do
@@ -73,6 +61,21 @@ do
         cp "${_BACKUP_FILE_ITEM}" "${_BACKUP_PATH}${_BACKUP_FILE_ITEM_NAME}";
     fi;
 done
+
+# Protect temp dir
+echo 'deny from all' > "${_BACKUP_PATH}.htaccess";
+
+# Backup DATABASE
+_WPCLICOMMAND db export - > "${_BACKUP_FILE}";
+
+# Hook
+wputools_execute_file "wputools-backup-after-db-export.sh" "${_BACKUP_FILE}";
+
+# Check dump filesize
+_dump_filesize=$(wc -c "${_BACKUP_FILE}" | awk '{print $1}')
+if [ "${_dump_filesize}" -lt "5000" ]; then
+    bashutilities_message 'The MySQL dump looks corrupted' 'error';
+fi
 
 # Backup crontab
 if [ -x "$(command -v crontab)" ]; then
@@ -91,7 +94,6 @@ if [ -x "$(command -v crontab)" ]; then
         crontab -l > "${_BACKUP_PATH}crontab.txt";
     fi;
 fi
-
 
 # Backup UPLOADS
 if [[ ! -z "${_BACKUP_UPLOADS}" ]];then
@@ -117,7 +119,7 @@ if [[ "${backup_topdir}" == 'y' ]];then
     _BACKUP_ARCHIVE="../${_BACKUP_ARCHIVE}";
 fi
 _BACKUP_ARCHIVE="${_BACKUP_DIR}${_BACKUP_ARCHIVE}";
-tar -zcvf "${_BACKUP_ARCHIVE}" "${_BACKUP_NAME}";
+tar --exclude=".htaccess" -zcvf "${_BACKUP_ARCHIVE}" "${_BACKUP_NAME}";
 
 # Delete TMP DIR
 rm -rf "${_BACKUP_NAME}";
