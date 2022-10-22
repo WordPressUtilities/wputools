@@ -67,10 +67,21 @@ foreach ($post_types as $pt => $post_type) {
         continue;
     }
 
+    /* Images */
+    $random_images = get_posts(array(
+        'post_type' => 'attachment',
+        'post_mime_type' => 'image/jpeg',
+        'fields' => 'ids',
+        'post_status' => 'inherit',
+        'posts_per_page' => 20,
+        'orderby' => 'rand'
+    ));
+
     $label = $post_type->labels->singular_name;
     echo "Samples for post type : " . $label . "\n";
     $taxonomies = get_object_taxonomies($pt);
     for ($i = 1; $i <= $_samples_nb; $i++) {
+        /* Create post */
         $post_id = wp_insert_post(array(
             'post_title' => $label . ' #' . $i,
             'post_content' => $raw_contents[mt_rand(0, $nb_raw_contents - 1)],
@@ -79,6 +90,13 @@ foreach ($post_types as $pt => $post_type) {
             'post_author' => 1
         ));
         $_hasImport = true;
+
+        /* Add images */
+        if ($post_id) {
+            set_post_thumbnail($post_id, $random_images[array_rand($random_images)]);
+        }
+
+        /* Taxonomies */
         foreach ($taxonomies as $tax_name) {
             if (in_array($tax_name, array('post_format', 'post_translations', 'language'))) {
                 continue;
