@@ -11,7 +11,7 @@ while (!is_file($bootstrap)) {
     }
 }
 
-if (!file_exists($bootstrap)) {
+if (!is_readable($bootstrap)) {
     return;
 }
 
@@ -129,7 +129,7 @@ if (!$is_debug_env) {
   Check commits hooks
 ---------------------------------------------------------- */
 
-if ($is_debug_env && file_exists('.git/config') && !file_exists('.git/hooks/pre-commit')) {
+if ($is_debug_env && is_readable('.git/config') && !is_readable('.git/hooks/pre-commit')) {
     $wputools_errors[] = 'Git : You should have a pre-commit hook installed.';
 }
 
