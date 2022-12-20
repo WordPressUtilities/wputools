@@ -22,6 +22,10 @@ while (!is_file($bootstrap)) {
 }
 require_once $bootstrap;
 
+/* Require some functions if W3TC is installed */
+$admin_path = str_replace(get_bloginfo('url') . '/', ABSPATH, get_admin_url());
+require_once $admin_path . '/includes/screen.php';
+
 /* Start WP */
 wp();
 
