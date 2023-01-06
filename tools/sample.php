@@ -34,6 +34,9 @@ if (isset($_GET['sample_posttype']) && $_GET['sample_posttype']) {
 }
 
 switch ($_posttype) {
+case 'users':
+    $_posttype = 'user';
+    break;
 case 'pages':
     $_posttype = 'page';
     break;
@@ -108,6 +111,24 @@ foreach ($post_types as $pt => $post_type) {
             }
         }
         echo "Success : #" . $post_id . "\n";
+    }
+}
+
+/* ----------------------------------------------------------
+  Users
+---------------------------------------------------------- */
+
+if ($_posttype == 'user') {
+    echo "Samples for users\n";
+    for ($i = 1; $i <= $_samples_nb; $i++) {
+        $user_id = 'user_' . uniqid();
+        wp_insert_user(array(
+            'user_login' => $user_id,
+            'user_email' => $user_id . '@yopmail.com',
+            'user_pass' => 'password'
+        ));
+        $_hasImport = true;
+        echo "Success : #" . $i . "\n";
     }
 }
 
