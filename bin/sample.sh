@@ -11,6 +11,21 @@ _WPUSAMPLE_FILE="sample-${_WPUSAMPLE_RAND}.php";
 _WPUSAMPLE_PATH="${_CURRENT_DIR}${_WPUSAMPLE_FILE}";
 
 ###################################
+## Help
+###################################
+
+if [[ "${1}" == 'help' ]];then
+cat <<TXT
+## Generate 5 posts
+wputools sample post
+
+## Generate 10 users
+wputools sample user 10
+TXT
+return 0;
+fi;
+
+###################################
 ## Copy file
 ###################################
 

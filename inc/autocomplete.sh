@@ -42,7 +42,7 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_PLUGIN_LIST}" "${_WPUTOOLS_PLUGIN_FAV_LIST}")" -- $cur) )
             ;;
             "sample")
-                COMPREPLY=( $(compgen -W "all attachment page post user" -- $cur) )
+                COMPREPLY=( $(compgen -W "all attachment help page post user" -- $cur) )
             ;;
             "update")
                 if [[ -d "${_base_wp_dir_plugins}" ]];then

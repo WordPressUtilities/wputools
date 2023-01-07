@@ -118,11 +118,42 @@ foreach ($post_types as $pt => $post_type) {
   Users
 ---------------------------------------------------------- */
 
+$users_values = array(
+    'first_name' => array(
+        'Sheldon',
+        'Donald',
+        'Steve',
+        'Tim',
+        'Bill',
+        'Anne',
+        'Maya',
+        'Jane',
+        'Rosa',
+        'Marie'
+    ),
+    'last_name' => array(
+        'Cooper',
+        'Duck',
+        'Jobs',
+        'Cook',
+        'Gates',
+        'Frank',
+        'Angelou',
+        'Austen',
+        'Parks',
+        'Curie'
+    )
+);
+
 if ($_posttype == 'user') {
     echo "Samples for users\n";
     for ($i = 1; $i <= $_samples_nb; $i++) {
-        $user_id = 'user_' . uniqid();
+        $first_name = $users_values['first_name'][array_rand($users_values['first_name'])];
+        $last_name = $users_values['last_name'][array_rand($users_values['last_name'])];
+        $user_id = strtolower(sanitize_user($first_name . '_' . $last_name)) . '_' . uniqid();
         wp_insert_user(array(
+            'first_name' => $first_name,
+            'last_name' => $last_name,
             'user_login' => $user_id,
             'user_email' => $user_id . '@yopmail.com',
             'user_pass' => 'password'
@@ -173,7 +204,7 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
         @flush();
         @ob_flush();
     }
-    if(!$images_list){
+    if (!$images_list) {
         echo "You need an Unsplash API KEY to import images. Please add a _WPUTOOLS_UNSPLASH_API_KEY in your wputools-local.sh file.\n";
     }
 }
