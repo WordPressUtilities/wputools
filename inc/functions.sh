@@ -24,12 +24,14 @@ function wputools_call_route(){
 function wputools_test_check_urls(){
     wputools_call_route cache > /dev/null;
     while read line; do
-        echo "";
-        echo "####################";
-        echo "## Test : ${line}";
-        echo "####################";
-        echo "";
-        wget -qO- "${line}";
+        if [[ "${line}" != "" ]];then
+            echo "";
+            echo "####################";
+            echo "## Test : ${line}";
+            echo "####################";
+            echo "";
+            wget -qO- "${line}";
+        fi;
     done < "${_wputools_test__file}"
 }
 
