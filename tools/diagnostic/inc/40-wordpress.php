@@ -215,7 +215,12 @@ if (!is_wp_error($request)) {
 global $wpdb;
 $autoloaded_weight = intval($wpdb->get_var("SELECT SUM(LENGTH(option_value)) as autoload_weight FROM $wpdb->options WHERE autoload='yes';"));
 if ($autoloaded_weight > 1024 * 200) {
-    $wputools_errors[] = sprintf('The autoloaded options may be too heavy (%skb). It could be slowing down your website.', round($autoloaded_weight / 1024));
+    $top_options = $wpdb->get_results("SELECT option_name, LENGTH(option_value) AS opt_length FROM $wpdb->options WHERE autoload='yes' ORDER BY opt_length DESC LIMIT 0,15;");
+    $top_options_text = '';
+    foreach ($top_options as $top_option) {
+        $top_options_text .= "\n  - " . $top_option->option_name . ": " . round($top_option->opt_length / 1024) . 'kb';
+    }
+    $wputools_errors[] = sprintf('The autoloaded options may be too heavy (%skb). It could be slowing down your website. Biggest lines: %s', round($autoloaded_weight / 1024), $top_options_text);
 }
 
 /* ----------------------------------------------------------
