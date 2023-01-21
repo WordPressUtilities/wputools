@@ -44,6 +44,14 @@ function run_test_after_regenerate(){
     fi;
 }
 
+function run_test_instant(){
+    if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
+        echo '# RUNNING TESTS : BEFORE ACTION';
+        _wputools_test_instant_content=$(wputools_test_check_urls);
+        echo "${_wputools_test_instant_content}" > diff-instant.txt;
+    fi;
+}
+
 function run_test_before(){
     if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : BEFORE ACTION';

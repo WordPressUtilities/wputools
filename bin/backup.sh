@@ -44,9 +44,13 @@ _BACKUP_NAME="${_SITE_NAME_SLUG}-$(date +%Y-%m-%d-%H%M%S)-${_BACKUP_RAND}";
 _BACKUP_PATH="./${_BACKUP_NAME}/";
 _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
 _BACKUP_FILES=(".htaccess" "wp-content/mu-plugins/wpu_local_overrides.php" "wp-config.php" "../wp-config.php")
+_BACKUP_FOLDERS=("wp-content/w3tc-config")
 
 # Create TMP DIR
 mkdir "${_BACKUP_NAME}";
+
+# Protect temp dir
+echo 'deny from all' > "${_BACKUP_PATH}.htaccess";
 
 # Backup files
 for ix in ${!_BACKUP_FILES[*]}
@@ -62,8 +66,15 @@ do
     fi;
 done
 
-# Protect temp dir
-echo 'deny from all' > "${_BACKUP_PATH}.htaccess";
+# Backup folders
+for ix in ${!_BACKUP_FOLDERS[*]}
+do
+    _BACKUP_FOLDER_ITEM="${_CURRENT_DIR}${_BACKUP_FOLDERS[$ix]}";
+    if [[ -d "${_BACKUP_FOLDER_ITEM}" ]];then
+        _BACKUP_FOLDER_ITEM_NAME=$(basename "${_BACKUP_FOLDER_ITEM}");
+        cp -r "${_BACKUP_FOLDER_ITEM}" "${_BACKUP_PATH}${_BACKUP_FOLDER_ITEM_NAME}";
+    fi;
+done
 
 # Backup DATABASE
 _WPCLICOMMAND db export - > "${_BACKUP_FILE}";
