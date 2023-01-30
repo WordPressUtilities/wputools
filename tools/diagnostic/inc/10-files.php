@@ -62,6 +62,10 @@ foreach ($folders as $folder) {
 
 $files = array_diff(scandir('.'), array('.', '..'));
 $matches = array(
+    '/license\.txt/',
+    '/README\.md/',
+    '/readme\.html/',
+    '/wp-links-opml\.php/',
     '/^adminer(.*).php/',
     '/^cache-(.*).php/',
     '/^detecthack-(.*).php/',

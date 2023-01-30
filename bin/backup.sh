@@ -31,7 +31,7 @@ if [[ ! $(_WPCLICOMMAND db check) ]];then
 fi;
 
 ###################################
-## Backup
+## Vars
 ###################################
 
 echo "# BACKUP";
@@ -44,7 +44,38 @@ _BACKUP_NAME="${_SITE_NAME_SLUG}-$(date +%Y-%m-%d-%H%M%S)-${_BACKUP_RAND}";
 _BACKUP_PATH="./${_BACKUP_NAME}/";
 _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
 _BACKUP_FILES=(".htaccess" "wp-content/mu-plugins/wpu_local_overrides.php" "wp-config.php" "../wp-config.php")
-_BACKUP_FOLDERS=("wp-content/w3tc-config")
+_BACKUP_FOLDERS=("wp-content/w3tc-config");
+
+
+###################################
+## Code
+###################################
+
+if [[ "${1}" == 'code' ]];then
+    if [[ -f "${_CURRENT_DIR}/.git/config" ]];then
+
+        _BACKUP_NAME="${_BACKUP_NAME}-code";
+
+        # Cloning repo with submodules
+        git clone "$(git config --get remote.origin.url)" "${_BACKUP_NAME}";
+        cd "${_BACKUP_NAME}";
+        git submodule update --init --recursive;
+
+        # Removing code
+        find  . -name '.git*' -exec rm -rf {} \;
+
+        # Compress
+        cd "${_CURRENT_DIR}";
+        tar -zcvf "${_BACKUP_NAME}.tar.gz" "${_BACKUP_NAME}";
+        rm -rf "${_BACKUP_NAME}";
+
+        return;
+    fi;
+fi;
+
+###################################
+## Backup
+###################################
 
 # Create TMP DIR
 mkdir "${_BACKUP_NAME}";
