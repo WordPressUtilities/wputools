@@ -104,7 +104,10 @@ fi;
 
 if [[ -n "${_WPDB_REPLACE_BEFORE}" && -n "${_WPDB_REPLACE_AFTER}" ]];then
     # Search replace
-    _WPCLICOMMAND search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}"  --skip-columns=autoload,comment_status,display_name,meta_key,option_name,ping_status,pinged,post_mime_type,post_name,post_password,post_status,post_title,post_type,to_ping,user_email,user_login --skip-tables=*_actionscheduler*,*_comments,*_commentmeta,*_links,*_terms,*_term_taxonomy,*_users,*_usermeta,*_wc_product*,*_wc_tax*,*_woocommerce_payment_tokenmeta;
+    _WPCLICOMMAND search-replace "${_WPDB_REPLACE_BEFORE}" "${_WPDB_REPLACE_AFTER}"  \
+        --all-tables-with-prefix \
+        --skip-columns=autoload,comment_status,display_name,meta_key,option_name,ping_status,pinged,post_mime_type,post_name,post_password,post_status,post_title,post_type,to_ping,user_email,user_login \
+        --skip-tables=*_actionscheduler*,*_redirection_404,*_redirection_logs,*_wpmailsmtp*,*_wpunewsletter*,*_comments,*_commentmeta,*_links,*_terms,*_term_taxonomy,*_users,*_usermeta,*_wc_product*,*_wc_tax*,*_woocommerce_payment_tokenmeta;
 fi;
 
 wputools_execute_file "wputools-dbimport-after-search-replace.sh";
