@@ -235,3 +235,28 @@ foreach ($forbidden_slugs as $user_slug) {
     }
     $wputools_errors[] = sprintf('You should not have an user with the ID “%s”.', $user_slug);
 }
+
+/* ----------------------------------------------------------
+  Check posts
+---------------------------------------------------------- */
+
+$post_types = get_post_types();
+if (isset($post_types['nav_menu_item'])) {
+    unset($post_types['nav_menu_item']);
+}
+$all_posts = get_posts(array(
+    'posts_per_page' => -1,
+    'post_status' => 'publish',
+    'post_type' => $post_types
+));
+
+$empty_pages = array();
+foreach ($all_posts as $p) {
+    if (empty($p->post_content) && empty($p->post_excerpt)) {
+        $empty_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
+    }
+}
+
+if (!empty($empty_pages)) {
+    $wputools_errors[] = sprintf("The following posts don't have any content: \n-- %s", implode("\n-- ", $empty_pages));
+}
