@@ -251,12 +251,25 @@ $all_posts = get_posts(array(
 ));
 
 $empty_pages = array();
+$lorem_pages = array();
 foreach ($all_posts as $p) {
     if (empty($p->post_content) && empty($p->post_excerpt)) {
         $empty_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
+    }
+    if (!empty($p->post_content)) {
+        if (strpos($p->post_content, 'lorem ipsum') !== false) {
+            $lorem_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
+        }
+        if (strpos($p->post_content, 'needs dreamers and the world') !== false) {
+            $lorem_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
+        }
     }
 }
 
 if (!empty($empty_pages)) {
     $wputools_errors[] = sprintf("The following posts don't have any content: \n-- %s", implode("\n-- ", $empty_pages));
+}
+
+if (!empty($lorem_pages)) {
+    $wputools_errors[] = sprintf("The following posts contains some lorem ipsum: \n-- %s", implode("\n-- ", $lorem_pages));
 }
