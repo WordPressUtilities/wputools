@@ -92,6 +92,10 @@ Add CLI shortcut :
 
 `wputools go mu-plugins;`
 
+### Generate default menus.
+
+`wputools generatemenus;`
+
 ### Import posts from a CSV File.
 
 `wputools wpuwoo import-csv file.csv`
