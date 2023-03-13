@@ -75,10 +75,12 @@ if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
         bashutilities_sed "s/#_SITE_NAME/_SITE_NAME/g" "${_WPUTOOLS_LOCAL_FILE}";
     fi
     # Backup dir
-    if [[ "${wputools_use_backup_dir}" == 'y' ]];then
+    if [[ "${wputools_use_backup_dir}" == 'y' || -d "${_WPUTOOLS_BACKUP_DIR}" ]];then
         bashutilities_sed "s#MYBACKUPDIR#${_WPUTOOLS_BACKUP_DIR}#g" "${_WPUTOOLS_LOCAL_FILE}";
         bashutilities_sed "s/#_BACKUP_DIR/_BACKUP_DIR/g" "${_WPUTOOLS_LOCAL_FILE}";
-        mkdir "${_WPUTOOLS_BACKUP_DIR}";
+        if [[ ! -d "${_WPUTOOLS_BACKUP_DIR}" ]];then
+            mkdir "${_WPUTOOLS_BACKUP_DIR}";
+        fi;
     fi
 fi
 
