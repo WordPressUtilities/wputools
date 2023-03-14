@@ -107,6 +107,25 @@ if (!$is_debug_env && defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
 }
 
 /* ----------------------------------------------------------
+  check RAM
+---------------------------------------------------------- */
+
+$ram_vars = array('WP_MEMORY_LIMIT', 'WP_MAX_MEMORY_LIMIT');
+foreach ($ram_vars as $ram_var) {
+    if (!defined($ram_var)) {
+        $wputools_errors[] = 'WordPress : ' . $ram_var . ' should be defined.';
+        continue;
+    }
+    $ram_var_value = intval(str_replace('M', '', constant($ram_var)), 10);
+    if ($ram_var_value < 128) {
+        $wputools_errors[] = 'WordPress : ' . $ram_var . ' value should be higher than .' . $ram_var;
+    }
+    if ($ram_var_value > 512) {
+        $wputools_errors[] = 'WordPress : ' . $ram_var . ' value should be lower than .' . $ram_var;
+    }
+}
+
+/* ----------------------------------------------------------
   Check for enabled auto file modification
 ---------------------------------------------------------- */
 
