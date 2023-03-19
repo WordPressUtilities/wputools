@@ -16,6 +16,7 @@ wputools cleanhack;       # Try to clean hacked files.
 wputools diagnostic;      # Checks that your installation can work properly.
 wputools dbexport;        # Export an SQL dump and replace URLs.
 wputools dbimport;        # Import an SQL dump.
+wputools duplicatemenu;   # Duplicate a menu.
 wputools go;              # Quickly go to a specific folder.
 wputools generatemenus;   # Generate default menus.
 wputools importsite;      # Import a distant website.

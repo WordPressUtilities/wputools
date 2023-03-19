@@ -92,6 +92,10 @@ Add CLI shortcut :
 
 `wputools go mu-plugins;`
 
+### Duplicate a menu.
+
+`wputools duplicatemenu;`
+
 ### Generate default menus.
 
 `wputools generatemenus;`
