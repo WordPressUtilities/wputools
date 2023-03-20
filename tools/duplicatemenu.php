@@ -15,11 +15,24 @@ require 'wp-load.php';
 wp();
 
 /* ----------------------------------------------------------
+  Helpers
+---------------------------------------------------------- */
+
+function wputools_display_menus() {
+    echo "Please select a menu and retry:\n";
+    $menus = get_terms('nav_menu', array('hide_empty' => true));
+    foreach ($menus as $menu) {
+        echo "#{$menu->term_id} - {$menu->name}\n";
+    }
+}
+
+/* ----------------------------------------------------------
   Checks
 ---------------------------------------------------------- */
 
 if (!isset($_GET['menu_id']) || !is_numeric($_GET['menu_id'])) {
-    echo "Menu ID is invalid\n";
+    echo "Menu ID is invalid.\n";
+    wputools_display_menus();
     return;
 }
 
@@ -27,7 +40,8 @@ $id = intval($_GET['menu_id'], 10);
 $old_menu = wp_get_nav_menu_object($id);
 
 if (!$old_menu) {
-    echo "This menu does not exists\n";
+    echo "This menu does not exists.\n";
+    wputools_display_menus();
     return;
 }
 

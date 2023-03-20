@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "# DUPLICATE A MENU";
+echo "# DUPLICATE MENU";
 
 ###################################
 ## Initial datas
