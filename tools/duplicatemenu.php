@@ -49,7 +49,8 @@ if (!$old_menu) {
   Create new menu
 ---------------------------------------------------------- */
 
-$new_menu_id = wp_create_nav_menu($old_menu->name . ' - ' . date('Y-m-d H:i:s'));
+$new_menu_name = $old_menu->name . ' - ' . date('Y-m-d H:i:s');
+$new_menu_id = wp_create_nav_menu($new_menu_name);
 
 /* ----------------------------------------------------------
   Duplicate items
@@ -72,8 +73,19 @@ foreach ($old_menu_items as $item) {
         'menu-item-url' => $item->url,
         'menu-item-xfn' => $item->xfn
     );
+    $old_metas = get_post_meta($item->ID);
+    $new_metas = array();
+    foreach ($old_metas as $meta_key => $meta_value) {
+        if ($meta_key[0] == '_') {
+            continue;
+        }
+        $new_metas[$meta_key] = $meta_value[0];
+    }
 
     $new_item_id = wp_update_nav_menu_item($new_menu_id, 0, $args);
+    foreach ($new_metas as $meta_key => $meta_value) {
+        update_post_meta($new_item_id, $meta_key, $meta_value);
+    }
 
     $matches_ids[$item->db_id] = array(
         'id' => $new_item_id,
@@ -92,3 +104,9 @@ foreach ($matches_ids as $new_item) {
         wp_update_nav_menu_item($new_menu_id, $new_item['id'], $new_item['args']);
     }
 }
+
+/* ----------------------------------------------------------
+  Success
+---------------------------------------------------------- */
+
+echo "A copy of this menu has been created : \"{$new_menu_name}\"\n";
