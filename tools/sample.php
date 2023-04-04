@@ -146,6 +146,10 @@ $users_values = array(
 );
 
 if ($_posttype == 'user') {
+    if (!function_exists('get_editable_roles')) {
+        require_once ABSPATH . '/wp-admin/includes/user.php';
+    }
+    $editable_roles = array_keys(get_editable_roles());
     echo "Samples for users\n";
     for ($i = 1; $i <= $_samples_nb; $i++) {
         $first_name = $users_values['first_name'][array_rand($users_values['first_name'])];
@@ -156,7 +160,8 @@ if ($_posttype == 'user') {
             'last_name' => $last_name,
             'user_login' => $user_id,
             'user_email' => $user_id . '@yopmail.com',
-            'user_pass' => 'password'
+            'user_pass' => 'password',
+            'role' => $editable_roles[array_rand($editable_roles, 1)]
         ));
         $_hasImport = true;
         echo "Success : #" . $i . "\n";

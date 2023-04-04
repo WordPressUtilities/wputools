@@ -1,3 +1,4 @@
+wpuadminlauncher
 wpualgolia
 wpuattachmetas
 wpucacheblocks
