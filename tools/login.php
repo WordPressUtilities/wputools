@@ -60,7 +60,7 @@ wp_set_auth_cookie($user->ID);
 do_action('wp_login', $user->user_login, $user);
 
 /* Redirect to admin home */
-wp_redirect('/wp-admin/');
+wp_redirect(get_admin_url());
 
 /* Delete this file */
 unlink(__FILE__);

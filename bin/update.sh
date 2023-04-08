@@ -2,6 +2,22 @@
 
 echo "# UPDATE";
 
+
+# Help
+if [[ "${1}" == 'help' ]];then
+    echo "Help :";
+    echo "- '' : Update everything.";
+    echo "- 'all-plugins' : Update only plugins.";
+    echo "- 'all-submodules' : Update only the submodules.";
+    echo "- 'myplugin' : Update 'myplugin'.";
+    echo "- 'core' : Update only the core.";
+    echo "- 'instant-test' : Launch a test on every page without updating.";
+    echo "- 'relaunch-test' : Relaunch the test and open diff.";
+    echo "- 'help' : Display this help.";
+    return;
+fi;
+
+
 _ADMIN_PROTECT_FILE=$(find . -mount -name 'wputh_admin_protect.php');
 _ADMIN_PROTECT_FLAG=".disable_wpu_admin_protect";
 _ADMIN_PROTECT_FLAG_FILE="${_CURRENT_DIR}${_ADMIN_PROTECT_FLAG}";
