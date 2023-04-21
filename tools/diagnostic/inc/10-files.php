@@ -98,3 +98,25 @@ foreach ($files as $file) {
     }
     $wputools_errors[] = sprintf('The file %s should not be present in the WordPress directory !', $file);
 }
+
+/* ----------------------------------------------------------
+  Find files which should not be in a Uploads directory
+---------------------------------------------------------- */
+
+if (!function_exists('glob_recursive')) {
+    function glob_recursive($pattern, $flags = 0) {
+        $files = glob($pattern, $flags);
+        foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
+            $files = array_merge($files, glob_recursive($dir . '/' . basename($pattern), $flags));
+        }
+        return $files;
+    }
+}
+
+$files = glob_recursive('wp-content/uploads/*.php', GLOB_BRACE);
+foreach ($files as $file) {
+    if (!is_file($file)) {
+        continue;
+    }
+    $wputools_errors[] = sprintf('The file %s should not be present in the uploads directory !', $file);
+}

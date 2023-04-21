@@ -27,7 +27,7 @@ if (function_exists('apache_get_modules')) {
 -------------------------- */
 
 $phpversion = phpversion();
-if (version_compare($phpversion, '7.4.10', '<')) {
+if (version_compare($phpversion, '7.4.33', '<')) {
     $wputools_errors[] = sprintf('PHP version %s is too old !', $phpversion);
 }
 
