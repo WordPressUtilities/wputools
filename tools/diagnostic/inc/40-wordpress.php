@@ -201,6 +201,23 @@ foreach ($uris as $uri) {
 }
 
 /* ----------------------------------------------------------
+  Some URLs should exist
+---------------------------------------------------------- */
+
+$uris = array(
+    '/favicon.ico',
+    '/robots.txt',
+    '/sitemap.xml',
+    '/wp-sitemap.xml',
+);
+foreach ($uris as $uri) {
+    $response_code = wp_remote_retrieve_response_code(wp_remote_head(site_url() . $uri));
+    if (!in_array($response_code, array(200, 301, 302))) {
+        $wputools_errors[] = sprintf('WordPress : the URL %s should not return a code %s.', site_url() . $uri, $response_code);
+    }
+}
+
+/* ----------------------------------------------------------
   Check https
 ---------------------------------------------------------- */
 
@@ -264,7 +281,7 @@ if (isset($post_types['nav_menu_item'])) {
     unset($post_types['nav_menu_item']);
 }
 $all_posts = get_posts(array(
-    'posts_per_page' => -1,
+    'posts_per_page' => 100,
     'post_status' => 'publish',
     'post_type' => $post_types
 ));
