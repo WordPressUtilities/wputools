@@ -95,7 +95,7 @@ foreach ($post_types as $pt => $post_type) {
         $_hasImport = true;
 
         /* Add images */
-        if ($post_id) {
+        if ($post_id && !empty($random_images)) {
             set_post_thumbnail($post_id, $random_images[array_rand($random_images)]);
         }
 
