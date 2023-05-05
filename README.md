@@ -128,6 +128,10 @@ Add CLI shortcut :
 
 `wputools sample;`
 
+### Create a WordPress sandbox.
+
+`wputools sandbox;`
+
 ### Go to this tool source.
 
 `wputools src;`

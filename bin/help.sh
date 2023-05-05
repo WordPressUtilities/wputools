@@ -23,6 +23,7 @@ wputools importsite;      # Import a distant website.
 wputools muplugin;        # Install a WordPressUtilities mu-plugin.
 wputools plugin;          # Install a WordPressUtilities plugin.
 wputools sample;          # Insert sample posts & images.
+wputools sandbox;         # Create a WordPress sandbox.
 wputools self-update;     # Update this tool.
 wputools settings;        # Create an override settings file.
 wputools src;             # Go to this tool source.

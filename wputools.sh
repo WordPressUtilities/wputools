@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.72.0';
+local _WPUTOOLS_VERSION='0.73.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3)
 local _CURRENT_DIR="${PWD}/";
@@ -111,7 +111,7 @@ fi;
 ###################################
 
 case "${1}" in
-    "src" | "self-update" | "importsite")
+    "sandbox" | "src" | "self-update" | "importsite")
         . "${_SOURCEDIR}bin/${1}.sh";
         return 0;
     ;;
