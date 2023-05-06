@@ -26,6 +26,21 @@ return 0;
 fi;
 
 ###################################
+## WP Test
+###################################
+
+if [[ "${1}" == "wptest" ]];then
+    # Add plugin WordPress Importer
+    _WPCLICOMMAND plugin install wordpress-importer --activate;
+    # Load wptest file
+    curl -OL https://raw.githubusercontent.com/poststatus/wptest/master/wptest.xml
+    # Import the file, then delete it.
+    _WPCLICOMMAND import wptest.xml --authors=create;
+    rm wptest.xml
+    return;
+fi;
+
+###################################
 ## Copy file
 ###################################
 

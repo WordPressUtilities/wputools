@@ -13,7 +13,7 @@ function wputools__sandbox(){
     cd "${_DIR}";
 
     # Download WordPress
-    wp core download;
+    _WPCLICOMMAND core download;
 
     # Download and Install SQLite integration
     git clone https://github.com/aaemnnosttv/wp-sqlite-db.git;
@@ -21,23 +21,24 @@ function wputools__sandbox(){
     rm -rf wp-sqlite-db;
 
     # Install site
-    wp core config \
+    _WPCLICOMMAND core config \
         --skip-check \
         --dbname=foo \
         --dbuser=bar \
         --dbpass=none;
-    wp core install \
-        --title="WPUTools Sample Website" \
+    _WPCLICOMMAND core install \
+        --title="WPUToolsSampleWebsite" \
         --admin_name=admin \
         --admin_email="admin@example.com" \
         --admin_password=admin \
         --url="http://${_URL}/"
 
     # Create init file
-    cat <<EOT >> "init-server.sh"
+    cat <<EOT >> "init-server.sh";
 #!/bin/bash
 php -S ${_URL};
 EOT
+    chmod +x "init-server.sh";
 
     # Init server
     php -S "${_URL}";
