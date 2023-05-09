@@ -29,14 +29,31 @@ fi;
 ## WP Test
 ###################################
 
-if [[ "${1}" == "wptest" ]];then
+function wputools__sample_wptest(){
+    # Check if plugin exists
+    local _HAD_IMPORTER_PLUGIN="0";
+    if [[ -d "${_CURRENT_DIR}wp-content/plugins/wordpress-importer" ]];then
+        _HAD_IMPORTER_PLUGIN="1";
+    fi;
+
     # Add plugin WordPress Importer
     _WPCLICOMMAND plugin install wordpress-importer --activate;
+
     # Load wptest file
     curl -OL https://raw.githubusercontent.com/poststatus/wptest/master/wptest.xml
+
     # Import the file, then delete it.
     _WPCLICOMMAND import wptest.xml --authors=create;
     rm wptest.xml
+
+    # Delete plugin if added only for this command
+    if [[ "${_HAD_IMPORTER_PLUGIN}" == '0' ]];then
+        rm -rf "${_CURRENT_DIR}wp-content/plugins/wordpress-importer";
+    fi;
+}
+
+if [[ "${1}" == "wptest" ]];then
+    wputools__sample_wptest;
     return;
 fi;
 
