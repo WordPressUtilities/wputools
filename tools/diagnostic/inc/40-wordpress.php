@@ -183,6 +183,7 @@ $uris = array(
     '/.git/config',
     '/wp-json/wp/v2/users',
     '/wp-admin/index.php',
+    '/wp-includes/wlwmanifest.xml',
     '/wp-includes/version.php'
 );
 if (!$is_debug_env) {
@@ -208,7 +209,7 @@ $uris = array(
     '/favicon.ico',
     '/robots.txt',
     '/sitemap.xml',
-    '/wp-sitemap.xml',
+    '/wp-sitemap.xml'
 );
 foreach ($uris as $uri) {
     $response_code = wp_remote_retrieve_response_code(wp_remote_head(site_url() . $uri));
@@ -270,6 +271,14 @@ foreach ($forbidden_slugs as $user_slug) {
         continue;
     }
     $wputools_errors[] = sprintf('You should not have an user with the ID “%s”.', $user_slug);
+}
+
+/* ----------------------------------------------------------
+  Check public setting
+---------------------------------------------------------- */
+
+if (!$is_debug_env && get_option('blog_public') == '0') {
+    $wputools_errors[] = sprintf('WordPress : Search engines are blocked while the environment is defined as “%s”.', wp_get_environment_type());
 }
 
 /* ----------------------------------------------------------
