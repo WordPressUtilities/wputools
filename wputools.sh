@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.74.2';
+local _WPUTOOLS_VERSION='0.75.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3)
 local _CURRENT_DIR="${PWD}/";
@@ -66,6 +66,7 @@ fi;
 . "${_TOOLSDIR}BashUtilities/modules/messages.sh";
 . "${_TOOLSDIR}BashUtilities/modules/texttransform.sh";
 . "${_TOOLSDIR}BashUtilities/modules/values.sh";
+. "${_TOOLSDIR}BashUtilities/modules/git.sh";
 
 ###################################
 ## Test WP Cli

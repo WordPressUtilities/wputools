@@ -19,6 +19,7 @@ unset -f wputools__get_db_name;
 unset -f wputools__get_db_password;
 unset -f wputools__get_db_prefix;
 unset -f wputools__get_db_user;
+unset -f wputools__plugin;
 unset -f wputools__update_all_plugins;
 unset -f wputools__update_all_submodules;
 unset -f wputools__update_core;
