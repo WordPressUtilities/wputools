@@ -118,10 +118,10 @@ foreach ($ram_vars as $ram_var) {
     }
     $ram_var_value = intval(str_replace('M', '', constant($ram_var)), 10);
     if ($ram_var_value < 128) {
-        $wputools_errors[] = 'WordPress : ' . $ram_var . ' value should be higher than .' . $ram_var;
+        $wputools_errors[] = 'WordPress : ' . $ram_var . ' value should be higher than 128MB.';
     }
     if ($ram_var_value > 512) {
-        $wputools_errors[] = 'WordPress : ' . $ram_var . ' value should be lower than .' . $ram_var;
+        $wputools_errors[] = 'WordPress : ' . $ram_var . ' value should be lower than 512MB.';
     }
 }
 
