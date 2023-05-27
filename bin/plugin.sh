@@ -26,7 +26,7 @@ function wputools__plugin(){
     # Install plugin and activate
     if [[ "${_IS_WPU}" == '1' ]];then
         cd "${_CURRENT_DIR}wp-content/plugins/";
-        bashutilities_submodule_or_install "https://github.com/WordPressUtilities/${_PLUGIN_ID}.git";
+        bashutilities_submodule_or_install "https://github.com/WordPressUtilities/${_PLUGIN_ID}.git" 'y';
         cd "${_CURRENT_DIR}";
         _WPCLICOMMAND plugin activate "${1}";
     else
