@@ -11,6 +11,7 @@ function wputools__sandbox(){
     local _DIR=${_URL/:/_};
     mkdir "${_DIR}";
     cd "${_DIR}";
+    local _CURRENT_DIR_SANDBOX=$(pwd);
 
     # Download WordPress
     _WPCLICOMMAND core download;
@@ -36,12 +37,19 @@ function wputools__sandbox(){
     # Create init file
     cat <<EOT >> "init-server.sh";
 #!/bin/bash
-php -S ${_URL};
+
+function init_server_sandbox(){
+    cd "${_CURRENT_DIR_SANDBOX}";
+    php -S ${_URL} &
+    open "http://${_URL}";
+}
+init_server_sandbox;
+
 EOT
     chmod +x "init-server.sh";
 
     # Init server
-    php -S "${_URL}";
+    . "init-server.sh";
 }
 
 wputools__sandbox;
