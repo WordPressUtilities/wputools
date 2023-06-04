@@ -23,10 +23,16 @@ function wputools__plugin(){
     # Base vars
     local _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
 
+
+    local _force_submodule='y';
+    if [[ ! "${inside_git_repo}" ]];then
+        _force_submodule='n';
+    fi;
+
     # Install plugin and activate
     if [[ "${_IS_WPU}" == '1' ]];then
         cd "${_CURRENT_DIR}wp-content/plugins/";
-        bashutilities_submodule_or_install "https://github.com/WordPressUtilities/${_PLUGIN_ID}.git" 'y';
+        bashutilities_submodule_or_install "https://github.com/WordPressUtilities/${_PLUGIN_ID}.git" "${_force_submodule}";
         cd "${_CURRENT_DIR}";
         _WPCLICOMMAND plugin activate "${1}";
     else
