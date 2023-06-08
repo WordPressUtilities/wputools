@@ -12,6 +12,7 @@ unset -f run_test_after;
 unset -f run_test_before;
 unset -f run_test_after_regenerate;
 unset -f wputools__check_acf_pro_install;
+unset -f wputools__delete_old_files;
 unset -f wputools__duplicate_menu;
 unset -f wputools__generate_menus;
 unset -f wputools__get_db_host;

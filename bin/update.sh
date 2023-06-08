@@ -130,6 +130,28 @@ fi;
 
 _WPCLICOMMAND maintenance-mode activate;
 
+function wputools__delete_old_files(){
+    local delete_old_files=$(bashutilities_get_yn "- Do you want to delete some unused WordPress files?" 'n');
+    if [[ "${delete_old_files}" == 'n' ]];then
+        return 0;
+    fi;
+
+    local _file;
+    local _file_delete;
+    local _files="xmlrpc.php wp-links-opml.php wp-comments-post.php wp-trackback.php wp-mail.php wp-signup.php README.md readme.txt readme.html license.txt";
+
+    for _file in $_files; do
+        if [[ -f "${_CURRENT_DIR}${_file}" ]];then
+            _file_delete=$(bashutilities_get_yn "- Do you want to delete ${_file}" 'y');
+            if [[ "${_file_delete}" == 'y' ]];then
+                rm "${_CURRENT_DIR}${_file}";
+                echo "${_file}" >> .gitignore;
+                echo "Deleted : ${_file}";
+            fi;
+        fi;
+    done
+}
+
 function commit_without_protect(){
     git reset;
     git add -A;
@@ -262,6 +284,8 @@ else
     ###################################
     ## Fixes
     ###################################
+
+    wputools__delete_old_files;
 
     # Disable object cache for redis-cache if updated
     if [[ -f "${_CURRENT_DIR}wp-content/plugins/redis-cache/includes/object-cache.php" && -f "${_CURRENT_DIR}wp-content/object-cache.php" ]];then
