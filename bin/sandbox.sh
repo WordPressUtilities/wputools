@@ -6,6 +6,12 @@ function wputools__sandbox(){
     # Default values
     local _RAND=$((RANDOM%900+100))
     local _URL="localhost:8${_RAND}"
+    local _MODE="sqlite";
+    if [[ "${1}" == 'mysql' ]];then
+        _MODE="mysql";
+    fi;
+
+    echo "# Chosen mode : ${_MODE}";
 
     # Temp dir
     local _DIR=${_URL/:/_};
@@ -16,17 +22,26 @@ function wputools__sandbox(){
     # Download WordPress
     _WPCLICOMMAND core download;
 
-    # Download and Install SQLite integration
-    git clone https://github.com/aaemnnosttv/wp-sqlite-db.git;
-    mv wp-sqlite-db/src/db.php wp-content/db.php;
-    rm -rf wp-sqlite-db;
+    if [[ "${_MODE}" == 'sqlite' ]];then
+        # Download and Install SQLite integration
+        git clone https://github.com/aaemnnosttv/wp-sqlite-db.git;
+        mv wp-sqlite-db/src/db.php wp-content/db.php;
+        rm -rf wp-sqlite-db;
+    fi;
 
     # Install site
     _WPCLICOMMAND core config \
         --skip-check \
-        --dbname=foo \
-        --dbuser=bar \
-        --dbpass=none;
+        --dbname="${_DIR}" \
+        --dbuser=root \
+        --dbpass=root;
+
+    if [[ "${_MODE}" == 'mysql' ]];then
+        # Database
+        _WPCLICOMMAND db create;
+    fi;
+
+    # Install
     _WPCLICOMMAND core install \
         --title="WPUToolsSampleWebsite" \
         --admin_name=admin \
@@ -52,4 +67,4 @@ EOT
     . "init-server.sh";
 }
 
-wputools__sandbox;
+wputools__sandbox "${2}";
