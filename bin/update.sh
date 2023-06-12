@@ -145,7 +145,7 @@ function wputools__delete_old_files(){
             _file_delete=$(bashutilities_get_yn "- Do you want to delete ${_file}" 'y');
             if [[ "${_file_delete}" == 'y' ]];then
                 rm "${_CURRENT_DIR}${_file}";
-                echo "${_file}" >> .gitignore;
+                echo "/${_file}" >> .gitignore;
                 echo "Deleted : ${_file}";
             fi;
         fi;
