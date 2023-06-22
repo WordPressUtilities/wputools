@@ -2,6 +2,8 @@ wpu_acf_flexible
 wpu_admin_protect
 wpu_file_cache
 wpu_opensans
+wpu_override_gettext
+wpu_super_editor
 wpu_ux_tweaks
 wpucustomavatar
 wpudisablecomments

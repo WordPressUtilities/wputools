@@ -37,6 +37,7 @@ wpursstoposts
 wpusavevideos
 wpuseo
 wpusimplepwa
+wputarteaucitron
 wputaxometas
 wputermstoposts
 wputermstoterms
