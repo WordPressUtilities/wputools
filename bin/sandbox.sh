@@ -49,6 +49,20 @@ function wputools__sandbox(){
         --admin_password=admin \
         --url="http://${_URL}/"
 
+    # Create a child theme
+    mkdir "wp-content/themes/${_DIR}";
+    cat <<EOT >> "wp-content/themes/${_DIR}/style.css";
+/*
+Theme Name: ${_DIR}
+Template: twentytwentythree
+Version: 0.1.0
+*/
+EOT
+    cat <<EOT >> "wp-content/themes/${_DIR}/functions.php";
+<?php
+EOT
+_WPCLICOMMAND theme activate "${_DIR}";
+
     # Create init file
     cat <<EOT >> "init-server.sh";
 #!/bin/bash
