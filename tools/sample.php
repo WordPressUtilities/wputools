@@ -48,6 +48,52 @@ default:
 }
 
 /* ----------------------------------------------------------
+  Images
+---------------------------------------------------------- */
+
+if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
+
+    $orientations = array('landscape', 'portrait', 'squarish');
+    $nb_orientations = count($orientations);
+    $images_list = array();
+    if ($_GET['unsplash_api_key']) {
+        for ($i = 0; $i < $_samples_nb; $i++) {
+            $orientation = $orientations[$i % $nb_orientations];
+            $image = json_decode(wp_remote_retrieve_body(wp_remote_get('https://api.unsplash.com/photos/random?orientation=' . $orientation . '&client_id=' . $_GET['unsplash_api_key'])), true);
+            if (isset($image['urls'])) {
+                $images_list[] = $image['urls']['regular'];
+            }
+        }
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+    echo "Samples for attachments\n";
+    foreach ($images_list as $url) {
+        $tmp_file = download_url($url);
+        $file_array = array(
+            'name' => sanitize_title(basename($url)) . '.jpg',
+            'tmp_name' => $tmp_file
+        );
+        if (is_wp_error($tmp_file)) {
+            @unlink($file_array['tmp_name']);
+        } else {
+            $id = media_handle_sideload($file_array, 0);
+            if (is_numeric($id)) {
+                $_hasImport = true;
+                echo "Success : #" . $id . "\n";
+            }
+        }
+        @flush();
+        @ob_flush();
+    }
+    if (!$images_list) {
+        echo "You need an Unsplash API KEY to import images. Please add a _WPUTOOLS_UNSPLASH_API_KEY in your wputools-local.sh file.\n";
+    }
+}
+
+/* ----------------------------------------------------------
   Content
 ---------------------------------------------------------- */
 
@@ -168,51 +214,6 @@ if ($_posttype == 'user') {
     }
 }
 
-/* ----------------------------------------------------------
-  Images
----------------------------------------------------------- */
-
-if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
-
-    $orientations = array('landscape', 'portrait', 'squarish');
-    $nb_orientations = count($orientations);
-    $images_list = array();
-    if ($_GET['unsplash_api_key']) {
-        for ($i = 0; $i < $_samples_nb; $i++) {
-            $orientation = $orientations[$i % $nb_orientations];
-            $image = json_decode(wp_remote_retrieve_body(wp_remote_get('https://api.unsplash.com/photos/random?orientation=' . $orientation . '&client_id=' . $_GET['unsplash_api_key'])), true);
-            if (isset($image['urls'])) {
-                $images_list[] = $image['urls']['regular'];
-            }
-        }
-    }
-
-    require_once ABSPATH . 'wp-admin/includes/file.php';
-    require_once ABSPATH . 'wp-admin/includes/image.php';
-    require_once ABSPATH . 'wp-admin/includes/media.php';
-    echo "Samples for attachments\n";
-    foreach ($images_list as $url) {
-        $tmp_file = download_url($url);
-        $file_array = array(
-            'name' => sanitize_title(basename($url)) . '.jpg',
-            'tmp_name' => $tmp_file
-        );
-        if (is_wp_error($tmp_file)) {
-            @unlink($file_array['tmp_name']);
-        } else {
-            $id = media_handle_sideload($file_array, 0);
-            if (is_numeric($id)) {
-                $_hasImport = true;
-                echo "Success : #" . $id . "\n";
-            }
-        }
-        @flush();
-        @ob_flush();
-    }
-    if (!$images_list) {
-        echo "You need an Unsplash API KEY to import images. Please add a _WPUTOOLS_UNSPLASH_API_KEY in your wputools-local.sh file.\n";
-    }
-}
 
 if (!$_hasImport) {
     echo "Nothing was imported\n";

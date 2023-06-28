@@ -30,11 +30,18 @@ function wputools__sandbox(){
     fi;
 
     # Install site
-    _WPCLICOMMAND core config \
+    _WPCLICOMMAND config create \
         --skip-check \
         --dbname="${_DIR}" \
         --dbuser=root \
-        --dbpass=root;
+        --dbpass=root \
+        --extra-php <<PHP
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+PHP
+
+    rm -r "wp-content/plugins/";
+    mkdir "wp-content/plugins/";
 
     if [[ "${_MODE}" == 'mysql' ]];then
         # Database
