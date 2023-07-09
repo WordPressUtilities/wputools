@@ -43,6 +43,8 @@ function _wputools_code_checker_common_tests(){
     # Bad practices
     # - replace by is_readable
     _wputools_code_checker__dir_contains "file_exists(" "${1}";
+    # - replace by ctype_digit
+    _wputools_code_checker__dir_contains "is_numeric(" "${1}";
 }
 
 function _wputools_code_checker_theme(){
