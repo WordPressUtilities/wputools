@@ -15,6 +15,7 @@ unset -f wputools__check_acf_pro_install;
 unset -f wputools__delete_old_files;
 unset -f wputools__duplicate_menu;
 unset -f wputools__generate_menus;
+unset -f wputools__generate_urls;
 unset -f wputools__get_db_host;
 unset -f wputools__get_db_name;
 unset -f wputools__get_db_password;

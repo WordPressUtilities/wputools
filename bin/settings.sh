@@ -85,44 +85,29 @@ if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
 fi
 
 # Generate URL file
+function wputools__generate_urls(){
+
+    local _RAND=$(bashutilities_rand_string 6);
+    local _FILE="generateurls-${_RAND}.php";
+    local _PATH="${_CURRENT_DIR}${_FILE}";
+
+    ###################################
+    ## Copy file
+    ###################################
+
+    cp "${_TOOLSDIR}generateurls.php" "${_PATH}";
+
+    # File will be deleted after use so lets ensure rights are ok.
+    chmod 0644 "${_PATH}";
+
+    # Call file
+    wputools_call_url "${_HOME_URL}/${_FILE}?file=${_WPUTOOLS_LOCAL_PATH}wputools-urls.txt";
+
+    # Delete
+    rm "${_PATH}";
+
+}
+
 if [[ "${_wputools_test__file}" == '' ]];then
-    _WPUTOOLS_URL_LOCAL_FILE="${_WPUTOOLS_LOCAL_PATH}wputools-urls.txt";
-    _WPUTOOLS_URL_LOCAL_FILE_TMP="${_WPUTOOLS_LOCAL_PATH}wputools-url-tmp.txt";
-    touch "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
-    touch "${_WPUTOOLS_URL_LOCAL_FILE}";
-    if [[ "${wputools_use_home_url}" == 'y' ]];then
-        echo "${_HOME_URL}" > "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
-    fi
-
-    # Extract all links from menus
-    _menu_list=$(_WPCLICOMMAND menu list --fields=term_id --format=csv);
-    for _menu_id in $_menu_list; do
-        if [[ "${_menu_id}" == 'term_id' ]];then
-            continue;
-        fi;
-        _menu_links=$(_WPCLICOMMAND menu item list "${_menu_id}" --fields=link --format=csv)
-        for _menu_link in $_menu_links;do
-            # Exclude invalid links
-            if [[ "${_menu_link}" == 'link' ]];then
-                continue;
-            fi;
-            # Exclude duplicate home URL
-            if [[ "${wputools_use_home_url}" == 'y' ]];then
-                if [[ "${_menu_link}" == "${_HOME_URL}" || "${_menu_link}" == "${_HOME_URL}/" ]];then
-                    continue;
-                fi;
-            fi;
-            # Exclude external links
-            if [[ "${_menu_link}" != "${_HOME_URL}"* ]];then
-                continue;
-            fi;
-            # Add link to file
-            echo "${_menu_link}" >> "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
-        done;
-    done
-
-    # Sort & deduplicate results
-    # Thanks to https://unix.stackexchange.com/a/190055
-    sort -u "${_WPUTOOLS_URL_LOCAL_FILE_TMP}" > "${_WPUTOOLS_URL_LOCAL_FILE}";
-    rm "${_WPUTOOLS_URL_LOCAL_FILE_TMP}";
-fi
+    wputools__generate_urls;
+fi;
