@@ -56,9 +56,11 @@ fi;
 
 # Extra files
 for _WPUTOOLS_SETTINGS_EXTRA_FILE in {"wputools-backup-after-db-export.sh","wputools-dbimport-before-all.sh","wputools-dbimport-before-search-replace.sh","wputools-dbimport-after-search-replace.sh","wputools-dbimport-after.sh"}; do
-    _WPUTOOLS_SETTINGS_INSTALL_EXTRA_FILE=$(bashutilities_get_yn "- Do you need ${_WPUTOOLS_SETTINGS_EXTRA_FILE} ?" 'y');
-    if [[ "${_WPUTOOLS_SETTINGS_INSTALL_EXTRA_FILE}" == 'y' ]];then
-        echo '#!/bin/bash' > "${_WPUTOOLS_LOCAL_PATH}${_WPUTOOLS_SETTINGS_EXTRA_FILE}";
+    if [[ ! -f "${_WPUTOOLS_LOCAL_PATH}${_WPUTOOLS_SETTINGS_EXTRA_FILE}" ]];then
+        _WPUTOOLS_SETTINGS_INSTALL_EXTRA_FILE=$(bashutilities_get_yn "- Do you need ${_WPUTOOLS_SETTINGS_EXTRA_FILE} ?" 'y');
+        if [[ "${_WPUTOOLS_SETTINGS_INSTALL_EXTRA_FILE}" == 'y' ]];then
+            echo '#!/bin/bash' > "${_WPUTOOLS_LOCAL_PATH}${_WPUTOOLS_SETTINGS_EXTRA_FILE}";
+        fi;
     fi;
 done
 

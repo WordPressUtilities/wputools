@@ -59,7 +59,6 @@ foreach ($post_types as $pt) {
     foreach ($posts as $post) {
         $link = get_permalink($post);
         if ($link) {
-
             $links[] = $link;
         }
     }
@@ -94,4 +93,13 @@ foreach ($tax as $tax) {
 ---------------------------------------------------------- */
 
 $links = array_unique($links);
-file_put_contents($_GET['file'], implode("\n", $links));
+$wputools_urls_file_content = '';
+$wputools_test_file_content = '';
+foreach ($links as $link) {
+    $link_prod = str_replace(site_url(), 'httpreplacebyproddomain', $link);
+    $wputools_urls_file_content .= $link . "\n";
+    $wputools_test_file_content .= $link . ';' . $link_prod . "\n";
+}
+$test_file = dirname($_GET['file']) . '/' . 'test-' . basename($_GET['file']);
+file_put_contents($_GET['file'], $wputools_urls_file_content);
+file_put_contents($test_file, $wputools_test_file_content);
