@@ -13,8 +13,14 @@ case "$1" in
         cd "${_CURRENT_DIR}/wp-content/mu-plugins";
     ;;
     "plugins" | "plugin" )
-        echo "... plugins";
-        cd "${_CURRENT_DIR}/wp-content/plugins";
+        _TMPLINE="... plugins";
+        _tmp_folder="${_CURRENT_DIR}/wp-content/plugins";
+        if [[ "${2}" != '' ]];then
+            _tmp_folder="${_tmp_folder}/${2}";
+            _TMPLINE="${_TMPLINE}/${2}";
+        fi;
+        echo "${_TMPLINE}";
+        cd "${_tmp_folder}";
     ;;
     "themes" | "theme" )
         echo "... themes";

@@ -65,6 +65,17 @@ _wputools_complete() {
             COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.csv' -- $cur ) )
         fi;
 
+        if [[ "$prev2" == 'go' ]];then
+            # Go to a plugin
+            if [[ "$prev" == 'plugins' ]];then
+                if [[ -d "${_base_wp_dir_plugins}" ]];then
+                    _reply=$(ls -1 "${_base_wp_dir_plugins}" | awk -F'/' '{print $NF}');
+                    COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
+                fi;
+            fi;
+        fi;
+
+
     fi
 
     return 0

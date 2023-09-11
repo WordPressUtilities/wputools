@@ -182,6 +182,7 @@ foreach ($php_constants as $constant) {
 $uris = array(
     '/.git/config',
     '/wp-json/wp/v2/users',
+    '/wp-json/wp/v2/pages',
     '/wp-admin/index.php',
     '/wp-includes/wlwmanifest.xml',
     '/wp-includes/version.php'
