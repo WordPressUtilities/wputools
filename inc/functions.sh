@@ -208,3 +208,18 @@ function wputools_get_siteurl(){
 function wputools_backup_uploads_cleanup(){
     echo '- No cleanup';
 }
+
+###################################
+## Go with subfolder
+###################################
+
+function wputools_go_folder_or_subfolder(){
+    local _TMPLINE="... ${1}";
+    local _tmp_folder="${_CURRENT_DIR}/wp-content/${1}";
+    if [[ "${2}" != '' ]];then
+        _tmp_folder="${_tmp_folder}/${2}";
+        _TMPLINE="${_TMPLINE}/${2}";
+    fi;
+    echo "${_TMPLINE}";
+    cd "${_tmp_folder}";
+}

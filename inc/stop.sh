@@ -37,6 +37,7 @@ unset -f wputools_check_update;
 unset -f wputools_execute_file;
 unset -f wputools_get_real_option;
 unset -f wputools_get_siteurl;
+unset -f wputools_go_folder_or_subfolder;
 unset -f wputools_query;
 unset -f wputools_query_select;
 unset -f wputools_test_check_urls;

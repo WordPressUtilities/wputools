@@ -9,25 +9,15 @@ case "$1" in
         cd "${_CURRENT_DIR}/wp-content/themes/${_CURRENT_THEME}";
     ;;
     "mu-plugins" | "mu-plugin" | "mu")
-        echo "... mu-plugins";
-        cd "${_CURRENT_DIR}/wp-content/mu-plugins";
+        wputools_go_folder_or_subfolder "mu-plugins" "${2}";
     ;;
     "plugins" | "plugin" )
-        _TMPLINE="... plugins";
-        _tmp_folder="${_CURRENT_DIR}/wp-content/plugins";
-        if [[ "${2}" != '' ]];then
-            _tmp_folder="${_tmp_folder}/${2}";
-            _TMPLINE="${_TMPLINE}/${2}";
-        fi;
-        echo "${_TMPLINE}";
-        cd "${_tmp_folder}";
+        wputools_go_folder_or_subfolder "plugins" "${2}";
     ;;
     "themes" | "theme" )
-        echo "... themes";
-        cd "${_CURRENT_DIR}/wp-content/themes";
+        wputools_go_folder_or_subfolder "themes" "${2}";
     ;;
     "uploads" | "upload" )
-        echo "... uploads";
-        cd "${_CURRENT_DIR}/wp-content/uploads";
+        wputools_go_folder_or_subfolder "uploads" "${2}";
     ;;
 esac

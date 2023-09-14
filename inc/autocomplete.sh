@@ -11,7 +11,8 @@ _wputools_complete() {
     local cur prev prev2
 
     local _base_wp_dir=$(awk -F '/wp-content'  '{print $1}'  <<<  "${PWD}");
-    local _base_wp_dir_plugins="${_base_wp_dir}/wp-content/plugins";
+    local _base_wp_dir_content="${_base_wp_dir}/wp-content/";
+    local _base_wp_dir_plugins="${_base_wp_dir_content}plugins";
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -67,14 +68,13 @@ _wputools_complete() {
 
         if [[ "$prev2" == 'go' ]];then
             # Go to a plugin
-            if [[ "$prev" == 'plugins' ]];then
-                if [[ -d "${_base_wp_dir_plugins}" ]];then
-                    _reply=$(ls -1 "${_base_wp_dir_plugins}" | awk -F'/' '{print $NF}');
+            if [[ "$prev" == 'plugins' || "$prev" == 'themes' || "$prev" == 'uploads' || "$prev" == 'mu-plugins' ]];then
+                if [[ -d "${_base_wp_dir_content}${prev}" ]];then
+                    _reply=$(ls -1 "${_base_wp_dir_content}${prev}" | awk -F'/' '{print $NF}');
                     COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
                 fi;
             fi;
         fi;
-
 
     fi
 
