@@ -239,10 +239,16 @@ function wputools__update_all_submodules() {
    git submodule foreach 'git checkout master; git checkout main; git pull origin';
 
    # Update
-   commit_without_protect "Update submodules";
+   commit_without_protect "Update Submodules";
 
    # Fix sub-sub-modules behavior.
    git submodule update --init --recursive;
+}
+
+function wputools__update_all_themes() {
+    echo '# Updating WordPress Themes';
+    _WPCLICOMMAND theme update --all;
+    commit_without_protect "Update Themes";
 }
 
 ###################################
@@ -274,6 +280,12 @@ else
     ###################################
 
     wputools__update_all_plugins;
+
+    ###################################
+    ## Themes
+    ###################################
+
+    wputools__update_all_themes;
 
     ###################################
     ## Submodules
