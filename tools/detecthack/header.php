@@ -331,17 +331,21 @@ foreach ($global_tests as $test_id => $var_test) {
   Most suspect files
 ---------------------------------------------------------- */
 
-wputh_echo("\n" . '# These files contains the most red flags :');
-natsort($most_suspect_files);
-$most_suspect_files = array_reverse($most_suspect_files);
-$i = 0;
-foreach ($most_suspect_files as $file => $nb_flags) {
-    if (in_array($file, $clean_files)) {
-        continue;
+if ($most_suspect_files) {
+    wputh_echo("\n" . '# These files contains the most red flags :');
+    natsort($most_suspect_files);
+    $most_suspect_files = array_reverse($most_suspect_files);
+    $i = 0;
+    foreach ($most_suspect_files as $file => $nb_flags) {
+        if (in_array($file, $clean_files)) {
+            continue;
+        }
+        $i++;
+        wputh_echo(' - ' . $file . ' : ' . $nb_flags . ' red flags.');
+        if ($i > 100 && $nb_flags <= 1) {
+            break;
+        }
     }
-    $i++;
-    wputh_echo(' - ' . $file . ' : ' . $nb_flags . ' red flags.');
-    if ($i > 100 && $nb_flags <= 1) {
-        break;
-    }
+} else {
+    wputh_echo("\n" . '# No files seems to contain red flags');
 }
