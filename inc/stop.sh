@@ -28,6 +28,7 @@ unset -f wputools__update_core;
 unset -f wputools__update_plugin;
 unset -f wputools__sample_wptest;
 unset -f wputools__sandbox;
+unset -f wputools__update_all_themes;
 unset -f wputools_add_files_to_excludes;
 unset -f wputools_backup_uploads_cleanup;
 unset -f wputools_cache_warming;

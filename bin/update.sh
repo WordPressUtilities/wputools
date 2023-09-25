@@ -141,12 +141,16 @@ function wputools__delete_old_files(){
     local _files="xmlrpc.php wp-links-opml.php wp-comments-post.php wp-trackback.php wp-mail.php wp-signup.php README.md readme.txt readme.html license.txt";
 
     for _file in $_files; do
+        # If file exists
         if [[ -f "${_CURRENT_DIR}${_file}" ]];then
+            echo "${_CURRENT_DIR}${_file}";
             _file_delete=$(bashutilities_get_yn "- Do you want to delete ${_file}" 'y');
             if [[ "${_file_delete}" == 'y' ]];then
                 rm "${_CURRENT_DIR}${_file}";
-                echo "/${_file}" >> .gitignore;
                 echo "Deleted : ${_file}";
+                if ! grep -q "/${_file}" "${_CURRENT_DIR}.gitignore"; then
+                    echo "/${_file}" >> "${_CURRENT_DIR}.gitignore";
+                fi
             fi;
         fi;
     done

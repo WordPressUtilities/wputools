@@ -82,3 +82,6 @@ rm "${_STATIC_PATH}";
 
 echo '# Cache warming';
 wputools_call_url "${_HOME_URL}" > /dev/null;
+
+# After all
+wputools_execute_file "wputools-cache-after-purge.sh";
