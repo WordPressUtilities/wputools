@@ -73,7 +73,13 @@ chmod 0644 "${_STATIC_PATH}";
 
 # Calling url
 echo '# Clearing static cache';
-wputools_call_url "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
+if [[ "${_cache_type}" == 'purge-cli' ]];then
+    _cache_type='all';
+    echo '- Launching purge via CLI';
+    $_PHP_COMMAND "${_STATIC_FILE}";
+else
+    wputools_call_url "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
+fi;
 rm "${_STATIC_PATH}";
 
 ###################################

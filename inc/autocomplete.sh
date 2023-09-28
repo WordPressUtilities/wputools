@@ -23,7 +23,7 @@ _wputools_complete() {
     elif [ $COMP_CWORD -eq 2 ]; then
         case "$prev" in
             "cache")
-                COMPREPLY=( $(compgen -W "all opcache wprocket w3tc transient fvm object url" -- $cur) )
+                COMPREPLY=( $(compgen -W "all opcache wprocket w3tc transient fvm object url purge-cli" -- $cur) )
             ;;
             "diagnostic")
                 COMPREPLY=( $(compgen -W "now view" -- $cur) )

@@ -143,7 +143,6 @@ function wputools__delete_old_files(){
     for _file in $_files; do
         # If file exists
         if [[ -f "${_CURRENT_DIR}${_file}" ]];then
-            echo "${_CURRENT_DIR}${_file}";
             _file_delete=$(bashutilities_get_yn "- Do you want to delete ${_file}" 'y');
             if [[ "${_file_delete}" == 'y' ]];then
                 rm "${_CURRENT_DIR}${_file}";
