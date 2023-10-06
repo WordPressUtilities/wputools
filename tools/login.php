@@ -1,5 +1,18 @@
 <?php
 
+/* ----------------------------------------------------------
+  Avoid preview
+---------------------------------------------------------- */
+
+$file = basename(__FILE__);
+if (!isset($_GET['wputools_login'])) {
+    echo '<script>window.location.href="' . basename(__FILE__) . '?wputools_login=1"</script>';
+}
+
+/* ----------------------------------------------------------
+  Login
+---------------------------------------------------------- */
+
 /* Disable default environment */
 define('WP_USE_THEMES', false);
 define('WP_ADMIN', true);
