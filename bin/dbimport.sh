@@ -8,6 +8,21 @@ _dbimport_file_isdownloaded="0";
 _tmp_folder="";
 _latest_backup="";
 
+# Use a secondary env for backups
+if [[ "${_dbimport_file}" == 'secondary' ]];then
+    echo "Using secondary source as distant backups dir";
+    _dbimport_file='latest';
+    if [[ -n "${_WPDB_SSH_PORT_SECONDARY}" ]];then
+        _WPDB_SSH_PORT="${_WPDB_SSH_PORT_SECONDARY}";
+    fi;
+    if [[ -n "${_WPDB_SSH_USER_AT_HOST_SECONDARY}" ]];then
+        _WPDB_SSH_USER_AT_HOST="${_WPDB_SSH_USER_AT_HOST_SECONDARY}";
+    fi;
+    if [[ -n "${_WPDB_SSH_BACKUP_DIR_SECONDARY}" ]];then
+        _WPDB_SSH_BACKUP_DIR="${_WPDB_SSH_BACKUP_DIR_SECONDARY}";
+    fi;
+fi;
+
 wputools_execute_file "wputools-dbimport-before-all.sh" "${1}";
 
 # Try to find the latest backup on server
