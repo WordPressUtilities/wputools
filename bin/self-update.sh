@@ -18,7 +18,11 @@ else
 fi;
 
 # Update WP CLI
-_WPCLICOMMAND cli update --yes;
+rm wp-cli.phar;
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar;
+chmod +x wp-cli.phar;
+
+# Prune cache
 if [[ -d ~/.wp-cli ]];then
     _WPCLICOMMAND cli cache prune --quiet;
 fi;
