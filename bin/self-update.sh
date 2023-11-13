@@ -17,10 +17,19 @@ else
     echo "Successful update from WPUTools v ${_WPUTOOLS_VERSION} to WPUTools v ${_WPUTOOLS_LATEST}";
 fi;
 
+_WPCLIVERSION_BEFORE=$(_WPCLICOMMAND cli version);
 # Update WP CLI
 rm wp-cli.phar;
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar;
 chmod +x wp-cli.phar;
+_WPCLIVERSION_AFTER=$(_WPCLICOMMAND cli version);
+
+if [[ "${_WPCLIVERSION_BEFORE}" == "${_WPCLIVERSION_AFTER}" ]]; then
+    echo "WP-CLI was already at the latest version.";
+else
+    echo "Successful update from ${_WPCLIVERSION_BEFORE} to ${_WPCLIVERSION_AFTER}";
+fi;
+
 
 # Prune cache
 if [[ -d ~/.wp-cli ]];then
