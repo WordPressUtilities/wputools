@@ -25,6 +25,7 @@ unset -f wputools__get_wp_config_path;
 unset -f wputools__plugin;
 unset -f wputools__update_all_plugins;
 unset -f wputools__update_all_submodules;
+unset -f wputools__update_all_features;
 unset -f wputools__update_core;
 unset -f wputools__update_plugin;
 unset -f wputools__sample_wptest;

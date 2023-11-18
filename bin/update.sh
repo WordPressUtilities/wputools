@@ -254,6 +254,17 @@ function wputools__update_all_themes() {
     commit_without_protect "Update Themes";
 }
 
+function wputools__update_all_features() {
+    echo '# Updating Features';
+
+    local _mu_autoload="${_CURRENT_DIR}wp-content/mu-plugins/wpu_muplugin_autoloader.php";
+    if [[ -f "${_mu_autoload}" ]];then
+        curl -o "${_mu_autoload}" "https://raw.githubusercontent.com/Darklg/WPUtilities/master/wp-content/mu-plugins/wpu_muplugin_autoloader.php";
+    fi;
+
+    commit_without_protect "Update Features";
+}
+
 ###################################
 ## Update
 ###################################
@@ -264,6 +275,8 @@ if [[ "${1}" == 'core' ]];then
 elif [[ "${1}" == 'all-plugins' ]];then
     wputools__check_acf_pro_install;
     wputools__update_all_plugins;
+elif [[ "${1}" == 'all-features' ]];then
+    wputools__update_all_features;
 elif [[ "${1}" == 'all-submodules' ]];then
     wputools__update_all_submodules;
 elif [[ ! -z "${_PLUGIN_ID}" ]];then
@@ -289,6 +302,12 @@ else
     ###################################
 
     wputools__update_all_themes;
+
+    ###################################
+    ## Features
+    ###################################
+
+    wputools__update_all_features;
 
     ###################################
     ## Submodules
