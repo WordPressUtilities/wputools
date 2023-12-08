@@ -223,3 +223,9 @@ fi;
 # Clear cache
 echo '- Purging cache';
 wputools_call_route cache > /dev/null;
+
+# Ask for login
+_wputools_need_login=$(bashutilities_get_yn "- Do you want to login ?" "y");
+if [[ "${_wputools_need_login}" == 'y' ]];then
+    wputools_call_route login;
+fi;
