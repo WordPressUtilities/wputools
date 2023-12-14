@@ -275,6 +275,18 @@ foreach ($forbidden_slugs as $user_slug) {
 }
 
 /* ----------------------------------------------------------
+  Check number of admins
+---------------------------------------------------------- */
+
+$admins = get_users(array(
+    'role' => 'administrator',
+    'fields'=>'user_login'
+));
+if(count($admins) > 1){
+    $wputools_errors[] = sprintf('You should not have more than one administrator. List of admins: “%s”.', implode('”, “', $admins));
+}
+
+/* ----------------------------------------------------------
   Check public setting
 ---------------------------------------------------------- */
 
