@@ -135,6 +135,7 @@ unset -v _WPUTOOLS_LOGIN_URL;
 unset -v _WPUTOOLS_MAINTENANCE_FILE;
 unset -v _WPUTOOLS_MAINTENANCE_FILE_PATH;
 unset -v _WPUTOOLS_SETTINGS_EXTRA_FILE;
+unset -v _WPUTOOLS_SETTINGS_EXTRA_FILE_NAME;
 unset -v _WPUTOOLS_SETTINGS_INSTALL_EXTRA_FILE;
 unset -v _wputools_test__file;
 unset -v _wputools_test_after_content;
