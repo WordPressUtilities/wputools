@@ -280,9 +280,13 @@ foreach ($forbidden_slugs as $user_slug) {
 
 $admins = get_users(array(
     'role' => 'administrator',
-    'fields'=>'user_login'
+    'fields' => array('user_nicename')
 ));
-if(count($admins) > 1){
+
+if (count($admins) > 1) {
+    $admins = array_map(function ($c) {
+        return $c->user_nicename;
+    }, $admins);
     $wputools_errors[] = sprintf('You should not have more than one administrator. List of admins: “%s”.', implode('”, “', $admins));
 }
 

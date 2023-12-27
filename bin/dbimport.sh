@@ -26,8 +26,7 @@ fi;
 wputools_execute_file "wputools-dbimport-before-all.sh" "${1}";
 
 # Try to find the latest backup on server
-if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && -n "${_WPDB_SSH_USER_AT_HOST}" ]];then
-
+if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && "${_WPDB_SSH_BACKUP_DIR}" != "" && -n "${_WPDB_SSH_USER_AT_HOST}" && "${_WPDB_SSH_USER_AT_HOST}" != "" ]];then
     if [[ "${_WPDB_SSH_PORT}" == "" ]];then
         _WPDB_SSH_PORT=22;
     fi;
