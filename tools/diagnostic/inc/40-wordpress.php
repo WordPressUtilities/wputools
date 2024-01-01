@@ -228,6 +228,21 @@ if (!$is_https && !$is_test_extension) {
 }
 
 /* ----------------------------------------------------------
+  Check home page speed
+---------------------------------------------------------- */
+
+$info = false;
+$ch = curl_init($site_url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+if (curl_exec($ch)) {
+    $info = curl_getinfo($ch);
+}
+curl_close($ch);
+if(is_array($info) && isset($info['total_time']) && $info['total_time'] > 0.2){
+    $wputools_errors[] = sprintf('Homepage took %s seconds to load.', $info['total_time']);
+}
+
+/* ----------------------------------------------------------
   Compare WP Version
 ---------------------------------------------------------- */
 
