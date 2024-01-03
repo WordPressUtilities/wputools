@@ -24,7 +24,7 @@ chmod 0644 "${_WPULOG_PATH}";
 ###################################
 
 _WPUTOOLS_LOGIN_URL="${_HOME_URL}/${_WPULOG_FILE}"
-if [[ "${1}" != "" ]];then
+if [[ "${1}" != "" && "${1}" != "--quiet" ]];then
     _WPUTOOLS_LOGIN_URL="${_WPUTOOLS_LOGIN_URL}?user_id=${1}";
 fi;
 

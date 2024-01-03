@@ -58,7 +58,7 @@ $new_menu_id = wp_create_nav_menu($new_menu_name);
 
 $matches_ids = array();
 $old_menu_items = wp_get_nav_menu_items($id);
-foreach ($old_menu_items as $item) {
+foreach ($old_menu_items as $i => $item) {
     $args = array(
         'menu-item-attr-title' => $item->attr_title,
         'menu-item-classes' => implode(' ', $item->classes),

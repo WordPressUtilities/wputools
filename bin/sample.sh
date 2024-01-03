@@ -14,7 +14,7 @@ _WPUSAMPLE_PATH="${_CURRENT_DIR}${_WPUSAMPLE_FILE}";
 ## Help
 ###################################
 
-if [[ "${1}" == 'help' ]];then
+if [[ "${1}" == 'help' || "${1}" == '--quiet' ]];then
 cat <<TXT
 ## Generate 5 posts
 wputools sample post
