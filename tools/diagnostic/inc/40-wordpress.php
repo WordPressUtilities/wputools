@@ -37,7 +37,64 @@ if (!function_exists('wp_get_environment_type')) {
         return '';
     }
 }
-$is_debug_env = in_array(wp_get_environment_type(), array('local', 'development'));
+$env_type = wp_get_environment_type();
+$debug_env_values = array('local', 'development', 'staging');
+$is_debug_env = in_array($env_type, $debug_env_values);
+
+/* Env type
+-------------------------- */
+
+if (!$is_debug_env && $env_type != 'production') {
+    $wputools_errors[] = 'WordPress : Env type "' . $env_type . '" is not valid';
+}
+
+/* Invalid env type
+-------------------------- */
+
+function wputools_diagnostic_check_is_preproduction($domainName) {
+    // Check for localhost
+    if ($domainName === 'localhost') {
+        return true;
+    }
+
+    // Check for IP address pattern (IPv4)
+    if (filter_var($domainName, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        return true;
+    }
+
+    // Check if the domain contains a port number
+    if (strpos($domainName, ':') !== false) {
+        return true;
+    }
+
+    // Check for specific subdomains indicating a preproduction environment
+    $preproductionSubdomains = ['preview', 'preprod', 'staging'];
+    foreach ($preproductionSubdomains as $subdomain) {
+        if (strpos($domainName, $subdomain . '.') !== false) {
+            return true;
+        }
+    }
+
+    // Check for specific top-level domains (TLDs) indicating a local or development environment
+    $developmentTlds = ['.test', '.local', '.dev'];
+    foreach ($developmentTlds as $tld) {
+        if (substr($domainName, -strlen($tld)) === $tld) {
+            return true;
+        }
+    }
+
+    // Assume it's a production domain if none of the above criteria are met
+    return false;
+}
+
+$urlparts = wp_parse_url(home_url());
+$looks_like_preproduction = wputools_diagnostic_check_is_preproduction($urlparts['host']);
+if (!$is_debug_env && $looks_like_preproduction) {
+    $wputools_errors[] = 'WordPress : Domain "' . $domain . '" does not looks like a production domain.';
+}
+if ($is_debug_env && !$looks_like_preproduction) {
+    $wputools_errors[] = 'WordPress : Domain "' . $domain . '" does not looks like a preproduction domain.';
+}
 
 /* Parts
 -------------------------- */
@@ -238,7 +295,7 @@ if (curl_exec($ch)) {
     $info = curl_getinfo($ch);
 }
 curl_close($ch);
-if(is_array($info) && isset($info['total_time']) && $info['total_time'] > 0.2){
+if (is_array($info) && isset($info['total_time']) && $info['total_time'] > 0.2) {
     $wputools_errors[] = sprintf('Homepage took %s seconds to load.', $info['total_time']);
 }
 
