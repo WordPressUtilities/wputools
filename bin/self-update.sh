@@ -36,11 +36,11 @@ if [[ -d ~/.wp-cli ]];then
     _WPCLICOMMAND cli cache prune --quiet;
 fi;
 
-# Reload autocomplete
-. "${_SOURCEDIR}inc/autocomplete.sh";
-
 # Mark update control file
 touch "${_UPDATE_CONTROL_FILE}";
 
 # Back to the current dir
 cd "${_CURRENT_DIR}";
+
+# Reload autocomplete
+. "${_SOURCEDIR}inc/autocomplete.sh";
