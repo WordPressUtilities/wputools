@@ -32,14 +32,20 @@ if ($free_space < 20) {
   Test files which should exist and be writable
 ---------------------------------------------------------- */
 
-$files = array('wp-config.php', '.htaccess');
+$files = array(
+    array('wp-config.php', '../wp-config.php'),
+    '.htaccess'
+);
 foreach ($files as $file) {
-    if (!file_exists($file)) {
-        $wputools_errors[] = sprintf('The %s file should exist !', $file);
+    if (!is_array($file)) {
+        $file = array($file, $file);
+    }
+    if (!file_exists($file[0]) && !file_exists($file[1])) {
+        $wputools_errors[] = sprintf('The %s file should exist !', $file[0]);
         continue;
     }
-    if (!is_writable($file)) {
-        $wputools_errors[] = sprintf('The file %s should be writable !', $file);
+    if (!is_writable($file[0]) && !is_writable($file[1])) {
+        $wputools_errors[] = sprintf('The file %s should be writable !', $file[0]);
         continue;
     }
 }
