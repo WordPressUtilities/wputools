@@ -2,9 +2,10 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.85.7';
-local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2)
-local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3)
+local _WPUTOOLS_VERSION='0.85.8';
+local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
+local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4)
+local _PHP_VERSIONS_ADVANCED=(8.2 8.3 8.4 8.5 9.0)
 local _CURRENT_DIR="${PWD}/";
 local _IS_QUIET_MODE="1";
 
@@ -47,6 +48,16 @@ _WPCLICOMMAND(){
 }
 
 typeset -fx _WPCLICOMMAND;
+
+
+###################################
+## Last check
+###################################
+
+if [[ ! -f "${_SOURCEDIR}/wputools.sh" ]];then
+    echo "Error: WPUTools install folder can't be reached.";
+    return 0;
+fi;
 
 ###################################
 ## Test submodules
@@ -92,6 +103,10 @@ fi;
 
 case "${_PHP_VERSIONS_OBSOLETES[@]}" in  *"${_PHP_VERSION}"*)
     bashutilities_message "Your PHP Version is obsolete : ${_PHP_VERSION}" 'warning';
+esac
+
+case "${_PHP_VERSIONS_ADVANCED[@]}" in  *"${_PHP_VERSION}"*)
+    bashutilities_message "Your PHP Version may not be compatible yet with WordPress : ${_PHP_VERSION}" 'warning';
 esac
 
 ###################################
