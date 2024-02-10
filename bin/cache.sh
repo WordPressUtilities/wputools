@@ -40,6 +40,15 @@ for _cache_dir in "${_CACHE_DIRS[@]}"; do
 done;
 
 ###################################
+## Performant translation cache
+###################################
+
+if [[ -f "${_CURRENT_DIR}.git/config" ]];then
+    echo '# Clearing performant translation cache';
+    find "${_CURRENT_DIR}wp-content" -type f -name "*.mo.php" -exec rm -f {} +;
+fi;
+
+###################################
 ## Extra directories
 ###################################
 
