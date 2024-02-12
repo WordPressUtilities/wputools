@@ -300,6 +300,33 @@ if (is_array($info) && isset($info['total_time']) && $info['total_time'] > 0.2) 
 }
 
 /* ----------------------------------------------------------
+  Check RSS
+---------------------------------------------------------- */
+
+function wputools_test_rss_feed($rss_url) {
+    global $wputools_errors;
+
+    if (empty($rss_url)) {
+        $wputools_errors[] = __('The RSS URL is empty.');
+        return;
+    }
+
+    $rss_content = @simplexml_load_file($rss_url);
+    if ($rss_content === false) {
+        $wputools_errors[] = __('Failed to load RSS feed. Please check the URL.');
+        return;
+    }
+
+    $items = $rss_content->channel->item;
+    if (empty($items)) {
+        $wputools_errors[] = __('No articles found in the RSS feed.');
+        return;
+    }
+}
+
+wputools_test_rss_feed(site_url() . '/feed');
+
+/* ----------------------------------------------------------
   Compare WP Version
 ---------------------------------------------------------- */
 
