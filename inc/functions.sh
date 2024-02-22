@@ -229,5 +229,9 @@ function wputools_go_folder_or_subfolder(){
         _TMPLINE="${_TMPLINE}/${2}";
     fi;
     echo "${_TMPLINE}";
+    if [[ ! -d "${_tmp_folder}" ]];then
+        echo 'This folder does not exists.';
+        return 0;
+    fi;
     cd "${_tmp_folder}";
 }
