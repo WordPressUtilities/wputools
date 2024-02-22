@@ -1,12 +1,10 @@
-name: Functions test
+name: "Trigger: Push action"
+permissions: {}
 
 on:
   push:
     branches:
       - master
-
-name: "Trigger: Push action"
-permissions: {}
 
 jobs:
   shellcheck:
