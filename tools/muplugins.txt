@@ -1,5 +1,6 @@
 wpu_acf_flexible
 wpu_admin_protect
+wpu_better_rss
 wpu_file_cache
 wpu_opensans
 wpu_override_gettext

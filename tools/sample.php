@@ -34,6 +34,9 @@ if (isset($_GET['sample_posttype']) && $_GET['sample_posttype']) {
 }
 
 switch ($_posttype) {
+case 'comments':
+    $_posttype = 'comment';
+    break;
 case 'users':
     $_posttype = 'user';
     break;
@@ -214,6 +217,28 @@ if ($_posttype == 'user') {
     }
 }
 
+/* ----------------------------------------------------------
+  Comments
+---------------------------------------------------------- */
+
+if ($_posttype == 'comment' && isset($_GET['sample_extra']) && is_numeric($_GET['sample_extra'])) {
+    $post_id = $_GET['sample_extra'];
+    echo "Samples for comments\n";
+    $comment_id = 0;
+    for ($i = 1; $i <= $_samples_nb; $i++) {
+        $first_name = $users_values['first_name'][array_rand($users_values['first_name'])];
+        $last_name = $users_values['last_name'][array_rand($users_values['last_name'])];
+        $user_id = strtolower(sanitize_user($first_name . '_' . $last_name)) . '_' . uniqid();
+        $comment_id = wp_insert_comment(array(
+            'comment_author' => $first_name . ' ' . $last_name,
+            'comment_parent' => (rand(0, 1) == 1) ? $comment_id : 0,
+            'comment_post_ID' => $post_id,
+            'comment_content' => $raw_contents[mt_rand(0, $nb_raw_contents - 1)]
+        ));
+        $_hasImport = true;
+        echo "Success : #" . $i . "\n";
+    }
+}
 
 if (!$_hasImport) {
     echo "Nothing was imported\n";

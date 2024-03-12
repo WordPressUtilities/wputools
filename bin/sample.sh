@@ -80,12 +80,17 @@ if [[ "${2}" != "" ]];then
     _WPUSAMPLE_NUM="${2}";
 fi;
 
+_WPUSAMPLE_EXTRA='';
+if [[ "${3}" != "" ]];then
+    _WPUSAMPLE_EXTRA="${3}";
+fi;
+
 if [[ -z "${_WPUTOOLS_UNSPLASH_API_KEY}" ]];then
     _WPUTOOLS_UNSPLASH_API_KEY="";
 fi;
 
 # Call file
-wputools_call_url "${_HOME_URL}/${_WPUSAMPLE_FILE}?sample_posttype=${_WPUSAMPLE_TYPE}&sample_num=${_WPUSAMPLE_NUM}&unsplash_api_key=${_WPUTOOLS_UNSPLASH_API_KEY}";
+wputools_call_url "${_HOME_URL}/${_WPUSAMPLE_FILE}?sample_posttype=${_WPUSAMPLE_TYPE}&sample_num=${_WPUSAMPLE_NUM}&sample_extra=${_WPUSAMPLE_EXTRA}&unsplash_api_key=${_WPUTOOLS_UNSPLASH_API_KEY}";
 
 # Delete
 rm "${_WPUSAMPLE_PATH}";

@@ -135,26 +135,27 @@ function wputools__get_wp_config_path(){
 }
 
 function wputools__get_db_prefix(){
-    local _TMP_DB_PREFIX=$(bashutilities_search_extract_file "\$table_prefix" "';" $(wputools__get_wp_config_path) );
+    local _TMP_DB_PREFIX;
+    _TMP_DB_PREFIX=$(bashutilities_search_extract_file "\$table_prefix" "';" "$(wputools__get_wp_config_path)" );
     _TMP_DB_PREFIX=${_TMP_DB_PREFIX/\'/};
     _TMP_DB_PREFIX=${_TMP_DB_PREFIX/=/};
     echo "${_TMP_DB_PREFIX/ /}";
 }
 
 function wputools__get_db_user(){
-    bashutilities_search_extract_file__php_constant "DB_USER" $(wputools__get_wp_config_path) ;
+    bashutilities_search_extract_file__php_constant "DB_USER" "$(wputools__get_wp_config_path)";
 }
 
 function wputools__get_db_password(){
-    bashutilities_search_extract_file__php_constant "DB_PASSWORD" $(wputools__get_wp_config_path) ;
+    bashutilities_search_extract_file__php_constant "DB_PASSWORD" "$(wputools__get_wp_config_path)";
 }
 
 function wputools__get_db_host(){
-    bashutilities_search_extract_file__php_constant "DB_HOST" $(wputools__get_wp_config_path) ;
+    bashutilities_search_extract_file__php_constant "DB_HOST" "$(wputools__get_wp_config_path)";
 }
 
 function wputools__get_db_name(){
-    bashutilities_search_extract_file__php_constant "DB_NAME" $(wputools__get_wp_config_path) ;
+    bashutilities_search_extract_file__php_constant "DB_NAME" "$(wputools__get_wp_config_path)";
 }
 
 ###################################
