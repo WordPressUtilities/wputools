@@ -17,6 +17,11 @@ if [[ "${1}" == 'help' ]];then
     return;
 fi;
 
+# Check lock
+if [[ -f "${_CURRENT_DIR}.git/index.lock" ]];then
+    bashutilities_message "Error : Git repository is locked" 'error';
+    return;
+fi;
 
 _ADMIN_PROTECT_FILE=$(find . -mount -name 'wputh_admin_protect.php');
 _ADMIN_PROTECT_FLAG=".disable_wpu_admin_protect";
