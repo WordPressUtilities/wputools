@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.88.1';
+local _WPUTOOLS_VERSION='0.89.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_ADVANCED=(8.2 8.3 8.4 8.5 9.0)
@@ -179,6 +179,22 @@ case "$1" in
         return 0;
     ;;
 esac
+
+
+###################################
+## Test writing in dir
+###################################
+
+_WPUTESTFILE_RAND=$(bashutilities_rand_string 6);
+_WPUTESTFILE_FILE="test-${_WPUTESTFILE_RAND}.txt";
+_WPUTESTFILE_PATH="${_CURRENT_DIR}${_WPUTESTFILE_FILE}";
+touch "${_WPUTESTFILE_PATH}";
+if [[ ! -f "${_WPUTESTFILE_PATH}" ]];then
+    bashutilities_message "WPUTools cant create a file at WordPress root. It will cause problems." 'error';
+else
+    rm "${_WPUTESTFILE_PATH}";
+fi;
+
 
 ###################################
 ## Getting vars

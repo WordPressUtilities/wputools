@@ -306,6 +306,8 @@ if (is_array($info) && isset($info['total_time']) && $info['total_time'] > 0.2) 
 function wputools_test_rss_feed($rss_url) {
     global $wputools_errors;
 
+    libxml_use_internal_errors(true);
+
     if (empty($rss_url)) {
         $wputools_errors[] = __('The RSS URL is empty.');
         return;
@@ -313,7 +315,13 @@ function wputools_test_rss_feed($rss_url) {
 
     $rss_content = @simplexml_load_file($rss_url);
     if ($rss_content === false) {
-        $wputools_errors[] = __('Failed to load RSS feed. Please check the URL.');
+        $error_text = '';
+        foreach (libxml_get_errors() as $error) {
+            if ($error->message) {
+                $error_text .= 'line ' . $error->line . ': ' . $error->message;
+            }
+        }
+        $wputools_errors[] = sprintf(__("Failed to parse RSS feed :\n%s"), $error_text);
         return;
     }
 
