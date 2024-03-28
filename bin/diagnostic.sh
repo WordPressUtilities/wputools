@@ -3,6 +3,26 @@
 echo "# DIAGNOSTIC";
 
 ###################################
+## Code profiler
+###################################
+
+if [[ "${1}" == 'code-profiler' ]];then
+    if [[ ! -d "${_TOOLSDIR}code-profiler-pro" ]];then
+        echo "The code-profiler-pro folder is not available in tools/";
+        return 0;
+    fi;
+    if [[ -d "${_CURRENT_DIR}wp-content/plugins/code-profiler-pro" ]];then
+        echo "The code-profiler-pro plugin is already installed";
+    else
+        cp -r "${_TOOLSDIR}code-profiler-pro"  "${_CURRENT_DIR}wp-content/plugins/code-profiler-pro";
+    fi;
+    _WPCLICOMMAND plugin activate code-profiler-pro;
+    echo "Success! please go to :";
+    wp eval 'echo admin_url("admin.php?page=code-profiler-pro")."\n";';
+    return 0;
+fi;
+
+###################################
 ## Initial datas
 ###################################
 
