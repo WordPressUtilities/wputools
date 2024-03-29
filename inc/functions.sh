@@ -236,3 +236,20 @@ function wputools_go_folder_or_subfolder(){
     fi;
     cd "${_tmp_folder}";
 }
+
+###################################
+## Install plugin
+###################################
+
+function wputools_install_plugin_folder(){
+    if [[ ! -d "${_PLUGINSMANUALDIR}${1}" ]];then
+        echo "The ${1} folder is not available in plugins/";
+        return 0;
+    fi;
+    if [[ -d "${_CURRENT_DIR}wp-content/plugins/${1}" ]];then
+        echo "The ${1} plugin is already installed";
+    else
+        cp -r "${_PLUGINSMANUALDIR}${1}"  "${_CURRENT_DIR}wp-content/plugins/${1}";
+    fi;
+    _WPCLICOMMAND plugin activate "${1}";
+}

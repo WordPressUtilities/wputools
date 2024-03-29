@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.90.0';
+local _WPUTOOLS_VERSION='0.90.1';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4)
 local _PHP_VERSIONS_ADVANCED=(8.2 8.3 8.4 8.5 9.0)
@@ -22,6 +22,7 @@ fi;
 
 local _SOURCEDIR="$( dirname "${BASH_SOURCE[0]}" )/";
 local _WPCLISRC="${_SOURCEDIR}wp-cli.phar";
+local _PLUGINSMANUALDIR="${_SOURCEDIR}plugins/";
 local _TOOLSDIR="${_SOURCEDIR}tools/";
 local _UPDATE_CONTROL_FILE="${_SOURCEDIR}control.txt";
 local _UPDATE_CHECK_EVERY_SEC=86400;

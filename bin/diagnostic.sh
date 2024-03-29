@@ -7,16 +7,9 @@ echo "# DIAGNOSTIC";
 ###################################
 
 if [[ "${1}" == 'code-profiler' ]];then
-    if [[ ! -d "${_TOOLSDIR}code-profiler-pro" ]];then
-        echo "The code-profiler-pro folder is not available in tools/";
-        return 0;
-    fi;
-    if [[ -d "${_CURRENT_DIR}wp-content/plugins/code-profiler-pro" ]];then
-        echo "The code-profiler-pro plugin is already installed";
-    else
-        cp -r "${_TOOLSDIR}code-profiler-pro"  "${_CURRENT_DIR}wp-content/plugins/code-profiler-pro";
-    fi;
-    _WPCLICOMMAND plugin activate code-profiler-pro;
+    wputools_install_plugin_folder "code-profiler-pro";
+    wputools_add_files_to_excludes "wp-content/plugins/code-profiler-pro"
+    wputools_add_files_to_excludes "wp-content/mu-plugins/0----code-profiler-pro.php"
     echo "Success! please go to :";
     wp eval 'echo admin_url("admin.php?page=code-profiler-pro")."\n";';
     return 0;
