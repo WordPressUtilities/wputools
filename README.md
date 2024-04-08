@@ -116,6 +116,10 @@ Add CLI shortcut :
 
 `wputools mu-plugin wpu_file_cache;`
 
+### Convert some htaccess rules to nginx
+
+`wputools nginx-convert;`
+
 ### Install a WordPressUtilities plugin
 
 `wputools plugin wpuloginas;`

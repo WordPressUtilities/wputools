@@ -21,6 +21,7 @@ wputools go;              # Quickly go to a specific folder.
 wputools generatemenus;   # Generate default menus.
 wputools importsite;      # Import a distant website.
 wputools muplugin;        # Install a WordPressUtilities mu-plugin.
+wputools nginx-convert;   # Convert some htaccess rules to nginx
 wputools plugin;          # Install a WordPressUtilities plugin.
 wputools sample;          # Insert sample posts & images.
 wputools sandbox;         # Create a WordPress sandbox.
