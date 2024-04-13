@@ -175,7 +175,21 @@ function commit_without_protect(){
 function wputools__update_core(){
     echo '# Updating WordPress core';
     local _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
+    local _LATEST_WORDPRESS=$(_WPCLICOMMAND core check-update --major --field=version);
     _WPCLICOMMAND core check-update;
+
+    if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == "major" && "${_LATEST_WORDPRESS}" != "${_CURRENT_WORDPRESS}" ]]; then
+        local _CURRENT_MINOR_VERSION=$(echo "${_CURRENT_WORDPRESS}" | cut -d'.' -f1-2)
+        local _LATEST_MINOR_VERSION=$(echo "${_LATEST_WORDPRESS}" | cut -d'.' -f1-2)
+        if [[ "${_CURRENT_MINOR_VERSION}" != "${_LATEST_MINOR_VERSION}" ]]; then
+            bashutilities_message "Warning: It seems like it is a major update" 'warning';
+            local switch_minor=$(bashutilities_get_yn "- Do you want to switch to a minor update?" 'n');
+            if [[ "${switch_minor}" == 'y' ]];then
+                _WPUTOOLS_CORE_UPDATE_TYPE='minor';
+            fi;
+        fi
+    fi
+
     if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
         _WPCLICOMMAND core update --skip-themes;
     else
