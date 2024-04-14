@@ -6,7 +6,13 @@
 
 $file = basename(__FILE__);
 if (!isset($_GET['wputools_login'])) {
-    echo '<script>window.location.href="' . basename(__FILE__) . '?wputools_login=1"</script>';
+    $url_args = array(
+        'wputools_login' => 1
+    );
+    if (isset($_GET['user_id']) && is_numeric($_GET['user_id'])) {
+        $url_args['user_id'] = $_GET['user_id'];
+    }
+    echo '<script>window.location.href="' . basename(__FILE__) . '?' . http_build_query($url_args) . '"</script>';
     return;
 }
 
