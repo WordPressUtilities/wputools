@@ -3,6 +3,7 @@
 echo "# DB Export";
 
 _dbexport_new_url="${1}";
+_WPDB_REPLACE_BEFORE_TMP=$(wputools_get_siteurl);
 
 ###################################
 ## Check MySQL
@@ -15,6 +16,7 @@ fi;
 
 if [[ "${_dbexport_new_url}" == '' ]];then
     bashutilities_message 'Missing export URL' 'error';
+    echo "- URL to be replaced is: ${_WPDB_REPLACE_BEFORE_TMP}";
     return 0;
 fi;
 
@@ -27,7 +29,6 @@ _SITE_NAME_SLUG="${_SITE_NAME_SLUG:0:10}";
 _BACKUP_RAND=$(bashutilities_rand_string 6);
 _BACKUP_NAME="${_SITE_NAME_SLUG}-$(date +%Y-%m-%d-%H%M%S)-${_BACKUP_RAND}.sql";
 _BACKUP_ARCHIVE="export-${_BACKUP_NAME}.tar.gz"
-_WPDB_REPLACE_BEFORE_TMP=$(wputools_get_siteurl);
 
 ###################################
 ## Backup
