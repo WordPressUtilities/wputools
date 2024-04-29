@@ -25,7 +25,7 @@ function wputools__nginx_convert() {
 
             # Append nginx configuration for denying access to this directory
     cat <<EOT >> "${nginx_file}";
-location = ${dir_path}/ {
+location ^~ ${dir_path} {
     deny all;
     return 404;
 }
