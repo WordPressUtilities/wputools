@@ -175,8 +175,10 @@ function commit_without_protect(){
 function wputools__update_core(){
     echo '# Updating WordPress core';
     local _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
-    local _LATEST_WORDPRESS=$(_WPCLICOMMAND core check-update --major --field=version);
-    _WPCLICOMMAND core check-update;
+    local _LATEST_WORDPRESS=$(_WPCLICOMMAND core check-update --force-check --major --field=version);
+    if [[ "${_LATEST_WORDPRESS}" == *"uccess"* ]]; then
+        _LATEST_WORDPRESS="${_CURRENT_WORDPRESS}"
+    fi
 
     if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == "major" && "${_LATEST_WORDPRESS}" != "${_CURRENT_WORDPRESS}" ]]; then
         local _CURRENT_MINOR_VERSION=$(echo "${_CURRENT_WORDPRESS}" | cut -d'.' -f1-2)
