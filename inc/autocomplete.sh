@@ -46,9 +46,10 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "all attachment comment help page post user wptest" -- $cur) )
             ;;
             "update")
+                COMPREPLY=( $(compgen -W "all-features all-plugins all-submodules core instant-test relaunch-test" -- $cur) )
                 if [[ -d "${_base_wp_dir_plugins}" ]];then
                     _reply=$(ls -1 "${_base_wp_dir_plugins}" | awk -F'/' '{print $NF}');
-                    COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
+                    COMPREPLY+=( $(compgen -W "${_reply}" -- $cur) );
                 fi;
             ;;
             "wpuwoo")
