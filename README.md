@@ -24,6 +24,10 @@ Add CLI shortcut :
 
 `wputools adminer;`
 
+### Archive old logs
+
+`wputools archivelogs;`
+
 ### Backup database + wp-config + htaccess + uploads (on demand).
 
 `wputools backup;`
