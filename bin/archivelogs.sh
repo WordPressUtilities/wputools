@@ -30,9 +30,12 @@ function wputools_archive_logs(){
         return;
     fi
 
-
     _EXCLUDED_YEARMONTHS="$(date +%Y)$(date +%m)";
-    _PREVIOUS_MONTH=$(date -v-1m +%Y%m);
+    if ((BASH_VERSINFO[0] >= 4)); then
+        _PREVIOUS_MONTH=$(date -d "1 month ago" +%Y%m);
+    else
+        _PREVIOUS_MONTH=$(date -v-1m +%Y%m);
+    fi
     _EXCLUDED_YEARMONTHS="${_EXCLUDED_YEARMONTHS} ${_PREVIOUS_MONTH}";
 
     # Loop through log files and archive them by year and month contained in the log file name
