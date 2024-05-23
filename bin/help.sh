@@ -4,6 +4,7 @@ echo "# HELP";
 
 cat <<EOF
 wputools adminer;         # Open an adminer session.
+wputools anonymizedb;     # Anonymize the database.
 wputools archivelogs;     # Archive old logs.
 wputools backup;          # Backup database + wp-config + htaccess + uploads (on demand).
 wputools bduser;          # Install SecuPress-Backdoor-User.

@@ -28,6 +28,10 @@ Add CLI shortcut :
 
 `wputools archivelogs;`
 
+### Anonymize the database.
+
+`wputools anonymizedb;`
+
 ### Backup database + wp-config + htaccess + uploads (on demand).
 
 `wputools backup;`
