@@ -13,6 +13,7 @@ _wputools_complete() {
     local _base_wp_dir=$(awk -F '/wp-content'  '{print $1}'  <<<  "${PWD}");
     local _base_wp_dir_content="${_base_wp_dir}/wp-content/";
     local _base_wp_dir_plugins="${_base_wp_dir_content}plugins";
+    local _list_backup_dir=( "../backups/" "../" "../local-backups/" );
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -32,9 +33,13 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "current_theme mu-plugins plugins themes uploads" -- $cur) )
             ;;
             "dbimport")
-                COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.sql' -- $cur ) )
-                COMPREPLY+=( $( compgen -o plusdirs  -f -X '!*.tar.gz' -- $cur ) )
-                COMPREPLY+=( $( compgen -o plusdirs  -f -X '!*.sql.gz' -- $cur ) )
+                COMPREPLY=( $(compgen -W "latest" -- $cur) )
+                for dir in "${_list_backup_dir[@]}"; do
+                    if [[ -d "${_base_wp_dir}/$dir" ]]; then
+                        _reply=$(ls -1 "${_base_wp_dir}/$dir" | awk -F'/' '{print "'$dir'"$NF}' | grep '\.tar\.gz$');
+                        COMPREPLY+=( $(compgen -W "${_reply}" -- $cur) );
+                    fi
+                done
             ;;
             "muplugin")
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_MUPLUGIN_LIST}")" -- $cur) )

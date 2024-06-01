@@ -20,13 +20,15 @@ function wputools__sandbox(){
     local _CURRENT_DIR_SANDBOX=$(pwd);
 
     # Download WordPress
-    _WPCLICOMMAND core download;
-
     if [[ "${_MODE}" == 'sqlite' ]];then
+        # Specific WordPress version
+        _WPCLICOMMAND core download --version=6.4.3;
         # Download and Install SQLite integration
         git clone https://github.com/aaemnnosttv/wp-sqlite-db.git;
         mv wp-sqlite-db/src/db.php wp-content/db.php;
         rm -rf wp-sqlite-db;
+    else
+        _WPCLICOMMAND core download;
     fi;
 
     # Install site
