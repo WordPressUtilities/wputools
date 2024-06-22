@@ -2,8 +2,10 @@
 
 echo "# UPDATE";
 
+###################################
+## Help
+###################################
 
-# Help
 if [[ "${1}" == 'help' ]];then
     echo "Help :";
     echo "- '' : Update everything.";
@@ -17,11 +19,38 @@ if [[ "${1}" == 'help' ]];then
     return;
 fi;
 
-# Check lock
+###################################
+## Checks before launching update
+###################################
+
+# Check if git is locked
 if [[ -f "${_CURRENT_DIR}.git/index.lock" ]];then
     bashutilities_message "Error : Git repository is locked" 'error';
     return;
 fi;
+
+# Check if there are uncommited changes
+if [[ $(git status --porcelain) ]]; then
+    bashutilities_message "Error : There are uncommited changes" 'error';
+    return;
+fi;
+
+# Check if there are unpushed commits
+if [[ $(git log origin/$(git symbolic-ref --short HEAD)..HEAD) ]]; then
+    bashutilities_message "Error : There are unpushed commits" 'error';
+    return;
+fi;
+
+# Check if WP env is not in production
+_WP_PROJECT_ENV=$(_WPCLICOMMAND config get WP_ENVIRONMENT_TYPE);
+if [[ "${_WP_PROJECT_ENV}" == 'production' || "${_WP_PROJECT_ENV}" == 'prod' ]];then
+    bashutilities_message "Error : You can't update in production" 'error';
+    return;
+fi;
+
+###################################
+## Variables
+###################################
 
 _ADMIN_PROTECT_FILE=$(find . -mount -name 'wputh_admin_protect.php');
 _ADMIN_PROTECT_FLAG=".disable_wpu_admin_protect";
@@ -260,7 +289,7 @@ function wputools__update_all_plugins() {
 
 function wputools__update_all_submodules() {
    echo '# Updating submodules';
-   git submodule foreach 'git checkout master; git checkout main; git pull origin';
+   git submodule foreach 'git fetch; git checkout master; git checkout main; git pull origin';
 
    # Update
    commit_without_protect "Update Submodules";

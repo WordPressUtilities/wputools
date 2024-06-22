@@ -98,6 +98,7 @@ unset -v _STATIC_RAND;
 unset -v _tmp_dump;
 unset -v _tmp_folder;
 unset -v _TMPLINE;
+unset -v _WP_PROJECT_ENV;
 unset -v _WPDB_BACKUP_LOCAL_DIR;
 unset -v _WPDB_REPLACE_AFTER;
 unset -v _WPDB_REPLACE_BEFORE;
