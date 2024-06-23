@@ -382,7 +382,7 @@ foreach ($forbidden_slugs as $user_slug) {
 }
 
 /* ----------------------------------------------------------
-  Check number of admins
+  Check admins
 ---------------------------------------------------------- */
 
 $admins = get_users(array(
@@ -390,6 +390,21 @@ $admins = get_users(array(
     'fields' => array('user_nicename')
 ));
 
+/* Check 2FA */
+if (!$is_debug_env) {
+    if (!in_array('two-factor/two-factor.php', get_option('active_plugins'))) {
+        $wputools_errors[] = 'You should have an active 2FA plugin.';
+    } else {
+        foreach ($admins as $user) {
+            $two_fa_user = get_user_meta($user->ID, '_two_factor_enabled', true);
+            if (!$two_fa_user) {
+                $wputools_errors[] = sprintf('You should have 2FA enabled for the user “%s”.', $user->user_nicename);
+            }
+        }
+    }
+}
+
+/* Check user name */
 if (count($admins) > 1) {
     $admins = array_map(function ($c) {
         return $c->user_nicename;
