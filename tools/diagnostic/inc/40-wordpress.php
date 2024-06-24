@@ -386,8 +386,7 @@ foreach ($forbidden_slugs as $user_slug) {
 ---------------------------------------------------------- */
 
 $admins = get_users(array(
-    'role' => 'administrator',
-    'fields' => array('user_nicename')
+    'role' => 'administrator'
 ));
 
 /* Check 2FA */
@@ -396,7 +395,7 @@ if (!$is_debug_env) {
         $wputools_errors[] = 'You should have an active 2FA plugin.';
     } else {
         foreach ($admins as $user) {
-            $two_fa_user = get_user_meta($user->ID, '_two_factor_enabled', true);
+            $two_fa_user = get_user_meta($user->ID, '_two_factor_enabled_providers', true);
             if (!$two_fa_user) {
                 $wputools_errors[] = sprintf('You should have 2FA enabled for the user “%s”.', $user->user_nicename);
             }
@@ -434,6 +433,11 @@ $all_posts = get_posts(array(
     'post_type' => $post_types
 ));
 
+$lorem_ipsum_strings = array(
+    'lorem ipsum',
+    'needs dreamers and the world'
+);
+
 $empty_pages = array();
 $lorem_pages = array();
 foreach ($all_posts as $p) {
@@ -441,11 +445,10 @@ foreach ($all_posts as $p) {
         $empty_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
     }
     if (!empty($p->post_content)) {
-        if (strpos($p->post_content, 'lorem ipsum') !== false) {
-            $lorem_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
-        }
-        if (strpos($p->post_content, 'needs dreamers and the world') !== false) {
-            $lorem_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
+        foreach ($lorem_ipsum_strings as $lorem_ipsum_string) {
+            if (strpos($p->post_content, $lorem_ipsum_string) !== false) {
+                $lorem_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
+            }
         }
     }
 }
