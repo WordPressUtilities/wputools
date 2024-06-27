@@ -127,6 +127,21 @@ if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
         $wputools_errors[] = 'WordPress : WP_DEBUG_LOG should not be a boolean, but a dynamic file path.';
     }
     if (strlen(WP_DEBUG_LOG) > 6 && is_dir(dirname(WP_DEBUG_LOG))) {
+
+        /* Check that logs are correctly written */
+        $log_file = WP_DEBUG_LOG;
+        $log_test_value = 'wputools_test_log_' . time();
+        error_log($log_test_value);
+        if (!file_exists(WP_DEBUG_LOG)) {
+            $wputools_errors[] = 'WordPress : The log file is not created.';
+        } else {
+            $log_content = file_get_contents($log_file);
+            if (strpos($log_content, $log_test_value) === false) {
+                $wputools_errors[] = 'WordPress : The log file is not correctly written.';
+            }
+        }
+
+        /* Check debug log weight */
         $logs = glob(dirname(WP_DEBUG_LOG) . '/*.log');
         $logs_count = 0;
         $logs_weight = 0;

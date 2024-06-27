@@ -26,6 +26,7 @@ wpuloginas
 wpumaintenance
 wpumediafinder
 wpunewsletter
+wpunotifications
 wpuogcache
 wpuoptions
 wpupagetransitions
