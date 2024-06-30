@@ -12,6 +12,7 @@ function wputools_archive_logs(){
     local _log_file;
     local _log_file_ym;
     local _log_file_archive;
+    local _nb_log_files_archived=0;
     local _EXCLUDED_YEARMONTHS;
     local _PREVIOUS_MONTH;
 
@@ -82,13 +83,18 @@ function wputools_archive_logs(){
     for _log_file_ym in *; do
         if [ -d "${_log_file_ym}" ]; then
             _log_file_archive="${_log_file_ym##*/}.tar.gz";
+            _nb_log_files_archived=$(($_nb_log_files_archived + 1));
             tar -czf "${_logs_archive}${_log_file_archive}" "${_log_file_ym}";
             rm -rf "${_log_file_ym}";
         fi
     done;
     cd "${_CURRENT_DIR}";
 
-
+    if [ $_nb_log_files_archived -eq 0 ]; then
+        bashutilities_message 'No log files archived' 'warning';
+    else
+        bashutilities_message "${_nb_log_files_archived} log files archived" 'success';
+    fi
 
 }
 
