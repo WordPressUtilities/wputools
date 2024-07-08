@@ -75,6 +75,7 @@ function wputools_archive_logs(){
 
         # Move the log file to the folder
         mv "${_logs_folder}/${_log_file}" "${_logs_archive}${_log_file_ym}/${_log_file}";
+        _nb_log_files_archived=$(($_nb_log_files_archived + 1));
 
     done;
 
@@ -83,7 +84,6 @@ function wputools_archive_logs(){
     for _log_file_ym in *; do
         if [ -d "${_log_file_ym}" ]; then
             _log_file_archive="${_log_file_ym##*/}.tar.gz";
-            _nb_log_files_archived=$(($_nb_log_files_archived + 1));
             tar -czf "${_logs_archive}${_log_file_archive}" "${_log_file_ym}";
             rm -rf "${_log_file_ym}";
         fi
