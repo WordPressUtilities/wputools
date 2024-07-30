@@ -11,18 +11,36 @@ function wputools__sandbox(){
         _MODE="mysql";
     fi;
 
+    local _INSTALL_TYPE="blank";
+    local _REPOSITORY="";
+    # if command contains an argument containing .git, we consider it as a git url
+    if [[ "${1}" == *".git"* ]];then
+        _INSTALL_TYPE="git";
+        _REPOSITORY="${1}";
+    fi;
+
     echo "# Chosen mode : ${_MODE}";
 
     # Temp dir
     local _DIR=${_URL/:/_};
-    mkdir "${_DIR}";
-    cd "${_DIR}";
+    if [[ "${_INSTALL_TYPE}" == 'git' ]];then
+        git clone "${_REPOSITORY}" "${_DIR}";
+        cd "${_DIR}";
+        git submodule update --init --recursive;
+    else
+        mkdir "${_DIR}";
+        cd "${_DIR}";
+    fi;
     local _CURRENT_DIR_SANDBOX=$(pwd);
 
     # Download WordPress
     if [[ "${_MODE}" == 'sqlite' ]];then
-        # Specific WordPress version
-        _WPCLICOMMAND core download --version=6.4.3;
+
+        # Download WordPress
+        if [[ "${_INSTALL_TYPE}" == 'blank' ]];then
+            _WPCLICOMMAND core download ;
+        fi;
+
         # Download and Install SQLite integration
         git clone https://github.com/aaemnnosttv/wp-sqlite-db.git;
         mv wp-sqlite-db/src/db.php wp-content/db.php;
@@ -42,8 +60,14 @@ define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 PHP
 
-    rm -r "wp-content/plugins/";
-    mkdir "wp-content/plugins/";
+    if [[ "${_INSTALL_TYPE}" == 'blank' ]];then
+        # Create an empty plugins folder
+        rm -r "wp-content/plugins/";
+        mkdir "wp-content/plugins/";
+        # Create a child theme
+        mkdir "wp-content/themes/${_DIR}";
+        cp -a "${_TOOLSDIR}/sandbox-theme/." "wp-content/themes/${_DIR}/"
+    fi;
 
     if [[ "${_MODE}" == 'mysql' ]];then
         # Database
@@ -58,11 +82,10 @@ PHP
         --admin_password=admin \
         --url="http://${_URL}/"
 
-    # Create a child theme
-    mkdir "wp-content/themes/${_DIR}";
-    cp -a "${_TOOLSDIR}/sandbox-theme/." "wp-content/themes/${_DIR}/"
-
-    _WPCLICOMMAND theme activate "${_DIR}";
+    # Activate theme
+    if [[ "${_INSTALL_TYPE}" == 'blank' ]];then
+        _WPCLICOMMAND theme activate "${_DIR}";
+    fi;
 
     # Create init file
     cat <<EOT >> "init-server.sh";
