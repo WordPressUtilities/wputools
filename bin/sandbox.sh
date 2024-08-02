@@ -19,17 +19,19 @@ function wputools__sandbox(){
         _REPOSITORY="${1}";
     fi;
 
+    # Check if a WordPress installation is already present in a parent folder X levels up
+    local _PARENT_WP_CONFIG=$(bashutilities_find_file_in_parent_folder 'wp-config.php');
+    if [[ "${_PARENT_WP_CONFIG}" != "" ]];then
+        bashutilities_message "A wp-config.php file has been detected in the folder '${_PARENT_WP_CONFIG}', please remove it to continue installing the sandbox." 'error';
+        return 0;
+    fi;
+
     # Detect a git repository
     if [[ -d .git ]]; then
         _INSTALL_TYPE="local"
         # Asks the user wants to continue
         local continue_git_detected=$(bashutilities_get_yn "- A git repository has been detected in this folder, do you want to continue and use it ?" 'n')
         if [[ "${continue_git_detected}" == 'n' ]]; then
-            return 0;
-        fi;
-        # Stop if a wp-config file is detected
-        if [[ -f wp-config.php || -f ../wp-config.php ]]; then
-            bashutilities_message "A wp-config.php file has been detected in this folder or the parent, please remove it before continuing" 'error';
             return 0;
         fi;
     fi;
