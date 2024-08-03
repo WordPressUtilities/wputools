@@ -6,12 +6,7 @@ _CURRENT_DIR="${PWD}/";
 
 # Update WPUTools
 cd "${_SOURCEDIR}";
-if [[ $(git rev-parse --abbrev-ref HEAD) != "main" ]]; then
-    git checkout master; git checkout main;
-fi
-git pull origin;
-git submodule update --init --recursive;
-git fetch --tags;
+bashutilities_update_repo_to_latest_main "${_SOURCEDIR}";
 _WPUTOOLS_LATEST=$(git describe --tags $(git rev-list --tags --max-count=1));
 
 if [[ "${_WPUTOOLS_VERSION}" == "${_WPUTOOLS_LATEST}" ]]; then

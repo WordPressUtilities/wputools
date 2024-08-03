@@ -257,7 +257,7 @@ function wputools__update_plugin() {
         if [[ -d "${_PLUGIN_DIR}.git" || -f "${_PLUGIN_DIR}.git" ]];then
             # If plugin uses git : update from git
             echo '# Update from git';
-            (cd "${_PLUGIN_DIR}"; git checkout master; git checkout main; git pull origin);
+            bashutilities_update_repo_to_latest_main "${_PLUGIN_DIR}";
         else
             # Update plugin with WP-CLI
             echo '# Update from WP-CLI';
