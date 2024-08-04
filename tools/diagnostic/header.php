@@ -4,8 +4,9 @@
   Vars
 ---------------------------------------------------------- */
 
+$wputools_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 $wputools_is_cli = php_sapi_name() == 'cli';
-$wputools_is_public = $wputools_is_cli || isset($_GET['from_cli']);
+$wputools_is_public = $wputools_is_cli || isset($_GET['from_cli']) || (strpos($wputools_user_agent, 'curl') !== false);
 $wputools_errors = array();
 
 /* ----------------------------------------------------------
