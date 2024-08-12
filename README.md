@@ -76,6 +76,10 @@ Add CLI shortcut :
 
 `wputools importsite conf.sh;`
 
+### Display the debug file.
+
+`wputools debugfile;`
+
 ### Checks that your installation can work properly.
 
 `wputools diagnostic;`

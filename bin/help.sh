@@ -13,6 +13,7 @@ wputools cache;           # Clear WordPress cache.
 wputools cachewarm;       # Preload WordPress urls.
 wputools clean;           # Clean WordPress path & files.
 wputools codechecker;     # Check your code.
+wputools debugfile;       # Display the debug file.
 wputools detecthack;      # Try to detect hacked files.
 wputools cleanhack;       # Try to clean hacked files.
 wputools diagnostic;      # Checks that your installation can work properly.

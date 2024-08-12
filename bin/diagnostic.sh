@@ -11,7 +11,7 @@ if [[ "${1}" == 'code-profiler' ]];then
     wputools_add_files_to_excludes "wp-content/plugins/code-profiler-pro"
     wputools_add_files_to_excludes "wp-content/mu-plugins/0----code-profiler-pro.php"
     echo "Success! please go to :";
-    wp eval 'echo admin_url("admin.php?page=code-profiler-pro")."\n";';
+    _WPCLICOMMAND eval 'echo admin_url("admin.php?page=code-profiler-pro")."\n";';
     return 0;
 fi;
 
