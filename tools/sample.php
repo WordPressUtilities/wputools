@@ -221,8 +221,13 @@ if ($_posttype == 'user') {
   Comments
 ---------------------------------------------------------- */
 
-if ($_posttype == 'comment' && isset($_GET['sample_extra']) && is_numeric($_GET['sample_extra'])) {
-    $post_id = $_GET['sample_extra'];
+if ($_posttype == 'comment') {
+    $post_id = isset($_GET['sample_extra']) && is_numeric($_GET['sample_extra']) ? $_GET['sample_extra'] : false;
+    if (!$post_id) {
+        echo "You need to provide a post ID to create sample comments. \n";
+        echo "Example: wputools sample 5 12345\n";
+        exit;
+    }
     echo "Samples for comments\n";
     $comment_id = 0;
     for ($i = 1; $i <= $_samples_nb; $i++) {
