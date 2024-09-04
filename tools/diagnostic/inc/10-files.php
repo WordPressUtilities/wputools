@@ -68,6 +68,8 @@ foreach ($folders as $folder) {
 
 $files = array_diff(scandir('.'), array('.', '..'));
 $matches = array(
+    '/\.maintenance/',
+    '/\.disable_wpu_admin_protect/',
     '/license\.txt/',
     '/README\.md/',
     '/readme\.html/',
