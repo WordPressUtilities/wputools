@@ -89,24 +89,14 @@ fi
 # Generate URL file
 function wputools__generate_urls(){
 
-    local _RAND=$(bashutilities_rand_string 6);
-    local _FILE="generateurls-${_RAND}.php";
-    local _PATH="${_CURRENT_DIR}${_FILE}";
-
-    ###################################
-    ## Copy file
-    ###################################
-
-    cp "${_TOOLSDIR}generateurls.php" "${_PATH}";
-
-    # File will be deleted after use so lets ensure rights are ok.
-    chmod 0644 "${_PATH}";
+    local _FILE=$(wputools_create_random_file "generateurls");
+    cat "${_TOOLSDIR}generateurls.php" > "${_CURRENT_DIR}${_FILE}";
 
     # Call file
     wputools_call_url "${_HOME_URL}/${_FILE}?file=${_WPUTOOLS_LOCAL_PATH}wputools-urls.txt";
 
     # Delete
-    rm "${_PATH}";
+    rm "${_CURRENT_DIR}${_FILE}";
 
 }
 

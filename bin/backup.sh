@@ -114,23 +114,23 @@ _WPCLICOMMAND db export - > "${_BACKUP_FILE}";
 wputools_execute_file "wputools-backup-after-db-export.sh" "${_BACKUP_FILE}";
 
 # Check dump filesize
-_dump_filesize=$(wc -c "${_BACKUP_FILE}" | awk '{print $1}')
-if [ "${_dump_filesize}" -lt "5000" ]; then
+_WPUTOOLS_DUMP_FILESIZE=$(wc -c "${_BACKUP_FILE}" | awk '{print $1}')
+if [ "${_WPUTOOLS_DUMP_FILESIZE}" -lt "5000" ]; then
     bashutilities_message 'The MySQL dump looks corrupted' 'error';
 fi
 
 # Backup crontab
 if [ -x "$(command -v crontab)" ]; then
-    _HAS_CRONTAB='1';
+    _WPUTOOLS_HAS_CRONTAB='1';
     # Empty crontab
     if [ $(crontab -l | wc -c) -eq 0 ]; then
-        _HAS_CRONTAB='0';
+        _WPUTOOLS_HAS_CRONTAB='0';
     fi
     # No need to backup
     if [[ ! -z "${_NOBACKUP_CRONTABS}" && "${_NOBACKUP_CRONTABS}" == '1' ]];then
-        _HAS_CRONTAB='0';
+        _WPUTOOLS_HAS_CRONTAB='0';
     fi;
-    if [[ "${_HAS_CRONTAB}" == '0' ]];then
+    if [[ "${_WPUTOOLS_HAS_CRONTAB}" == '0' ]];then
         echo '- crontab ignored';
     else
         crontab -l > "${_BACKUP_PATH}crontab.txt";

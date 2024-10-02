@@ -6,18 +6,13 @@ echo "# LOGIN";
 ## Initial datas
 ###################################
 
-_WPULOG_RAND=$(bashutilities_rand_string 6);
-_WPULOG_FILE="login-${_WPULOG_RAND}.php";
-_WPULOG_PATH="${_CURRENT_DIR}${_WPULOG_FILE}";
+_WPULOG_FILE=$(wputools_create_random_file "login");
 
 ###################################
 ## Copy file
 ###################################
 
-cp "${_TOOLSDIR}login.php" "${_WPULOG_PATH}";
-
-# File will be deleted after use so lets ensure rights are ok.
-chmod 0644 "${_WPULOG_PATH}";
+cat "${_TOOLSDIR}login.php" > "${_CURRENT_DIR}${_WPULOG_FILE}";
 
 ###################################
 ## Information

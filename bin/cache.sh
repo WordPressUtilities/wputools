@@ -70,15 +70,10 @@ _EXTRA_CACHE_DIRS='';
 ###################################
 
 # Initial datas
-_STATIC_RAND=$(bashutilities_rand_string 6);
-_STATIC_FILE="cache-${_STATIC_RAND}.php";
-_STATIC_PATH="${_CURRENT_DIR}${_STATIC_FILE}";
+_STATIC_FILE=$(wputools_create_random_file "cache");
 
 # Copy file
-cp "${_TOOLSDIR}cache.php" "${_STATIC_PATH}";
-
-# File will be deleted after use so lets ensure rights are ok.
-chmod 0644 "${_STATIC_PATH}";
+cat "${_TOOLSDIR}cache.php" > "${_CURRENT_DIR}${_STATIC_FILE}";
 
 # Calling url
 echo '# Clearing static cache';
@@ -89,7 +84,7 @@ if [[ "${_cache_type}" == 'purge-cli' ]];then
 else
     wputools_call_url "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
 fi;
-rm "${_STATIC_PATH}";
+rm "${_CURRENT_DIR}${_STATIC_FILE}";
 
 ###################################
 ## CACHE WARMER

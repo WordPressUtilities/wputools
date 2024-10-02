@@ -253,3 +253,16 @@ function wputools_install_plugin_folder(){
     fi;
     _WPCLICOMMAND plugin activate "${1}";
 }
+
+###################################
+## Copy file
+###################################
+
+function wputools_create_random_file(){
+    local _RANDFILE_RAND=$(bashutilities_rand_string 6);
+    local _RANDFILE_FILE="${1}-${_RANDFILE_RAND}.php";
+    local _RANDFILE_PATH="${_CURRENT_DIR}${_RANDFILE_FILE}";
+    touch "${_RANDFILE_PATH}";
+    chmod 0777 "${_RANDFILE_PATH}";
+    echo "${_RANDFILE_FILE}";
+}

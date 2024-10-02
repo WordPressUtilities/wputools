@@ -6,18 +6,8 @@ echo "# Adminer";
 ## Initial datas
 ###################################
 
-_WPUADM_RAND=$(bashutilities_rand_string 6);
-_WPUADM_FILE="adminer-${_WPUADM_RAND}.php";
-_WPUADM_PATH="${_CURRENT_DIR}${_WPUADM_FILE}";
-
-###################################
-## Copy file
-###################################
-
-cp "${_TOOLSDIR}adminer/adminer.php" "${_WPUADM_PATH}";
-
-# File will be deleted after use so lets ensure rights are ok.
-chmod 0644 "${_WPUADM_PATH}";
+_WPUADM_FILE=$(wputools_create_random_file "adminer")
+cat "${_TOOLSDIR}adminer/adminer.php" > "${_CURRENT_DIR}${_WPUADM_FILE}";
 
 ###################################
 ## Information

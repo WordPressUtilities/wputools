@@ -6,9 +6,7 @@ echo "# SAMPLE";
 ## Initial datas
 ###################################
 
-_WPUSAMPLE_RAND=$(bashutilities_rand_string 6);
-_WPUSAMPLE_FILE="sample-${_WPUSAMPLE_RAND}.php";
-_WPUSAMPLE_PATH="${_CURRENT_DIR}${_WPUSAMPLE_FILE}";
+_WPUSAMPLE_FILE=$(wputools_create_random_file "sample");
 
 ###################################
 ## Help
@@ -61,10 +59,7 @@ fi;
 ## Copy file
 ###################################
 
-cp "${_TOOLSDIR}sample.php" "${_WPUSAMPLE_PATH}";
-
-# File will be deleted after use so lets ensure rights are ok.
-chmod 0644 "${_WPUSAMPLE_PATH}";
+cat "${_TOOLSDIR}sample.php" > "${_CURRENT_DIR}${_WPUSAMPLE_FILE}";
 
 ###################################
 ## Information
@@ -93,4 +88,4 @@ fi;
 wputools_call_url "${_HOME_URL}/${_WPUSAMPLE_FILE}?sample_posttype=${_WPUSAMPLE_TYPE}&sample_num=${_WPUSAMPLE_NUM}&sample_extra=${_WPUSAMPLE_EXTRA}&unsplash_api_key=${_WPUTOOLS_UNSPLASH_API_KEY}";
 
 # Delete
-rm "${_WPUSAMPLE_PATH}";
+rm "${_CURRENT_DIR}${_WPUSAMPLE_FILE}";
