@@ -70,6 +70,7 @@ if (!$user) {
 
 /* Disable two-factor auth */
 add_filter('two_factor_providers', '__return_empty_array', 10, 1);
+add_filter('wp_2fa_user_enabled_methods', '__return_empty_array', 10, 1);
 
 /* Avoid unwanted redirects or else */
 remove_all_actions('wp_logout');
