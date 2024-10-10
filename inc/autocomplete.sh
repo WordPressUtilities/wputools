@@ -23,6 +23,9 @@ _wputools_complete() {
         COMPREPLY=( $(compgen -W "adminer anonymizedb archivelogs backup bduser cache cachewarm clean cleanhack codechecker dbexport dbimport debugfile detecthack diagnostic duplicatemenu generatemenus go importsite login muplugin nginx-convert plugin sample sandbox settings self-update src update wp wpconfig wpuwoo" -- $cur) )
     elif [ $COMP_CWORD -eq 2 ]; then
         case "$prev" in
+            "archivelogs")
+                COMPREPLY=( $(compgen -W "all" -- $cur) )
+            ;;
             "cache")
                 COMPREPLY=( $(compgen -W "all opcache wprocket w3tc transient fvm object url purge-cli" -- $cur) )
             ;;

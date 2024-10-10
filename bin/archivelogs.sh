@@ -12,6 +12,8 @@ function wputools_archive_logs(){
     local _log_file;
     local _log_file_ym;
     local _log_file_archive;
+    local _log_file_suffix;
+    local _log_file_suffix_content;
     local _nb_log_files_archived=0;
     local _EXCLUDED_YEARMONTHS;
     local _PREVIOUS_MONTH;
@@ -23,6 +25,10 @@ function wputools_archive_logs(){
         return;
     fi
     _logs_archive="${_logs_folder}archive/";
+    if [ ! -d "${_logs_archive}" ]; then
+        mkdir "${_logs_archive}";
+    fi
+    _log_file_suffix_content="--forced-"$(date +%Y%m%d%H%M%S);
 
     # Find if there are logs
     _logs_files=$(ls -1 "${_logs_folder}");
@@ -42,9 +48,16 @@ function wputools_archive_logs(){
     # Loop through log files and archive them by year and month contained in the log file name
     for _log_file in ${_logs_files}; do
 
+        _log_file_suffix='';
+
         # Stop if the year and month are in the excluded list
         if [[ "${_EXCLUDED_YEARMONTHS}" == *"${_log_file}"* ]]; then
-            continue;
+            if [[ "${1}" == 'all' ]];
+            then
+                _log_file_suffix="${_log_file_suffix_content}";
+            else
+                continue;
+            fi
         fi
 
         # Stop if the file is not a log file
@@ -65,7 +78,12 @@ function wputools_archive_logs(){
 
         # Check if the first chars are in the excluded list
         if [[ "${_EXCLUDED_YEARMONTHS}" == *"${_log_file_ym}"* ]]; then
-            continue;
+            if [[ "${1}" == 'all' ]];
+            then
+                _log_file_suffix="${_log_file_suffix_content}";
+            else
+                continue;
+            fi
         fi
 
         # Create the folder if it does not exist
@@ -83,7 +101,7 @@ function wputools_archive_logs(){
     cd "${_logs_archive}";
     for _log_file_ym in *; do
         if [ -d "${_log_file_ym}" ]; then
-            _log_file_archive="${_log_file_ym##*/}.tar.gz";
+            _log_file_archive="${_log_file_ym##*/}${_log_file_suffix}.tar.gz";
             tar -czf "${_logs_archive}${_log_file_archive}" "${_log_file_ym}";
             rm -rf "${_log_file_ym}";
         fi
@@ -98,4 +116,4 @@ function wputools_archive_logs(){
 
 }
 
-wputools_archive_logs;
+wputools_archive_logs "$@";
