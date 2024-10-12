@@ -213,7 +213,7 @@ function wputools__update_core(){
         local _CURRENT_MINOR_VERSION=$(echo "${_CURRENT_WORDPRESS}" | cut -d'.' -f1-2)
         local _LATEST_MINOR_VERSION=$(echo "${_LATEST_WORDPRESS}" | cut -d'.' -f1-2)
         if [[ "${_CURRENT_MINOR_VERSION}" != "${_LATEST_MINOR_VERSION}" ]]; then
-            bashutilities_message "Warning: It seems like it is a major update" 'warning';
+            bashutilities_message "Warning: It seems like it is a major update (${_CURRENT_WORDPRESS} -> ${_LATEST_WORDPRESS})" 'warning';
             local switch_minor=$(bashutilities_get_yn "- Do you want to switch to a minor update?" 'n');
             if [[ "${switch_minor}" == 'y' ]];then
                 _WPUTOOLS_CORE_UPDATE_TYPE='minor';
