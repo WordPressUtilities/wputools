@@ -124,7 +124,8 @@ if (!function_exists('glob_recursive')) {
 $files = glob_recursive('wp-content/uploads/*.php', GLOB_BRACE);
 $allowlist_files = array(
     'wp-content/uploads/wpucontactforms/index.php',
-    'wp-content/uploads/wp-personal-data-exports/index.php'
+    'wp-content/uploads/wp-personal-data-exports/index.php',
+    'wp-content/uploads/code-profiler-pro/log.php'
 );
 foreach ($files as $file) {
     if (!is_file($file)) {

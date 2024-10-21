@@ -266,3 +266,14 @@ function wputools_create_random_file(){
     chmod 0777 "${_RANDFILE_PATH}";
     echo "${_RANDFILE_FILE}";
 }
+
+###################################
+## Echo a message if not quiet mode
+###################################
+
+function wputools_echo_message(){
+    if [[ "${_IS_QUIET_MODE}" == '1' ]];then
+        return 0;
+    fi;
+    echo "${1}";
+}

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "# DIAGNOSTIC";
+wputools_echo_message "# DIAGNOSTIC";
 
 ###################################
 ## Code profiler
@@ -28,16 +28,16 @@ echo "<?php \$wpudiag_file='${_WPUDIAG_FILE}';include '${_TOOLSDIR}diagnostic/he
 
 # Direct launch
 if [[ "${1}" == 'now' || "${1}" == 'cli' || "${1}" == 'web' ]];then
-    echo "";
+    wputools_echo_message "";
     if [[ "${1}" == 'cli' || "${1}" == 'now' ]];then
-        echo "### Diagnostic CLI";
+        wputools_echo_message "### Diagnostic CLI";
         $_PHP_COMMAND "${_WPUDIAG_FILE}";
     fi;
     if [[ "${1}" == 'web' || "${1}" == 'now' ]];then
-        echo "### Diagnostic WEB";
+        wputools_echo_message "### Diagnostic WEB";
         wputools_call_url "${_HOME_URL}/${_WPUDIAG_FILE}";
     fi;
-    echo "### END";
+    wputools_echo_message "### END";
     rm "${_WPUDIAG_FILE}";
 else
     # Open in a new window if it exists

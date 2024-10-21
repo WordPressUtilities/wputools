@@ -37,7 +37,19 @@ else if (version_compare($phpversion, '8.0', '<')) {
 /* Mail
 -------------------------- */
 
-$sentmail = mail('test@example.com', 'subject', 'message');
+$wputools_test_address = 'test@example.com';
+if(defined('WPUTOOLS_TEST_ADDRESS')) {
+    $wputools_test_address = WPUTOOLS_TEST_ADDRESS;
+}
+
+$sentmail = mail($wputools_test_address, 'subject', 'message');
 if (!$sentmail) {
-    $wputools_errors[] = sprintf('PHP mail function doesn’t seem to work !', $phpversion);
+    $error_string = 'PHP mail function to "%s" doesn’t seem to work !';
+    if (defined('WPUTOOLS_TEST_ADDRESS')) {
+        $error_string .= ' (defined in WPUTOOLS_TEST_ADDRESS)';
+    }
+    else {
+        $error_string .= ' Please try a custom test address WPUTOOLS_TEST_ADDRESS in your wp-config.php';
+    }
+    $wputools_errors[] = sprintf($error_string, $wputools_test_address);
 }
