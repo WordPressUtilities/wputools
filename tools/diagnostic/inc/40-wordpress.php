@@ -248,6 +248,15 @@ foreach ($php_constants as $constant) {
 }
 
 /* ----------------------------------------------------------
+  Check local overrides
+---------------------------------------------------------- */
+
+$local_override_file = WPMU_PLUGIN_DIR . '/wpu_local_overrides.php';
+if ($env_type == 'local' && !is_file($local_override_file)) {
+    $wputools_errors[] = 'WordPress : You should have a local overrides file.';
+}
+
+/* ----------------------------------------------------------
   Some URLs should not be publicly accessible
 ---------------------------------------------------------- */
 
@@ -430,10 +439,15 @@ if (count($admins) > 1) {
   Check public setting
 ---------------------------------------------------------- */
 
-if (!$is_debug_env && get_option('blog_public') == '0') {
+$search_engines_blocked = (get_option('blog_public') == '0');
+/* Do not block search engines on local & production */
+if ((!$is_debug_env || $env_type == 'local') && $search_engines_blocked) {
     $wputools_errors[] = sprintf('WordPress : Search engines are blocked while the environment is defined as “%s”.', wp_get_environment_type());
 }
-
+/* Block search engines on debug env */
+if (($is_debug_env && $env_type != 'local') && !$search_engines_blocked) {
+    $wputools_errors[] = sprintf('WordPress : Search engines are not blocked while the environment is defined as “%s”.', wp_get_environment_type());
+}
 /* ----------------------------------------------------------
   Check posts
 ---------------------------------------------------------- */
