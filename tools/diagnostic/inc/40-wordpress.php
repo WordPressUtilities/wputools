@@ -489,3 +489,36 @@ if (!empty($empty_pages)) {
 if (!empty($lorem_pages)) {
     $wputools_errors[] = sprintf("The following posts contains some lorem ipsum: \n-- %s", implode("\n-- ", $lorem_pages));
 }
+
+/* ----------------------------------------------------------
+  Check image sizes
+---------------------------------------------------------- */
+
+$all_image_sizes = get_intermediate_image_sizes();
+$max_nb_image_sizes = 7;
+$nb_all_image_sizes = count($all_image_sizes);
+if ($nb_all_image_sizes > $max_nb_image_sizes) {
+    $additional_wp_sizes = wp_get_additional_image_sizes();
+    $image_sizes_text = '';
+    foreach ($all_image_sizes as $size) {
+        $size_values = array(
+            'width' => get_option($size . '_size_w'),
+            'height' => get_option($size . '_size_h')
+        );
+        if (is_numeric($size_values['width']) && $size_values['width'] < 1) {
+            $size_values['width'] = 'auto';
+        }
+        if (is_numeric($size_values['height']) && $size_values['height'] < 1) {
+            $size_values['height'] = 'auto';
+        }
+        if (!$size_values['width'] && isset($additional_wp_sizes[$size]['width'])) {
+            $size_values['width'] = $additional_wp_sizes[$size]['width'];
+        }
+        if (!$size_values['height'] && isset($additional_wp_sizes[$size]['height'])) {
+            $size_values['height'] = $additional_wp_sizes[$size]['height'];
+        }
+        $image_sizes_text .= "\n-- " . $size . ': ' . $size_values['width'] . '×' . $size_values['height'];
+    }
+
+    $wputools_errors[] = sprintf('There are %d images sizes, please check if they are useful : %s', $nb_all_image_sizes, $image_sizes_text);
+}
