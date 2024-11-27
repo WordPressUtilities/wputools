@@ -5,6 +5,7 @@ echo "# DEBUG FILE";
 function wputools__debug_display_file() {
     _WPCLICOMMAND eval "error_log('eval_start');";
     local _debug_file=$(_WPCLICOMMAND config get "WP_DEBUG_LOG");
+    local _debug_file_filename=$(basename "${_debug_file}");
     if [[ ! -f "${_debug_file}" ]];then
 
         # check if log directory exists
@@ -18,7 +19,7 @@ function wputools__debug_display_file() {
 
         return;
     fi;
-    bashutilities_message 'Start displaying debug file log' 'success';
+    bashutilities_message "Start displaying debug file log from ${_debug_file_filename}" 'success';
     tail -f "${_debug_file}";
 }
 wputools__debug_display_file;
