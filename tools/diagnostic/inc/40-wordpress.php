@@ -88,7 +88,8 @@ function wputools_diagnostic_check_is_preproduction($domainName) {
 }
 
 $urlparts = wp_parse_url(home_url());
-$looks_like_preproduction = wputools_diagnostic_check_is_preproduction($urlparts['host']);
+$domain = $urlparts['host'];
+$looks_like_preproduction = wputools_diagnostic_check_is_preproduction($domain);
 if (!$is_debug_env && $looks_like_preproduction) {
     $wputools_errors[] = 'WordPress : Domain "' . $domain . '" does not looks like a production domain.';
 }
