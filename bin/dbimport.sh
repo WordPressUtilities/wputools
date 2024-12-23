@@ -31,6 +31,11 @@ if [[ "${_dbimport_file}" == 'latest' && -n "${_WPDB_SSH_BACKUP_DIR}" && "${_WPD
         _WPDB_SSH_PORT=22;
     fi;
 
+    if [[ "$(wputools_is_online)" == '0' ]];then
+        bashutilities_message 'You need to be online to import a distant backup' 'error';
+        return 0;
+    fi;
+
     # Find latest backup on server and copy it
     _latest_backup=$(ssh -p "${_WPDB_SSH_PORT}" "${_WPDB_SSH_USER_AT_HOST}" "ls ${_WPDB_SSH_BACKUP_DIR}* -t1 | head -n 1");
 

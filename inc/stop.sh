@@ -48,6 +48,7 @@ unset -f wputools_get_real_option;
 unset -f wputools_get_siteurl;
 unset -f wputools_go_folder_or_subfolder;
 unset -f wputools_install_plugin_folder;
+unset -f wputools_is_online;
 unset -f wputools_query;
 unset -f wputools_query_select;
 unset -f wputools_test_check_urls;

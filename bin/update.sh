@@ -48,6 +48,12 @@ if [[ "${_WP_PROJECT_ENV}" == 'production' || "${_WP_PROJECT_ENV}" == 'prod' ]];
     return;
 fi;
 
+# Check online status
+if [[ "$(wputools_is_online)" == '0' ]];then
+    bashutilities_message "Error : You can't update when offline" 'error';
+    return;
+fi;
+
 ###################################
 ## Variables
 ###################################

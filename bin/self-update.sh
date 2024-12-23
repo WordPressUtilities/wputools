@@ -2,6 +2,13 @@
 
 echo "# SELF-UPDATE";
 
+# Check online status
+if [[ "$(wputools_is_online)" == '0' ]];then
+    bashutilities_message "Error : You can't self-update when offline" 'error';
+    return;
+fi;
+
+
 _CURRENT_DIR="${PWD}/";
 
 # Update WPUTools
