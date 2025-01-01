@@ -141,18 +141,22 @@ fi
 if [[ ! -z "${_BACKUP_UPLOADS}" ]];then
     backup_uploads="${_BACKUP_UPLOADS}";
 fi;
-if [[ "${backup_uploads}" == '' ]];then
-    backup_uploads=$(bashutilities_get_yn "- Backup uploads?" 'n');
-fi;
-if [[ "${backup_uploads}" == 'y' ]]; then
-    # Copy uploads
-    cp -La "wp-content/uploads" "${_BACKUP_PATH}uploads";
-    # Delete tmp files
-    find "${_BACKUP_PATH}uploads" -name '.DS_Store' -type f -delete;
-    # Delete logs
-    find "${_BACKUP_PATH}uploads" -name '*.log' -type f -delete;
+if [[ -d "wp-content/uploads" ]];then
+    if [[ "${backup_uploads}" == '' ]];then
+        backup_uploads=$(bashutilities_get_yn "- Backup uploads?" 'n');
+    fi;
+    if [[ "${backup_uploads}" == 'y' ]]; then
+        # Copy uploads
+        cp -La "wp-content/uploads" "${_BACKUP_PATH}uploads";
+        # Delete tmp files
+        find "${_BACKUP_PATH}uploads" -name '.DS_Store' -type f -delete;
+        # Delete logs
+        find "${_BACKUP_PATH}uploads" -name '*.log' -type f -delete;
 
-    wputools_backup_uploads_cleanup "${_BACKUP_PATH}uploads";
+        wputools_backup_uploads_cleanup "${_BACKUP_PATH}uploads";
+    fi;
+else
+    echo "- No uploads folder";
 fi;
 
 # Zip TMP DIR

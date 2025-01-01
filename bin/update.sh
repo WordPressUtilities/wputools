@@ -230,7 +230,7 @@ function wputools__update_core(){
     if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
         _WPCLICOMMAND core update --skip-themes;
     else
-        _WPCLICOMMAND core update --minor;
+        _WPCLICOMMAND core update --skip-themes --minor;
     fi;
     rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
     _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);

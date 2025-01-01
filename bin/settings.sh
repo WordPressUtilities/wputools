@@ -14,6 +14,10 @@ if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' && "${_wputools_test__file}" != '' ]];then
     bashutilities_message "All files already exists." 'error';
     return 0;
 fi;
+if [[ "${_HOME_URL}" == '' || "${_SITE_NAME}" == '' ]];then
+    bashutilities_message "The WordPress install is not ready." 'error';
+    return 0;
+fi;
 
 ###################################
 ## Asks
