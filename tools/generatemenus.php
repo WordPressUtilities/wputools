@@ -24,6 +24,20 @@ $langs = array(
     )
 );
 
+$args = array();
+$force_add = false;
+if (isset($_GET['args'])) {
+    if ($_GET['args'] == 'force_add') {
+        $force_add = true;
+    } else {
+        $args = json_decode($_GET['args'], true);
+    }
+}
+
+if (!is_array($args)) {
+    $args = array();
+}
+
 /* Polylang
 -------------------------- */
 
@@ -81,9 +95,37 @@ $nav_menus = get_registered_nav_menus();
 foreach ($nav_menus as $menu_slug => $menu_name) {
     foreach ($langs as $lang_id => $lang_details) {
         $menu_name_lang = $menu_name . ($lang_details['suffix'] ? ' - ' . $lang_details['suffix'] : '');
+        $menu_item = wp_get_nav_menu_object($menu_name_lang);
 
         /* Stop if this menu exists */
-        if (wp_get_nav_menu_object($menu_name_lang)) {
+        if ($menu_item) {
+            $menu_id = $menu_item->term_id;
+            echo "- Menu {$menu_name_lang} already exists.\n";
+            if (!$force_add) {
+                continue;
+            }
+
+            echo "- Adding random items to menu {$menu_name_lang}.\n";
+            // Add random items to the menu
+            for ($i = 1; $i <= 2; $i++) {
+                $random_item = $page_item;
+                $random_item['menu-item-title'] = 'Random Item ' . $i;
+                $random_item['menu-item-url'] = get_site_url();
+                $parent_item_id = wp_update_nav_menu_item($menu_id, 0, $random_item);
+                $number_of_children = rand(3, 6);
+                for ($j = 1; $j <= $number_of_children; $j++) {
+                    $sub_item = array(
+                        'menu-item-db-id' => 0,
+                        'menu-item-type' => 'custom',
+                        'menu-item-title' => 'Sub Item ' . $j,
+                        'menu-item-url' => get_site_url(),
+                        'menu-item-parent-id' => $parent_item_id,
+                        'menu-item-status' => 'publish'
+                    );
+                    wp_update_nav_menu_item($menu_id, 0, $sub_item);
+                }
+            }
+
             continue;
         }
 

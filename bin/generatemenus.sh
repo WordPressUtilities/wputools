@@ -12,10 +12,10 @@ function wputools__generate_menus(){
     cat "${_TOOLSDIR}generatemenus.php" > "${_CURRENT_DIR}${_FILE}";
 
     # Call file
-    wputools_call_url "${_HOME_URL}/${_FILE}";
+    wputools_call_url "${_HOME_URL}/${_FILE}?args=${1}";
 
     # Delete
     rm "${_CURRENT_DIR}${_FILE}";
 
 }
-wputools__generate_menus;
+wputools__generate_menus "$@";

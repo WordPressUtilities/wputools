@@ -35,6 +35,9 @@ _wputools_complete() {
             "go")
                 COMPREPLY=( $(compgen -W "current_theme mu-plugins plugins themes uploads" -- $cur) )
             ;;
+            "generatemenus")
+                COMPREPLY=( $(compgen -W "force_add" -- $cur) )
+            ;;
             "dbimport")
                 COMPREPLY=( $(compgen -W "latest" -- $cur) )
                 for dir in "${_list_backup_dir[@]}"; do
