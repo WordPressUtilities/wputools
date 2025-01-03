@@ -24,18 +24,17 @@ $langs = array(
     )
 );
 
-$args = array();
-$force_add = false;
-if (isset($_GET['args'])) {
-    if ($_GET['args'] == 'force_add') {
-        $force_add = true;
-    } else {
-        $args = json_decode($_GET['args'], true);
-    }
-}
+$args = wp_parse_args($_GET, array(
+    'force_add' => 0,
+    'depth' => 2,
+    'menu_id' => 'all',
+    'generate_type' => 'default'
+));
 
-if (!is_array($args)) {
-    $args = array();
+/* Clean args */
+$args['force_add'] = (int) $args['force_add'];
+if ($args['menu_id'] != 'all') {
+    $args['menu_id'] = (int) $args['menu_id'];
 }
 
 /* Polylang
@@ -81,6 +80,22 @@ $page_item = array(
     'menu-item-status' => 'publish'
 );
 
+/* Random Item
+-------------------------- */
+
+function generatemenus_get_random_item_name($type = 'default') {
+    if ($type == 'default') {
+        return 'Random Item';
+    }
+    $item_names = array(
+        'Random Item',
+        'The world needs dreamers and the world needs doers. But above all, the world needs dreamers who do — Sarah Ban Breathnach.',
+        'thisisaverylongitemnamethatshouldnotbeusedinproductionthisisaverylongitemnamethatshouldnotbeusedinproductionthisisaverylongitemnamethatshouldnotbeusedinproduction',
+        'This <strong>contains</strong> <em>HTML</em> and an 😂'
+    );
+    return $item_names[rand(0, count($item_names) - 1)];
+}
+
 /* ----------------------------------------------------------
   Generate menus
 ---------------------------------------------------------- */
@@ -101,7 +116,7 @@ foreach ($nav_menus as $menu_slug => $menu_name) {
         if ($menu_item) {
             $menu_id = $menu_item->term_id;
             echo "- Menu {$menu_name_lang} already exists.\n";
-            if (!$force_add) {
+            if (!$args['force_add'] || $args['menu_id'] != 'all' && $args['menu_id'] != $menu_id) {
                 continue;
             }
 
@@ -109,20 +124,22 @@ foreach ($nav_menus as $menu_slug => $menu_name) {
             // Add random items to the menu
             for ($i = 1; $i <= 2; $i++) {
                 $random_item = $page_item;
-                $random_item['menu-item-title'] = 'Random Item ' . $i;
+                $random_item['menu-item-title'] = generatemenus_get_random_item_name($args['generate_type']) . $i;
                 $random_item['menu-item-url'] = get_site_url();
                 $parent_item_id = wp_update_nav_menu_item($menu_id, 0, $random_item);
                 $number_of_children = rand(3, 6);
-                for ($j = 1; $j <= $number_of_children; $j++) {
-                    $sub_item = array(
-                        'menu-item-db-id' => 0,
-                        'menu-item-type' => 'custom',
-                        'menu-item-title' => 'Sub Item ' . $j,
-                        'menu-item-url' => get_site_url(),
-                        'menu-item-parent-id' => $parent_item_id,
-                        'menu-item-status' => 'publish'
-                    );
-                    wp_update_nav_menu_item($menu_id, 0, $sub_item);
+                if ($args['depth'] > 1) {
+                    for ($j = 1; $j <= $number_of_children; $j++) {
+                        $sub_item = array(
+                            'menu-item-db-id' => 0,
+                            'menu-item-type' => 'custom',
+                            'menu-item-title' => generatemenus_get_random_item_name($args['generate_type']) . $j,
+                            'menu-item-url' => get_site_url(),
+                            'menu-item-parent-id' => $parent_item_id,
+                            'menu-item-status' => 'publish'
+                        );
+                        wp_update_nav_menu_item($menu_id, 0, $sub_item);
+                    }
                 }
             }
 

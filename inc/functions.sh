@@ -285,3 +285,18 @@ function wputools_echo_message(){
 function wputools_is_online(){
     ping -q -t 1 -c 1 1.1.1.1 &>/dev/null && echo "1" || echo "0";
 }
+
+###################################
+## Convert script arguments to URL arguments
+###################################
+
+function wputools_convert_args_to_url(){
+    local _ARGS="";
+    for arg in "$@"; do
+        if [[ $arg == --* ]]; then
+            _ARGS="${_ARGS}&${arg:2}";
+        fi
+    done
+    _ARGS="${_ARGS#&}";
+    echo "${_ARGS}";
+}
