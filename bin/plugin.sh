@@ -22,7 +22,11 @@ function wputools__plugin(){
 
     # Base vars
     local _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
-
+    local _MUPLUGIN_DIR="${_CURRENT_DIR}wp-content/mu-plugins/wpu/${_PLUGIN_ID}/";
+    if [[ -d "${_MUPLUGIN_DIR}" || -d "${_PLUGIN_DIR}" ]];then
+        bashutilities_message "The plugin \"${_PLUGIN_ID}\" is already installed." 'error';
+        return 0;
+    fi
 
     local _force_submodule='y';
     if [[ ! "${inside_git_repo}" ]];then
