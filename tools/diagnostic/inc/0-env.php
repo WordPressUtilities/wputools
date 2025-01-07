@@ -31,5 +31,5 @@ if (version_compare($phpversion, '7.4.33', '<')) {
     $wputools_errors[] = sprintf('PHP version %s is too old !', $phpversion);
 }
 else if (version_compare($phpversion, '8.0', '<')) {
-    $wputools_errors[] = sprintf('PHP version %s is getting old.', $phpversion);
+    $wputools_notices[] = sprintf('PHP version %s is getting old.', $phpversion);
 }

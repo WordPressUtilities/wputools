@@ -9,7 +9,9 @@ ini_set('memory_limit', '512M');
 /* Disable maintenance */
 define('WPUMAINTENANCE_DISABLED', true);
 
-/** Loads the WordPress Environment and Template */
+/* ----------------------------------------------------------
+  Settings
+---------------------------------------------------------- */
 define('WP_USE_THEMES', false);
 require 'wp-load.php';
 wp();
@@ -17,7 +19,7 @@ wp();
 $_hasImport = false;
 
 /* ----------------------------------------------------------
-  Settings
+  Images
 ---------------------------------------------------------- */
 
 $_samples_nb = 5;
@@ -51,7 +53,7 @@ default:
 }
 
 /* ----------------------------------------------------------
-  Images
+  Content
 ---------------------------------------------------------- */
 
 if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
@@ -76,7 +78,7 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
     foreach ($images_list as $url) {
         $tmp_file = download_url($url);
         $file_array = array(
-            'name' => sanitize_title(basename($url)) . '.jpg',
+            'name' => substr(sanitize_title(basename($url)), 0, 50) . '.jpg',
             'tmp_name' => $tmp_file
         );
         if (is_wp_error($tmp_file)) {
@@ -96,9 +98,7 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
     }
 }
 
-/* ----------------------------------------------------------
-  Content
----------------------------------------------------------- */
+/* Images */
 
 $raw_contents = array(
     'Sometimes when you innovate, you make mistakes. It is best to admit them quickly, and get on with improving your other innovations.',
@@ -119,7 +119,7 @@ foreach ($post_types as $pt => $post_type) {
         continue;
     }
 
-    /* Images */
+    /* Create post */
     $random_images = get_posts(array(
         'post_type' => 'attachment',
         'post_mime_type' => 'image/jpeg',
@@ -133,7 +133,7 @@ foreach ($post_types as $pt => $post_type) {
     echo "Samples for post type : " . $label . "\n";
     $taxonomies = get_object_taxonomies($pt);
     for ($i = 1; $i <= $_samples_nb; $i++) {
-        /* Create post */
+        /* Add images */
         $post_id = wp_insert_post(array(
             'post_title' => $label . ' #' . $i,
             'post_content' => $raw_contents[mt_rand(0, $nb_raw_contents - 1)],
@@ -143,12 +143,14 @@ foreach ($post_types as $pt => $post_type) {
         ));
         $_hasImport = true;
 
-        /* Add images */
+        /* Taxonomies */
         if ($post_id && !empty($random_images)) {
             set_post_thumbnail($post_id, $random_images[array_rand($random_images)]);
         }
 
-        /* Taxonomies */
+        /* ----------------------------------------------------------
+  Users
+---------------------------------------------------------- */
         foreach ($taxonomies as $tax_name) {
             if (in_array($tax_name, array('post_format', 'post_translations', 'language'))) {
                 continue;
@@ -164,7 +166,7 @@ foreach ($post_types as $pt => $post_type) {
 }
 
 /* ----------------------------------------------------------
-  Users
+  Comments
 ---------------------------------------------------------- */
 
 $users_values = array(
@@ -216,10 +218,6 @@ if ($_posttype == 'user') {
         echo "Success : #" . $i . "\n";
     }
 }
-
-/* ----------------------------------------------------------
-  Comments
----------------------------------------------------------- */
 
 if ($_posttype == 'comment') {
     $post_id = isset($_GET['sample_extra']) && is_numeric($_GET['sample_extra']) ? $_GET['sample_extra'] : false;

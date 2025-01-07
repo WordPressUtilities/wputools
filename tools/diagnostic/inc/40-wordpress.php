@@ -130,8 +130,7 @@ if (function_exists('mail')) {
         }
         $wputools_errors[] = sprintf($error_string, $wputools_test_address);
     }
-}
-else {
+} else {
     $wputools_errors[] = 'PHP mail function is not available !';
 }
 
@@ -184,6 +183,21 @@ if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
         if ($logs_count > $max_count) {
             $wputools_errors[] = sprintf('WordPress : There is more than %s files in the logs folder.', $max_count);
         }
+    }
+}
+
+/* ----------------------------------------------------------
+  Check if a MySQL table named *logs* exists and contains more than 1000 rows
+---------------------------------------------------------- */
+
+global $wpdb;
+$q = "SHOW TABLES LIKE '%log%'";
+$tables = $wpdb->get_results($q);
+foreach ($tables as $table) {
+    $logs_table = implode('', get_object_vars($table));
+    $logs_count = $wpdb->get_var("SELECT COUNT(*) FROM $logs_table");
+    if ($logs_count > 1000) {
+        $wputools_errors[] = sprintf('WordPress : The table “%s” contains more than 1000 rows.', $logs_table);
     }
 }
 
@@ -278,7 +292,7 @@ foreach ($php_constants as $constant) {
 
 $local_override_file = WPMU_PLUGIN_DIR . '/wpu_local_overrides.php';
 if ($env_type == 'local' && !is_file($local_override_file)) {
-    $wputools_errors[] = 'WordPress : You should have a local overrides file.';
+    $wputools_notices[] = 'WordPress : You should have a local overrides file.';
 }
 
 /* ----------------------------------------------------------
@@ -376,7 +390,7 @@ function wputools_test_rss_feed($rss_url) {
 
     $items = $rss_content->channel->item;
     if (empty($items)) {
-        $wputools_errors[] = __('No articles found in the RSS feed.');
+        $wputools_notices[] = __('No articles found in the RSS feed.');
         return;
     }
 }
@@ -508,7 +522,7 @@ foreach ($all_posts as $p) {
 }
 
 if (!empty($empty_pages)) {
-    $wputools_errors[] = sprintf("The following posts don't have any content: \n-- %s", implode("\n-- ", $empty_pages));
+    $wputools_notices[] = sprintf("The following posts don't have any content: \n-- %s", implode("\n-- ", $empty_pages));
 }
 
 if (!empty($lorem_pages)) {
@@ -545,5 +559,5 @@ if ($nb_all_image_sizes > $max_nb_image_sizes) {
         $image_sizes_text .= "\n-- " . $size . ': ' . $size_values['width'] . '×' . $size_values['height'];
     }
 
-    $wputools_errors[] = sprintf('There are %d images sizes, please check if they are useful : %s', $nb_all_image_sizes, $image_sizes_text);
+    $wputools_notices[] = sprintf('There are %d images sizes, please check if they are useful : %s', $nb_all_image_sizes, $image_sizes_text);
 }

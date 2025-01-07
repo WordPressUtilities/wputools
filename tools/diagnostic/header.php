@@ -8,6 +8,7 @@ $wputools_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_
 $wputools_is_cli = php_sapi_name() == 'cli';
 $wputools_is_public = $wputools_is_cli || isset($_GET['from_cli']) || (strpos($wputools_user_agent, 'curl') !== false);
 $wputools_errors = array();
+$wputools_notices = array();
 
 /* ----------------------------------------------------------
   Load tests
@@ -26,13 +27,15 @@ foreach ($included_files as $included_file) {
 if (!$wputools_is_public) {
     echo "<pre>";
 }
-if (empty($wputools_errors)) {
+if (empty($wputools_errors) && empty($wputools_notices)) {
     echo "No errors !";
 } else {
-    $wputools_errors = array_map(function ($i) {
-        return '- ' . $i;
-    }, $wputools_errors);
-    echo "Errors:\n" . implode("\n", $wputools_errors);
+    foreach ($wputools_errors as $error) {
+        echo "\033[31m- " . $error . "\033[0m\n"; // Red color for errors
+    }
+    foreach ($wputools_notices as $notice) {
+        echo "\033[33m- " . $notice . "\033[0m\n"; // Yellow color for notices
+    }
 }
 if (!$wputools_is_public) {
     echo "</pre>";
