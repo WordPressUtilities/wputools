@@ -2,6 +2,8 @@
 
 echo "# SELF-UPDATE";
 
+. "${_SOURCEDIR}inc/functions.sh";
+
 # Check online status
 if [[ "$(wputools_is_online)" == '0' ]];then
     bashutilities_message "Error : You can't self-update when offline" 'error';
