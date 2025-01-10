@@ -26,6 +26,9 @@ _wputools_complete() {
             "archivelogs")
                 COMPREPLY=( $(compgen -W "all" -- $cur) )
             ;;
+            "bduser")
+                COMPREPLY=( $(compgen -W "admins all-users" -- $cur) )
+            ;;
             "cache")
                 COMPREPLY=( $(compgen -W "all opcache wprocket w3tc transient fvm object url purge-cli" -- $cur) )
             ;;

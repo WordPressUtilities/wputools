@@ -14,8 +14,10 @@ _BD_FILE=$(wputools_create_random_file "bduser");
 
 cat "${_TOOLSDIR}SecuPress-Backdoor-User/secupress-backdoor-user.php" > "${_CURRENT_DIR}${_BD_FILE}";
 
-# Only load administrators
-bashutilities_sed "s/get_users()/get_users(array('role'=>'administrator'))/g" "${_CURRENT_DIR}${_BD_FILE}";
+if [[ "${1}" != "all-users" ]];then
+    # Only load administrators
+    bashutilities_sed "s/get_users()/get_users(array('role'=>'administrator'))/g" "${_CURRENT_DIR}${_BD_FILE}";
+fi;
 
 # Default menu is login
 bashutilities_sed "s/'dash';/'read';/g" "${_CURRENT_DIR}${_BD_FILE}";
