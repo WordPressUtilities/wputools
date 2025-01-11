@@ -53,7 +53,7 @@ default:
 }
 
 /* ----------------------------------------------------------
-  Content
+  Attachments
 ---------------------------------------------------------- */
 
 if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
@@ -107,6 +107,10 @@ $raw_contents = array(
 );
 $nb_raw_contents = count($raw_contents);
 
+/* ----------------------------------------------------------
+  Post types
+---------------------------------------------------------- */
+
 $post_types = get_post_types(array(
     'public' => true
 ), 'objects');
@@ -148,9 +152,6 @@ foreach ($post_types as $pt => $post_type) {
             set_post_thumbnail($post_id, $random_images[array_rand($random_images)]);
         }
 
-        /* ----------------------------------------------------------
-  Users
----------------------------------------------------------- */
         foreach ($taxonomies as $tax_name) {
             if (in_array($tax_name, array('post_format', 'post_translations', 'language'))) {
                 continue;
@@ -166,7 +167,7 @@ foreach ($post_types as $pt => $post_type) {
 }
 
 /* ----------------------------------------------------------
-  Comments
+  Users
 ---------------------------------------------------------- */
 
 $users_values = array(
@@ -218,6 +219,10 @@ if ($_posttype == 'user') {
         echo "Success : #" . $i . "\n";
     }
 }
+
+/* ----------------------------------------------------------
+  Comments
+---------------------------------------------------------- */
 
 if ($_posttype == 'comment') {
     $post_id = isset($_GET['sample_extra']) && is_numeric($_GET['sample_extra']) ? $_GET['sample_extra'] : false;
