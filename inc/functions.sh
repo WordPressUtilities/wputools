@@ -283,7 +283,7 @@ function wputools_echo_message(){
 ###################################
 
 function wputools_is_online(){
-    ping -q -t 1 -c 1 1.1.1.1 &>/dev/null && echo "1" || echo "0";
+    ping -q -c 1 1.1.1.1 &>/dev/null && echo "1" || echo "0";
 }
 
 ###################################
