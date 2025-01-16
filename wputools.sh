@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.109.4';
+local _WPUTOOLS_VERSION='0.110.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.3 8.4 8.5 9.0)
@@ -43,6 +43,28 @@ _WPUTOOLS_MUPLUGIN_LIST="${_TOOLSDIR}muplugins.txt";
 if [[ -f "${_SOURCEDIR}wputools-local.sh" ]];then
     . "${_SOURCEDIR}wputools-local.sh";
 fi;
+if [[ -f "${_CURRENT_DIR}../wputools-local.sh" ]];then
+    . "${_CURRENT_DIR}../wputools-local.sh";
+    _HAS_WPUTOOLS_LOCAL='1';
+fi;
+if [[ -f "${_CURRENT_DIR}wputools-local.sh" ]];then
+    . "${_CURRENT_DIR}wputools-local.sh";
+    _HAS_WPUTOOLS_LOCAL='1';
+fi;
+
+###################################
+## PHP Commmand
+###################################
+
+# Load default PHP command
+local _PHP_POSSIBLE_COMMANDS=("/usr/local/php8.0/bin/php" "/usr/local/php8.1/bin/php" "/usr/local/php8.2/bin/php"  "/opt/php/bin/php");
+if ! command -v $_PHP_COMMAND &> /dev/null; then
+    for _PHP_POSSIBLE_COMMAND in "${_PHP_POSSIBLE_COMMANDS[@]}"; do
+        if [[ -f "${_PHP_POSSIBLE_COMMAND}" ]]; then
+            _PHP_COMMAND="${_PHP_POSSIBLE_COMMAND}";
+        fi
+    done
+fi
 
 _WPCLICOMMAND(){
     $_PHP_COMMAND -d error_reporting=0 $_WPCLISRC $@;
