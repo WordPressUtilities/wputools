@@ -88,6 +88,21 @@ if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
             mkdir "${_WPUTOOLS_BACKUP_DIR}";
         fi;
     fi
+    # Check for .htpasswd file
+    _HTPASSWD_FILE='';
+    if [[ -f "${_CURRENT_DIR}.htpasswd" ]]; then
+        _HTPASSWD_FILE="${_CURRENT_DIR}.htpasswd";
+    elif [[ -f "${_CURRENT_DIR}../.htpasswd" ]]; then
+        _HTPASSWD_FILE="${_CURRENT_DIR}../.htpasswd";
+    fi
+
+    if [[ "${_HTPASSWD_FILE}" != '' ]]; then
+        bashutilities_message "A .htpasswd file was found." 'warning';
+        read -p "Enter username for .htpasswd: " _HTPASSWD_USER;
+        read -p "Enter password for .htpasswd: " _HTPASSWD_PASS;
+        bashutilities_sed "s/#_EXTRA_CURL_ARGS/_EXTRA_CURL_ARGS/g" "${_WPUTOOLS_LOCAL_FILE}";
+        bashutilities_sed "s#user:password#${_HTPASSWD_USER}:${_HTPASSWD_PASS}#g" "${_WPUTOOLS_LOCAL_FILE}";
+    fi
 fi
 
 # Generate URL file
