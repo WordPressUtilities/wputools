@@ -164,5 +164,6 @@ unset -v use__wpdb_replace_before_tmp;
 unset -v wputools_use_backup_dir;
 unset -v wputools_use_home_url;
 unset -v wputools_use_site_name;
+unset -v wputools_wp_config_path;
 
 . "${_TOOLSDIR}BashUtilities/modules/stop.sh";
