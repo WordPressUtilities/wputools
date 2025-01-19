@@ -95,6 +95,7 @@ PHP
         --admin_email="admin@example.com" \
         --admin_password=admin \
         --url="http://${_URL}/"
+        --skip-email;
 
     # Activate theme
     if [[ "${_INSTALL_TYPE}" == 'blank' ]];then

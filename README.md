@@ -136,6 +136,10 @@ Add CLI shortcut :
 
 `wputools plugin wpuloginas;`
 
+### Quick WordPress Install.
+
+`wputools quickinstall;`
+
 ### Create an override settings file.
 
 `wputools settings;`
