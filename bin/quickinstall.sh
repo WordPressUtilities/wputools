@@ -21,6 +21,9 @@ if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
     return 0;
 fi;
 
+# Remove trailing slash from _HOME_URL if it exists
+_HOME_URL="${_HOME_URL%/}"
+
 _WPCLICOMMAND core install \
     --title=Example \
     --admin_user=admin \

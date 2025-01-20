@@ -35,6 +35,7 @@ else
 fi;
 
 _WPUTOOLS_BACKUP_DIR="${_CURRENT_DIR}../backups/";
+_WPUTOOLS_LOGS_DIR="${_CURRENT_DIR}../logs/";
 
 ###################################
 ## Check again
@@ -52,12 +53,21 @@ fi
 wputools_use_home_url=$(bashutilities_get_yn "- Use “${_HOME_URL}” as home_url?" 'y');
 wputools_use_site_name=$(bashutilities_get_yn "- Use “${_SITE_NAME}” as site name?" 'y');
 
+# Backup dir
 if [[ -d "${_WPUTOOLS_BACKUP_DIR}" ]];then
     wputools_use_backup_dir='n';
 else
     wputools_use_backup_dir=$(bashutilities_get_yn "- Create the backups folder in the parent folder ?" 'y');
 fi;
 
+# Logs dir
+if [[ -d "${_WPUTOOLS_LOGS_DIR}" ]];then
+    wputools_use_logs_dir='n';
+else
+    wputools_use_logs_dir=$(bashutilities_get_yn "- Create the logs folder in the parent folder ?" 'y');
+fi;
+
+# Extra files
 for _WPUTOOLS_SETTINGS_EXTRA_FILE in "${_TOOLSDIR}dbimport-shell"/*.sh; do
     _WPUTOOLS_SETTINGS_EXTRA_FILE_NAME=$(basename "${_WPUTOOLS_SETTINGS_EXTRA_FILE}");
     if [[ ! -f "${_WPUTOOLS_LOCAL_PATH}${_WPUTOOLS_SETTINGS_EXTRA_FILE_NAME}" ]];then
@@ -87,6 +97,9 @@ if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
         if [[ ! -d "${_WPUTOOLS_BACKUP_DIR}" ]];then
             mkdir "${_WPUTOOLS_BACKUP_DIR}";
         fi;
+    fi
+    if [[ "${wputools_use_logs_dir}" == 'y' && ! -d "${_WPUTOOLS_LOGS_DIR}" ]];then
+        mkdir "${_WPUTOOLS_LOGS_DIR}";
     fi
     # Check for .htpasswd file
     _HTPASSWD_FILE='';

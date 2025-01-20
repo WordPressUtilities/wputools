@@ -141,6 +141,7 @@ unset -v _wputools_last_check_age;
 unset -v _WPUTOOLS_LATEST;
 unset -v _WPUTOOLS_LOCAL_PATH;
 unset -v _WPUTOOLS_LOCAL_PATH_ASK;
+unset -v _WPUTOOLS_LOGS_DIR;
 unset -v _WPUTOOLS_LOGIN_URL;
 unset -v _WPUTOOLS_MAINTENANCE_FILE;
 unset -v _WPUTOOLS_MAINTENANCE_FILE_PATH;

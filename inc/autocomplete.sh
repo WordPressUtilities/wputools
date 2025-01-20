@@ -8,12 +8,13 @@ _WPUTOOLS_AUTOCOMPLETE_WPUWOO_ACTION_DIR="${_WPUWOO_ACTION_DIR}";
 
 # Thanks : https://stackoverflow.com/a/5303225
 _wputools_complete() {
-    local cur prev prev2
+    local cur prev prev2 dir ext _reply;
 
     local _base_wp_dir=$(awk -F '/wp-content'  '{print $1}'  <<<  "${PWD}");
     local _base_wp_dir_content="${_base_wp_dir}/wp-content/";
     local _base_wp_dir_plugins="${_base_wp_dir_content}plugins";
     local _list_backup_dir=( "../backups/" "../" "../local-backups/" );
+    local _backup_extensions=( ".tar.gz" ".sql" ".sql.gz" );
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -45,9 +46,11 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "latest" -- $cur) )
                 for dir in "${_list_backup_dir[@]}"; do
                     if [[ -d "${_base_wp_dir}/$dir" ]]; then
-                        _reply=$(ls -1 "${_base_wp_dir}/$dir" | awk -F'/' '{print "'$dir'"$NF}' | grep '\.tar\.gz$');
-                        COMPREPLY+=( $(compgen -W "${_reply}" -- $cur) );
-                    fi
+                        for ext in "${_backup_extensions[@]}"; do
+                            _reply=$(ls -1 "${_base_wp_dir}/$dir" | awk -F'/' '{print "'$dir'"$NF}' | grep "$ext$");
+                            COMPREPLY+=( $(compgen -W "${_reply}" -- $cur) );
+                        done
+                    fi;
                 done
             ;;
             "muplugin")
