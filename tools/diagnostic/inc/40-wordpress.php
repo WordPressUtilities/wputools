@@ -307,6 +307,18 @@ $uris = array(
     '/wp-includes/wlwmanifest.xml',
     '/wp-includes/version.php'
 );
+if (post_type_exists('post')) {
+    $latest_post = get_posts(array(
+        'posts_per_page' => 1,
+        'post_type' => 'post',
+        'orderby' => 'date',
+        'order' => 'DESC'
+    ));
+    if (!empty($latest_post)) {
+        $latest_post_year = date('Y', strtotime($latest_post[0]->post_date));
+        $uris[] = '/' . $latest_post_year . '/';
+    }
+}
 if (!$is_debug_env) {
     $uris[] = '/wp-login.php';
 }
