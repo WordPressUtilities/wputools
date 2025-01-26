@@ -8,16 +8,10 @@ _dbimport_file_isdownloaded="0";
 _tmp_folder="";
 _latest_backup="";
 
-# Check if wp-config.php file exists
-wputools_wp_config_path=$(wputools__get_wp_config_path)
-if [[ ! -f "${wputools_wp_config_path}" ]]; then
-    bashutilities_message 'wp-config.php file not found' 'error';
-    return 0;
-fi
-
-# WordPress is not configured
-if [[ "${_HOME_URL}" == '' || "${_SITE_NAME}" == '' ]];then
-    bashutilities_message "The WordPress install is not ready." 'error';
+# Check Install
+_wputools_is_wp_installed=$(wputools_is_wp_installed);
+if [[ "${_wputools_is_wp_installed}" != '' ]];then
+    echo "${_wputools_is_wp_installed}";
     return 0;
 fi;
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "# UPDATE";
+wputools_echo_message "# UPDATE";
 
 ###################################
 ## Help

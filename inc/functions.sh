@@ -283,6 +283,10 @@ function wputools_echo_message(){
 ###################################
 
 function wputools_is_online(){
+    if [[ "${_WPUTOOLS_IS_ONLINE}" == '1' ]];then
+        echo "1";
+        return;
+    fi;
     ping -q -c 1 1.1.1.1 &>/dev/null && echo "1" || echo "0";
 }
 
@@ -299,4 +303,22 @@ function wputools_convert_args_to_url(){
     done
     _ARGS="${_ARGS#&}";
     echo "${_ARGS}";
+}
+
+###################################
+## Check if WordPress is installed
+###################################
+
+function wputools_is_wp_installed(){
+    local wputools_wp_config_path=$(wputools__get_wp_config_path);
+    if [[ ! -f "${wputools_wp_config_path}" ]]; then
+        bashutilities_message 'wp-config.php file not found' 'error';
+        return 0;
+    fi
+
+    # WordPress is not configured
+    if [[ "${_HOME_URL}" == '' || "${_SITE_NAME}" == '' ]];then
+        bashutilities_message "The WordPress install is not ready." 'error';
+        return 0;
+    fi;
 }

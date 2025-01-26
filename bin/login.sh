@@ -2,6 +2,13 @@
 
 echo "# LOGIN";
 
+# Check Install
+_wputools_is_wp_installed=$(wputools_is_wp_installed);
+if [[ "${_wputools_is_wp_installed}" != '' ]];then
+    echo "${_wputools_is_wp_installed}";
+    return 0;
+fi;
+
 ###################################
 ## Initial datas
 ###################################

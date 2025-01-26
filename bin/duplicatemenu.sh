@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "# DUPLICATE MENU";
+wputools_echo_message "# DUPLICATE MENU";
 
 ###################################
 ## Initial datas

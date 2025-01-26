@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.112.3';
+local _WPUTOOLS_VERSION='0.113.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.3 8.4 8.5 9.0)
@@ -225,11 +225,16 @@ fi;
 ## Getting vars
 ###################################
 
-if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
-    _HOME_URL=$(_WPCLICOMMAND option get home --quiet --skip-plugins --skip-themes --skip-packages);
-fi;
-if [[ -z "${_SITE_NAME}" || "${_SITE_NAME}" == '' ]];then
-    _SITE_NAME=$(_WPCLICOMMAND option get blogname --quiet --skip-plugins --skip-themes --skip-packages);
+local wputools_wp_config_path=$(wputools__get_wp_config_path);
+_HOME_URL='';
+_SITE_NAME='';
+if [[ -f "${wputools_wp_config_path}" ]];then
+    if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
+        _HOME_URL=$(_WPCLICOMMAND option get home --quiet --skip-plugins --skip-themes --skip-packages);
+    fi;
+    if [[ -z "${_SITE_NAME}" || "${_SITE_NAME}" == '' ]];then
+        _SITE_NAME=$(_WPCLICOMMAND option get blogname --quiet --skip-plugins --skip-themes --skip-packages);
+    fi;
 fi;
 
 ###################################
