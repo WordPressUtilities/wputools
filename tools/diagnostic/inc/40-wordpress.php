@@ -41,6 +41,18 @@ $env_type = wp_get_environment_type();
 $debug_env_values = array('local', 'development', 'staging');
 $is_debug_env = in_array($env_type, $debug_env_values);
 
+/* Branch name
+-------------------------- */
+
+if (isset($wpudiag_branch_name) && $wpudiag_branch_name) {
+    if ($env_type == 'production' && in_array($wpudiag_branch_name, array('develop', 'staging', 'preprod'))) {
+        $wputools_errors[] = 'WordPress : The branch name is "' . strip_tags($wpudiag_branch_name) . '" on a production environment.';
+    }
+    if ($is_debug_env && in_array($wpudiag_branch_name, array('master', 'main', 'production'))) {
+        $wputools_errors[] = 'WordPress : The branch name is "' . strip_tags($wpudiag_branch_name) . '" on a non-production environment.';
+    }
+}
+
 /* Env type
 -------------------------- */
 
