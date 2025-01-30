@@ -53,6 +53,27 @@ if (isset($wpudiag_branch_name) && $wpudiag_branch_name) {
     }
 }
 
+/* Path
+-------------------------- */
+
+$production_path_list = array('/prod/', '/production/');
+$debug_path_list = array('/dev/', '/development/', '/staging/', '/preprod/');
+
+if ($env_type == 'production') {
+    foreach ($debug_path_list as $path_part) {
+        if (strpos($wpudiag_path, $path_part) !== false) {
+            $wputools_errors[] = 'WordPress : The path contains "' . strip_tags($path_part) . '" on a production environment.';
+        }
+    }
+}
+if ($is_debug_env) {
+    foreach ($production_path_list as $path_part) {
+        if (strpos($wpudiag_path, $path_part) !== false) {
+            $wputools_errors[] = 'WordPress : The path contains "' . strip_tags($path_part) . '" on a non-production environment.';
+        }
+    }
+}
+
 /* Env type
 -------------------------- */
 
@@ -63,7 +84,7 @@ if (!$is_debug_env && $env_type != 'production') {
 /* Invalid env type
 -------------------------- */
 
-function wputools_diagnostic_check_is_preproduction($domainName) {
+function wputools_diagnostic_check_domain_is_preproduction($domainName) {
     // Check for localhost
     if ($domainName === 'localhost') {
         return true;
@@ -101,7 +122,7 @@ function wputools_diagnostic_check_is_preproduction($domainName) {
 
 $urlparts = wp_parse_url(home_url());
 $domain = $urlparts['host'];
-$looks_like_preproduction = wputools_diagnostic_check_is_preproduction($domain);
+$looks_like_preproduction = wputools_diagnostic_check_domain_is_preproduction($domain);
 if (!$is_debug_env && $looks_like_preproduction) {
     $wputools_errors[] = 'WordPress : Domain "' . $domain . '" does not looks like a production domain.';
 }
