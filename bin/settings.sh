@@ -50,8 +50,10 @@ fi
 ## Create
 ###################################
 
-wputools_use_home_url=$(bashutilities_get_yn "- Use “${_HOME_URL}” as home_url?" 'y');
-wputools_use_site_name=$(bashutilities_get_yn "- Use “${_SITE_NAME}” as site name?" 'y');
+if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
+    wputools_use_home_url=$(bashutilities_get_yn "- Use “${_HOME_URL}” as home_url?" 'y');
+    wputools_use_site_name=$(bashutilities_get_yn "- Use “${_SITE_NAME}” as site name?" 'y');
+fi;
 
 # Backup dir
 if [[ -d "${_WPUTOOLS_BACKUP_DIR}" ]];then

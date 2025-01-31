@@ -14,7 +14,7 @@ define('WP_USE_THEMES', false);
 require 'wp-load.php';
 wp();
 
-$links = array(site_url());
+$links = array(site_url(), home_url());
 
 /* ----------------------------------------------------------
   Extract all links from menus
@@ -61,6 +61,9 @@ foreach ($post_types as $pt) {
         if ($link) {
             $links[] = $link;
         }
+    }
+    if (get_post_type_archive_link($pt)) {
+        $links[] = get_post_type_archive_link($pt);
     }
 }
 
