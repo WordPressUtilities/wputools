@@ -98,14 +98,29 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
     }
 }
 
-/* Images */
-
+/* Random contents */
 $raw_contents = array(
-    'Sometimes when you innovate, you make mistakes. It is best to admit them quickly, and get on with improving your other innovations.',
-    'We don’t get a chance to do that many things, and every one should be really excellent. Because this is our life. Life is brief, and then you die, you know? And we’ve all chosen to do this with our lives. So it better be damn good. It better be worth it.',
-    'I think if you do something and it turns out pretty good, then you should go do something else wonderful, not dwell on it for too long. Just figure out what’s next.'
+    'Sometimes when you innovate, you make <strong>mistakes</strong>. It is best to admit them <em>quickly</em>, and get on with improving your other innovations.',
+    'We don’t get a chance to do that many things, and every one should be really <em>excellent</em>. Because this is our life. Life is brief, and then you die, you know? And we’ve all chosen to do this with our lives. So it better be damn good. It better be worth it.',
+    'I think if you do <strong>something</strong> and it turns out pretty good, then you <em>should</em> go do something else wonderful, not dwell on it for too long. Just figure out what’s next.',
+    'HTML test <strong>bold</strong> <em>italic</em> <a href="#">link</a> <img src="https://placehold.co/600x400" alt="image" /><br /> <ul><li>list</li></ul> <hr /> <blockquote>quote</blockquote> <pre>code</pre> <table><tr><td>table</td></tr></table'
 );
 $nb_raw_contents = count($raw_contents);
+
+$raw_titles = array(
+    'A really long title that will test limits, maybe broke your content, and make you cry if your theme is not ready for it, but it will be a good test',
+    'A short title',
+    '10 Inspirational Graphics About coding',
+    '10 Things Steve Jobs Can Teach Us About coding',
+    'Why It’s Easier to Succeed With coding Than You Might Think',
+    'What I Wish I Knew a Year Ago About coding a really long title, but it will be a good test to see if your theme is ready for it',
+    'What’s the Current Job Market for coding Professionals Like?',
+    '7 Things About coding Your Boss Wants to Know',
+    'The coding Case Study You’ll Never Forget',
+    '3 Reasons Your coding Is Broken (And How to Fix It)',
+    'The Most Common Complaints About coding, and Why They’re Bunk'
+);
+$nb_raw_titles = count($raw_titles);
 
 /* ----------------------------------------------------------
   Post types
@@ -116,6 +131,7 @@ $post_types = get_post_types(array(
 ), 'objects');
 
 foreach ($post_types as $pt => $post_type) {
+    $post_id = false;
     if (in_array($pt, array('attachment'))) {
         continue;
     }
@@ -138,8 +154,10 @@ foreach ($post_types as $pt => $post_type) {
     $taxonomies = get_object_taxonomies($pt);
     for ($i = 1; $i <= $_samples_nb; $i++) {
         /* Add images */
+        $post_title = $raw_titles[mt_rand(0, $nb_raw_titles - 1)] . ' ' . $label . ' #' . $i;
+
         $post_id = wp_insert_post(array(
-            'post_title' => $label . ' #' . $i,
+            'post_title' => $post_title,
             'post_content' => $raw_contents[mt_rand(0, $nb_raw_contents - 1)],
             'post_type' => $pt,
             'post_status' => 'publish',
@@ -163,6 +181,15 @@ foreach ($post_types as $pt => $post_type) {
             }
         }
         echo "Success : #" . $post_id . "\n";
+    }
+
+    if ($_posttype == 'post' && $post_id) {
+        $sticky_posts = get_option('sticky_posts');
+        if (!is_array($sticky_posts)) {
+            $sticky_posts = array();
+        }
+        $sticky_posts[] = $post_id;
+        update_option('sticky_posts', $sticky_posts);
     }
 }
 
@@ -228,9 +255,10 @@ if ($_posttype == 'comment') {
     $post_id = isset($_GET['sample_extra']) && is_numeric($_GET['sample_extra']) ? $_GET['sample_extra'] : false;
     if (!$post_id) {
         echo "You need to provide a post ID to create sample comments. \n";
-        echo "Example: wputools sample 5 12345\n";
+        echo "Example: wputools sample comments 5 12345\n";
         exit;
     }
+
     echo "Samples for comments\n";
     $comment_id = 0;
     for ($i = 1; $i <= $_samples_nb; $i++) {
@@ -243,6 +271,9 @@ if ($_posttype == 'comment') {
             'comment_post_ID' => $post_id,
             'comment_content' => $raw_contents[mt_rand(0, $nb_raw_contents - 1)]
         ));
+        if ($comment_id && function_exists('wpu_comments_rating__get_rating')) {
+            update_comment_meta($comment_id, 'wpu_comment_rating', rand(1, 5));
+        }
         $_hasImport = true;
         echo "Success : #" . $i . "\n";
     }
