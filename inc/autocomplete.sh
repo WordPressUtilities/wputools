@@ -27,6 +27,9 @@ _wputools_complete() {
             "archivelogs")
                 COMPREPLY=( $(compgen -W "all" -- $cur) )
             ;;
+            "backup")
+                COMPREPLY=( $(compgen -W "all clean code" -- $cur) )
+            ;;
             "bduser")
                 COMPREPLY=( $(compgen -W "admins all-users" -- $cur) )
             ;;

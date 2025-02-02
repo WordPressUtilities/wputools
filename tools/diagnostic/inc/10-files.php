@@ -99,7 +99,7 @@ foreach ($files as $file) {
   Find files which should not be in a WordPress directory
 ---------------------------------------------------------- */
 
-$files = glob('{*,wp-content/*,wp-content/uploads/*}.{log,sql,zip,sql.gz}', GLOB_BRACE);
+$files = glob('{*,wp-content/*,wp-content/uploads/*}.{log,sql,zip,sql.gz,sql.tar.gz}', GLOB_BRACE);
 foreach ($files as $file) {
     if (!is_file($file)) {
         continue;

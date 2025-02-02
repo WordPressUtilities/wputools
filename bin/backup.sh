@@ -46,6 +46,49 @@ _BACKUP_FILE="${_BACKUP_PATH}db-${_BACKUP_NAME}.sql";
 _BACKUP_FILES=(".htaccess" "wp-content/mu-plugins/wpu_local_overrides.php" "wp-config.php" "../wp-config.php")
 _BACKUP_FOLDERS=("wp-content/w3tc-config");
 
+###################################
+## Clean
+###################################
+
+if [[ "${1}" == 'clean' ]];then
+    # Create a tmp directory in _BACKUP_DIR
+    _WPUTOOLS_TMP_DIR="${_BACKUP_DIR}tmp${_BACKUP_RAND}/";
+    if [[ -d "${_WPUTOOLS_TMP_DIR}" ]];then
+        bashutilities_message 'The temporary directory already exists' 'error';
+        return 0;
+    fi;
+    mkdir "${_WPUTOOLS_TMP_DIR}";
+
+    # Build an array of year-month, starting 3 years ago and finishing one month ago
+    _current_date=$(date +%Y-%m)
+    _start_date=$(date -v-3y +%Y-%m)
+    _year_months=()
+    while [[ "$_start_date" < "$_current_date" ]]; do
+        _year_months+=("$_start_date")
+        _start_date=$(date -v+1m -jf "%Y-%m" "$_start_date" +%Y-%m)
+    done
+
+    # For each year-month, find all files and move them all except the first one to _WPUTOOLS_TMP_DIR
+    _WPUTOOLS_FILES_MOVED=0;
+    for ym in "${_year_months[@]}"; do
+        _BACKUP_FILES=($(find "${_BACKUP_DIR}" -type f -name "*${ym}*" | sort));
+
+        for ((i=1; i<${#_BACKUP_FILES[@]}; i++)); do
+            mv "${_BACKUP_FILES[$i]}" "${_WPUTOOLS_TMP_DIR}";
+            _WPUTOOLS_FILES_MOVED=$((_WPUTOOLS_FILES_MOVED + 1))
+        done
+    done;
+
+    # Display a message with the number of files moved
+    if [[ "${_WPUTOOLS_FILES_MOVED}" -gt 0 ]];then
+        bashutilities_message "${_WPUTOOLS_FILES_MOVED} file(s) moved to ${_WPUTOOLS_TMP_DIR}";
+    else
+        bashutilities_message "No files moved";
+    fi;
+
+    return 0;
+fi;
+
 
 ###################################
 ## Code

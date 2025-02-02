@@ -157,6 +157,7 @@ unset -v _wputools_test_before_content;
 unset -v _wputools_test_before_length;
 unset -v _wputools_need_login;
 unset -v _WPUTOOLS_TEXT_MESSAGE;
+unset -v _WPUTOOLS_TMP_DIR;
 unset -v _WPUTOOLS_UNSPLASH_API_KEY;
 unset -v _WPUTOOLS_URL_LOCAL_FILE;
 unset -v _WPUTOOLS_URL_LOCAL_FILE_TMP;
