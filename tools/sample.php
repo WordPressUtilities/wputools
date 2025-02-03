@@ -103,7 +103,7 @@ $raw_contents = array(
     'Sometimes when you innovate, you make <strong>mistakes</strong>. It is best to admit them <em>quickly</em>, and get on with improving your other innovations.',
     'We don’t get a chance to do that many things, and every one should be really <em>excellent</em>. Because this is our life. Life is brief, and then you die, you know? And we’ve all chosen to do this with our lives. So it better be damn good. It better be worth it.',
     'I think if you do <strong>something</strong> and it turns out pretty good, then you <em>should</em> go do something else wonderful, not dwell on it for too long. Just figure out what’s next.',
-    'HTML test <strong>bold</strong> <em>italic</em> <a href="#">link</a> <img src="https://placehold.co/600x400" alt="image" /><br /> <ul><li>list</li></ul> <hr /> <blockquote>quote</blockquote> <pre>code</pre> <table><tr><td>table</td></tr></table'
+    'HTML test <strong>bold</strong> <em>italic</em> <a href="#">link</a> <img src="https://placehold.co/600x400" alt="image" /><br /> <ul><li>list</li></ul> <hr /> <blockquote>quote</blockquote> <pre>code</pre> <table><tr><td>table</td></tr></table>'
 );
 $nb_raw_contents = count($raw_contents);
 
