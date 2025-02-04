@@ -26,11 +26,15 @@ fi;
 ## Initial datas
 ###################################
 
-_WPUDIAG_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD);
+_WPUDIAG_BRANCH_NAME='';
+if [[ -d "${_CURRENT_DIR}.git" ]];then
+    _WPUDIAG_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD);
+fi;
+
 _WPUDIAG_FILE=$(wputools_create_random_file "diagnostic");
 echo "<?php" > "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 echo "\$wpudiag_file='${_WPUDIAG_FILE}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
-echo "\$wpudiag_branch_name='${_BRANCH_NAME}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
+echo "\$wpudiag_branch_name='${_WPUDIAG_BRANCH_NAME}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 echo "\$wpudiag_path='${_CURRENT_DIR}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 echo "include '${_TOOLSDIR}diagnostic/header.php';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 

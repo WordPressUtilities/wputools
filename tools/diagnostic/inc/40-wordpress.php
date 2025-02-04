@@ -38,7 +38,7 @@ if (!function_exists('wp_get_environment_type')) {
     }
 }
 $env_type = wp_get_environment_type();
-$debug_env_values = array('local', 'development', 'staging');
+$debug_env_values = array('local', 'development', 'staging', 'preproduction');
 $is_debug_env = in_array($env_type, $debug_env_values);
 
 /* Branch name
