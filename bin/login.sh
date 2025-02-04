@@ -10,6 +10,25 @@ if [[ "${_wputools_is_wp_installed}" != '' ]];then
 fi;
 
 ###################################
+## Detect multisite
+###################################
+
+_WPUTOOLS_MULTISITE=$(grep "define('SITE_ID_CURRENT_SITE'" "${wputools_wp_config_path}");
+if [[ "${_WPUTOOLS_MULTISITE}" != "" ]];then
+    # List all sites home URLs
+    echo "Multiple sites detected. Please choose one site to login:"
+    _wputools_sites=($(_WPCLICOMMAND site list --field=url))
+    select _wputools_site in "${_wputools_sites[@]}"; do
+        if [[ -n "$_wputools_site" ]]; then
+            _HOME_URL="$_wputools_site"
+            break
+        else
+            echo "Invalid site. Please try again.";
+        fi
+    done
+fi;
+
+###################################
 ## Initial datas
 ###################################
 
