@@ -23,20 +23,26 @@ fi;
 ## Checks before launching update
 ###################################
 
+wputools_has_git_repo='y';
+# Check if a git repository exists
+if [[ ! -d "${_CURRENT_DIR}.git" ]];then
+    wputools_has_git_repo='n';
+fi;
+
 # Check if git is locked
-if [[ -f "${_CURRENT_DIR}.git/index.lock" ]];then
+if [[ "${wputools_has_git_repo}" == 'y' && -f "${_CURRENT_DIR}.git/index.lock" ]];then
     bashutilities_message "Error : Git repository is locked" 'error';
     return;
 fi;
 
 # Check if there are uncommited changes
-if [[ $(git status --porcelain) ]]; then
+if [[ "${wputools_has_git_repo}" == 'y' && $(git status --porcelain) ]]; then
     bashutilities_message "Error : There are uncommited changes" 'error';
     return;
 fi;
 
 # Check if there are unpushed commits
-if [[ $(git log origin/$(git symbolic-ref --short HEAD)..HEAD) ]]; then
+if [[ "${wputools_has_git_repo}" == 'y' && $(git log origin/$(git symbolic-ref --short HEAD)..HEAD) ]]; then
     bashutilities_message "Error : There are unpushed commits" 'error';
     return;
 fi;

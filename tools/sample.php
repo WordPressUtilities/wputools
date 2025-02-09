@@ -234,7 +234,7 @@ if ($_posttype == 'user') {
         $first_name = $users_values['first_name'][array_rand($users_values['first_name'])];
         $last_name = $users_values['last_name'][array_rand($users_values['last_name'])];
         $user_id = strtolower(sanitize_user($first_name . '_' . $last_name)) . '_' . uniqid();
-        wp_insert_user(array(
+        $user_id = wp_insert_user(array(
             'first_name' => $first_name,
             'last_name' => $last_name,
             'user_login' => $user_id,
@@ -243,7 +243,7 @@ if ($_posttype == 'user') {
             'role' => $editable_roles[array_rand($editable_roles, 1)]
         ));
         $_hasImport = true;
-        echo "Success : #" . $i . "\n";
+        echo "Success : #" . $i . " - ID : " . $user_id . "\n";
     }
 }
 

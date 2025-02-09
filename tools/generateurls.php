@@ -96,13 +96,22 @@ foreach ($tax as $tax) {
 ---------------------------------------------------------- */
 
 $links = array_unique($links);
-$wputools_urls_file_content = '';
+
+/* URLs file : warming cache or checking pages */
+$wputools_urls_file_content =
+    site_url() . '/robots.txt' . "\n" .
+    site_url() . '/feed' . "\n" .
+    site_url() . '/wp-sitemap.xml' . "\n";
+foreach ($links as $link) {
+    $wputools_urls_file_content .= $link . "\n";
+}
+file_put_contents($_GET['file'], $wputools_urls_file_content);
+
+/* Test file : used to compare two instances of the same website */
 $wputools_test_file_content = '';
 foreach ($links as $link) {
     $link_prod = str_replace(site_url(), 'httpreplacebyproddomain', $link);
-    $wputools_urls_file_content .= $link . "\n";
     $wputools_test_file_content .= $link . ';' . $link_prod . "\n";
 }
 $test_file = dirname($_GET['file']) . '/' . 'test-' . basename($_GET['file']);
-file_put_contents($_GET['file'], $wputools_urls_file_content);
 file_put_contents($test_file, $wputools_test_file_content);
