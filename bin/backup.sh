@@ -61,11 +61,19 @@ if [[ "${1}" == 'clean' ]];then
 
     # Build an array of year-month, starting 3 years ago and finishing one month ago
     _current_date=$(date +%Y-%m)
-    _start_date=$(date -v-3y +%Y-%m)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        _start_date=$(date -v-3y +%Y-%m)
+    else
+        _start_date=$(date --date='-3 years' +%Y-%m)
+    fi
     _year_months=()
     while [[ "$_start_date" < "$_current_date" ]]; do
         _year_months+=("$_start_date")
-        _start_date=$(date -v+1m -jf "%Y-%m" "$_start_date" +%Y-%m)
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            _start_date=$(date -v+1m -jf "%Y-%m" "$_start_date" +%Y-%m)
+        else
+            _start_date=$(date --date="$_start_date-01 +1 month" +%Y-%m)
+        fi
     done
 
     # For each year-month, find all files and move them all except the first one to _WPUTOOLS_TMP_DIR
