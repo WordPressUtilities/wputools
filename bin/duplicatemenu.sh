@@ -10,6 +10,9 @@ function wputools__duplicate_menu(){
     local _FILE=$(wputools_create_random_file "duplicatemenu");
     cat "${_TOOLSDIR}duplicatemenu.php" > "${_CURRENT_DIR}${_FILE}";
 
+    # Detect multisite
+    wputools_select_multisite;
+
     # Call file
     wputools_call_url "${_HOME_URL}/${_FILE}?menu_id=${1}";
 

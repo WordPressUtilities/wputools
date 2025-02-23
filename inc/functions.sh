@@ -322,3 +322,25 @@ function wputools_is_wp_installed(){
         return 0;
     fi;
 }
+
+###################################
+## Check if it is a multisite
+###################################
+
+function wputools_select_multisite(){
+    local _WPUTOOLS_MULTISITE=$(grep "define('SITE_ID_CURRENT_SITE'" "$(wputools__get_wp_config_path)");
+    if [[ "${_WPUTOOLS_MULTISITE}" == "" ]];then
+    return;
+    fi;
+    # List all sites home URLs
+    echo "Multiple sites detected. Please choose one site to continue:"
+    local _wputools_sites=($(_WPCLICOMMAND site list --field=url))
+    select _wputools_site in "${_wputools_sites[@]}"; do
+        if [[ -n "$_wputools_site" ]]; then
+            _HOME_URL="$_wputools_site"
+            break
+        else
+            echo "Invalid site. Please try again.";
+        fi
+    done
+}
