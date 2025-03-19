@@ -91,7 +91,7 @@ _wputools_complete() {
             # Go to a plugin
             if [[ "$prev" == 'plugins' || "$prev" == 'themes' || "$prev" == 'uploads' || "$prev" == 'mu-plugins' ]];then
                 if [[ -d "${_base_wp_dir_content}${prev}" ]];then
-                    _reply=$(ls -1 "${_base_wp_dir_content}${prev}" | awk -F'/' '{print $NF}');
+                    _reply=$(ls -1d "${_base_wp_dir_content}${prev}"/*/ 2>/dev/null | awk -F'/' '{print $(NF-1)}');
                     COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
                 fi;
             fi;
