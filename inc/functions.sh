@@ -46,9 +46,10 @@ function run_test_after_regenerate(){
 
 function run_test_instant(){
     if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
-        echo '# RUNNING TESTS : BEFORE ACTION';
+        echo '# RUNNING TESTS : INSTANT TEST';
         _wputools_test_instant_content=$(wputools_test_check_urls);
-        echo "${_wputools_test_instant_content}" > diff-instant.txt;
+        _current_timestamp=$(date +%Y%m%d-%H%M%S)
+        echo "${_wputools_test_instant_content}" > "diff-instant-${_current_timestamp}.txt";
     fi;
 }
 
