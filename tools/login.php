@@ -43,7 +43,12 @@ while (!is_file($bootstrap)) {
 require_once $bootstrap;
 
 /* Require some functions if W3TC is installed */
-$admin_path = str_replace(strtok(get_bloginfo('url'), '?') . '/', ABSPATH, get_admin_url());
+
+$bloginfo_url_parts = parse_url(get_bloginfo('url'));
+$bloginfo_url = $bloginfo_url_parts['scheme'] . "://" . $bloginfo_url_parts['host'];
+
+/* Require some functions if W3TC is installed */
+$admin_path = str_replace(strtok($bloginfo_url, '?') . '/', ABSPATH, get_admin_url());
 require_once $admin_path . '/includes/screen.php';
 
 /* Start WP */
