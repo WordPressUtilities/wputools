@@ -63,7 +63,8 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_PLUGIN_LIST}" "${_WPUTOOLS_PLUGIN_FAV_LIST}")" -- $cur) )
             ;;
             "sample")
-                COMPREPLY=( $(compgen -W "all attachment comment help page post user wptest" -- $cur) )
+                _reply=$(wp post-type list --public=1 --fields=name --format=csv 2>/dev/null | tail -n +2);
+                COMPREPLY=( $(compgen -W "all comment help user wptest ${_reply}" -- $cur) );
             ;;
             "update")
                 COMPREPLY=( $(compgen -W "all-features all-plugins all-submodules core instant-test relaunch-test" -- $cur) )
