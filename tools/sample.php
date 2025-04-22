@@ -139,6 +139,15 @@ foreach ($post_types as $pt => $post_type) {
         continue;
     }
 
+    $is_multilingual = function_exists('pll_get_post_translations');
+    $languages = array();
+    if ($is_multilingual) {
+        $languages_raw = get_terms('term_language', ['hide_empty' => false]);
+        foreach ($languages_raw as $lang) {
+            $languages[str_replace('pll_', '', $lang->slug)] = $lang->name;
+        }
+    }
+
     /* Create post */
     $random_images = get_posts(array(
         'post_type' => 'attachment',
@@ -156,18 +165,41 @@ foreach ($post_types as $pt => $post_type) {
         /* Add images */
         $post_title = $raw_titles[mt_rand(0, $nb_raw_titles - 1)] . ' ' . $label . ' #' . $i;
 
-        $post_id = wp_insert_post(array(
+        $post_infos = array(
             'post_title' => $post_title,
             'post_content' => $raw_contents[mt_rand(0, $nb_raw_contents - 1)],
             'post_type' => $pt,
             'post_status' => 'publish',
             'post_author' => 1
-        ));
+        );
+
+        $post_id = wp_insert_post($post_infos);
         $_hasImport = true;
 
         /* Taxonomies */
+        $thumbnail_id = false;
         if ($post_id && !empty($random_images)) {
-            set_post_thumbnail($post_id, $random_images[array_rand($random_images)]);
+            $thumbnail_id = $random_images[array_rand($random_images)];
+            set_post_thumbnail($post_id, $thumbnail_id);
+        }
+
+        if ($is_multilingual && $languages) {
+            $first_code = array_keys($languages)[0];
+            $translations = array($post_id);
+            foreach ($languages as $lang_code => $lang_name) {
+                if ($lang_code === $first_code) {
+                    continue;
+                }
+                $post_infos['post_title'] = $post_title . ' (' . $lang_name . ')';
+                $translated_post_id = wp_insert_post($post_infos);
+                if ($translated_post_id) {
+                    pll_set_post_language($translated_post_id, $lang_code);
+                    pll_save_post_translations(array_merge(pll_get_post_translations($post_id), [$lang_code => $translated_post_id]));
+                }
+                if($thumbnail_id){
+                    set_post_thumbnail($translated_post_id, $thumbnail_id);
+                }
+            }
         }
 
         foreach ($taxonomies as $tax_name) {
