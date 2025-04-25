@@ -54,6 +54,14 @@ if [[ "${_WP_PROJECT_ENV}" == 'production' || "${_WP_PROJECT_ENV}" == 'prod' ]];
     return;
 fi;
 
+# Check if an update is already in progress
+_has_core_updated_lock=$(_WPCLICOMMAND option --quiet get "core_updater.lock" 2> /dev/null);
+_has_auto_updated_lock=$(_WPCLICOMMAND option --quiet get "auto_updater.lock" 2> /dev/null);
+if [[ "${_has_core_updated_lock}" != "" || "${_has_auto_updated_lock}" != "" ]];then
+    bashutilities_message "Error : An update is already in progress" 'error';
+    return;
+fi;
+
 # Check online status
 if [[ "$(wputools_is_online)" == '0' ]];then
     bashutilities_message "Error : You can't update when offline" 'error';
