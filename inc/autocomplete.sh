@@ -73,6 +73,11 @@ _wputools_complete() {
                     COMPREPLY+=( $(compgen -W "${_reply}" -- $cur) );
                 fi;
             ;;
+            "wp")
+                # Thanks to https://github.com/wp-cli/wp-cli/issues/6012
+                _reply=$(echo 'foreach (WP_CLI::get_root_command()->get_subcommands() as $name => $details) { echo $name. " "; }' | wp shell);
+                COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
+            ;;
             "wpuwoo")
                 _reply=$(ls -1 "${_WPUTOOLS_AUTOCOMPLETE_WPUWOO_ACTION_DIR}tasks/"*.php | awk -F'/' '{print $NF}');
                 _reply=${_reply//\.php/};
@@ -83,6 +88,15 @@ _wputools_complete() {
         esac
     elif [ $COMP_CWORD -eq 3 ]; then
         prev2=${COMP_WORDS[COMP_CWORD-2]}
+
+        if [[ "$prev2" == 'wp' ]];then
+            # Load all subcommands
+            local _tmp_reply='foreach (WP_CLI::get_root_command()->get_subcommands() as $name => $details) {if($name == "';
+            _tmp_reply+=$prev;
+            _tmp_reply+='") {foreach ($details->get_subcommands() as $subname => $subdetails) { echo $subname. " "; } }} ';
+            _reply=$(echo "${_tmp_reply}" | wp shell);
+            COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
+        fi;
 
         if [[ "$prev2" == 'wpuwoo' && "$prev" == 'import-csv' ]];then
             COMPREPLY=( $( compgen -o plusdirs  -f -X '!*.csv' -- $cur ) )
