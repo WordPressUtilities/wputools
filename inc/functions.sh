@@ -329,7 +329,7 @@ function wputools_is_wp_installed(){
 ###################################
 
 function wputools_select_multisite(){
-    local _WPUTOOLS_MULTISITE=$(grep "define('SITE_ID_CURRENT_SITE'" "$(wputools__get_wp_config_path)");
+    local _WPUTOOLS_MULTISITE=$(_WPCLICOMMAND config get SITE_ID_CURRENT_SITE);
     if [[ "${_WPUTOOLS_MULTISITE}" == "" ]];then
     return;
     fi;
