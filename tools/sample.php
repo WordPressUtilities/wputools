@@ -34,6 +34,7 @@ if (isset($_GET['sample_posttype']) && $_GET['sample_posttype']) {
         $_posttype = esc_html($_GET['sample_posttype']);
     }
 }
+$_samples_nb_min = max(1, $_samples_nb);
 
 switch ($_posttype) {
 case 'comments':
@@ -206,7 +207,7 @@ foreach ($post_types as $pt => $post_type) {
             if (in_array($tax_name, array('post_format', 'post_translations', 'language'))) {
                 continue;
             }
-            $nb_tax = mt_rand(2, min($_samples_nb, 10));
+            $nb_tax = mt_rand($_samples_nb_min, min($_samples_nb, 10));
             $nb_start = mt_rand(1, $nb_tax);
             for ($y = $nb_start; $y <= $nb_tax; $y++) {
                 wp_set_object_terms($post_id, $tax_name . ' ' . $y, $tax_name, true);

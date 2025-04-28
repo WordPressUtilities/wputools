@@ -329,9 +329,12 @@ function wputools_is_wp_installed(){
 ###################################
 
 function wputools_select_multisite(){
-    local _WPUTOOLS_MULTISITE=$(_WPCLICOMMAND config get SITE_ID_CURRENT_SITE);
-    if [[ "${_WPUTOOLS_MULTISITE}" == "" ]];then
-    return;
+    local wputools_wp_config_path=$(wputools__get_wp_config_path);
+    if ! grep -q "SITE_ID_CURRENT_SITE" "${wputools_wp_config_path}"; then
+        return;
+    fi;
+    if [[ $(_WPCLICOMMAND config get SITE_ID_CURRENT_SITE) == "" ]];then
+        return;
     fi;
     # List all sites home URLs
     echo "Multiple sites detected. Please choose one site to continue:"
