@@ -136,3 +136,27 @@ foreach ($files as $file) {
     }
     $wputools_errors[] = sprintf('The file %s should not be present in the uploads directory !', $file);
 }
+
+/* ----------------------------------------------------------
+  Check chmod of some files
+---------------------------------------------------------- */
+
+$chmod_items = array(
+    '../wp-config.php' => '0644',
+    '.htaccess' => '0644',
+    'wp-config.php' => '0644',
+    'wp-content' => '0755',
+    'wp-content/uploads' => '0755',
+    'wp-content/uploads/' . date('Y') => '0755'
+);
+
+foreach ($chmod_items as $item => $mode) {
+    if (!is_dir($item) && !is_file($item)) {
+        continue;
+    }
+    $file_type = is_dir($item) ? 'folder' : 'file';
+    $current_mode = substr(sprintf('%o', fileperms($item)), -4);
+    if ($current_mode != $mode) {
+        $wputools_errors[] = sprintf('The %s %s should have the %s mode !', $file_type, $item, $mode);
+    }
+}
