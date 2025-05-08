@@ -159,4 +159,7 @@ foreach ($chmod_items as $item => $mode) {
     if ($current_mode != $mode) {
         $wputools_errors[] = sprintf('The %s %s should have the %s mode !', $file_type, $item, $mode);
     }
+    if(!is_writable($item)) {
+        $wputools_errors[] = sprintf('The %s %s should be writable !', $file_type, $item);
+    }
 }

@@ -29,6 +29,21 @@ require_once $bootstrap;
   Initial checks
 ---------------------------------------------------------- */
 
+/* Loading
+-------------------------- */
+
+if (!function_exists('get_option')) {
+    $wputools_errors[] = 'WordPress is not correctly loaded.';
+}
+
+/* Database
+-------------------------- */
+
+global $wpdb;
+if (!is_object($wpdb) || !$wpdb->check_connection()) {
+    $wputools_errors[] = 'WordPress : The database is not available.';
+}
+
 /* Debug
 -------------------------- */
 
@@ -605,4 +620,18 @@ if ($nb_all_image_sizes > $max_nb_image_sizes) {
     }
 
     $wputools_notices[] = sprintf('There are %d images sizes, please check if they are useful : %s', $nb_all_image_sizes, $image_sizes_text);
+}
+
+/* ----------------------------------------------------------
+  Check privacy policy
+---------------------------------------------------------- */
+
+$privacy_page_id = get_option('wp_page_for_privacy_policy');
+if ($privacy_page_id) {
+    $privacy_page = get_post($privacy_page_id);
+    if ($privacy_page && $privacy_page->post_status != 'publish') {
+        $wputools_errors[] = sprintf('The privacy policy page is not published.');
+    }
+} else {
+    $wputools_errors[] = sprintf('The privacy policy page is not set.');
 }
