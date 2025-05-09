@@ -33,7 +33,8 @@ require_once $bootstrap;
 -------------------------- */
 
 if (!function_exists('get_option')) {
-    $wputools_errors[] = 'WordPress is not correctly loaded.';
+    $wputools_errors[] = 'WordPress is not correctly loaded';
+    return;
 }
 
 /* Database
@@ -42,6 +43,7 @@ if (!function_exists('get_option')) {
 global $wpdb;
 if (!is_object($wpdb) || !$wpdb->check_connection()) {
     $wputools_errors[] = 'WordPress : The database is not available.';
+    return;
 }
 
 /* Debug
@@ -330,7 +332,7 @@ if (method_exists($wpdb, 'db_server_info')) {
 $php_constants = array('WP_CACHE_KEY_SALT');
 foreach ($php_constants as $constant) {
     if (!defined($constant)) {
-        $wputools_errors[] = sprintf('WordPress : the constant %s should be defined.', $constant);
+        $wputools_errors[] = sprintf('WordPress : the constant %s should be defined : wputools wp config shuffle-salts WP_CACHE_KEY_SALT --force', $constant);
     }
 }
 

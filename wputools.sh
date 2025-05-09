@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.120.1';
+local _WPUTOOLS_VERSION='0.121.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.3 8.4 8.5 9.0)
@@ -57,7 +57,7 @@ fi;
 ###################################
 
 # Load default PHP command
-local _PHP_POSSIBLE_COMMANDS=("/usr/local/php8.0/bin/php" "/usr/local/php8.1/bin/php" "/usr/local/php8.2/bin/php"  "/opt/php/bin/php");
+local _PHP_POSSIBLE_COMMANDS=("/usr/local/php8.0/bin/php" "/usr/local/php8.1/bin/php" "/usr/local/php8.2/bin/php" "/usr/local/php8.3/bin/php"  "/opt/php/bin/php");
 if ! command -v $_PHP_COMMAND &> /dev/null; then
     for _PHP_POSSIBLE_COMMAND in "${_PHP_POSSIBLE_COMMANDS[@]}"; do
         if [[ -f "${_PHP_POSSIBLE_COMMAND}" ]]; then

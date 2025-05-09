@@ -142,12 +142,12 @@ foreach ($files as $file) {
 ---------------------------------------------------------- */
 
 $chmod_items = array(
-    '../wp-config.php' => '0644',
-    '.htaccess' => '0644',
-    'wp-config.php' => '0644',
-    'wp-content' => '0755',
-    'wp-content/uploads' => '0755',
-    'wp-content/uploads/' . date('Y') => '0755'
+    '../wp-config.php' => '644',
+    '.htaccess' => '644',
+    'wp-config.php' => '644',
+    'wp-content' => '755',
+    'wp-content/uploads' => '755',
+    'wp-content/uploads/' . date('Y') => '755'
 );
 
 foreach ($chmod_items as $item => $mode) {
@@ -155,7 +155,7 @@ foreach ($chmod_items as $item => $mode) {
         continue;
     }
     $file_type = is_dir($item) ? 'folder' : 'file';
-    $current_mode = substr(sprintf('%o', fileperms($item)), -4);
+    $current_mode = substr(sprintf('%o', fileperms($item)), -3);
     if ($current_mode != $mode) {
         $wputools_errors[] = sprintf('The %s %s should have the %s mode !', $file_type, $item, $mode);
     }
