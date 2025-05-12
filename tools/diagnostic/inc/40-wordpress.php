@@ -162,6 +162,50 @@ if (isset($url_parts['host'])) {
 $is_test_extension = $host_extension && in_array($host_extension, $ignored_extensions);
 
 /* ----------------------------------------------------------
+  Htaccess
+---------------------------------------------------------- */
+
+$temp_dir_name = 'wputools_temp_dir_' . uniqid();
+$wputools_temp_dir = wp_upload_dir()['basedir'] . '/' . $temp_dir_name;
+$wputools_temp_url = wp_upload_dir()['baseurl'] . '/' . $temp_dir_name;
+mkdir($wputools_temp_dir, 0755, true);
+if (!is_dir($wputools_temp_dir)) {
+    $wputools_errors[] = sprintf('The temporary directory %s could not be created', $wputools_temp_dir);
+} else {
+    /* Create temp files */
+    $temp_files = array(
+        '.htaccess',
+        'test.txt'
+    );
+
+    foreach ($temp_files as $temp_file) {
+        file_put_contents($wputools_temp_dir . '/' . $temp_file, 'deny from all');
+    }
+
+    /* Test if the temporary directory is correctly blocked */
+    $response = wp_remote_get($wputools_temp_url . '/test.txt');
+    if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 403) {
+        $wputools_errors[] = 'The temporary directory test did not return a 403 error as expected.';
+    }
+
+    /* Clean up the temporary directory */
+    foreach ($temp_files as $temp_file) {
+        unlink($wputools_temp_dir . '/' . $temp_file);
+    }
+
+    /* Test if the temporary directory does not show an Apache index */
+    $response = wp_remote_get($wputools_temp_url . '/');
+    if (!is_wp_error($response)) {
+        $body = wp_remote_retrieve_body($response);
+        if (strpos($body, '<title>Index of') !== false) {
+            $wputools_errors[] = 'The temporary directory is publicly accessible and shows an Apache index.';
+        }
+    }
+
+    rmdir($wputools_temp_dir);
+}
+
+/* ----------------------------------------------------------
   Mail
 ---------------------------------------------------------- */
 
@@ -283,6 +327,17 @@ foreach ($ram_vars as $ram_var) {
     }
     if ($ram_var_value > 512) {
         $wputools_errors[] = 'WordPress : ' . $ram_var . ' value should be lower than 512MB.';
+    }
+}
+
+/* ----------------------------------------------------------
+  Check execution time
+---------------------------------------------------------- */
+
+if (!$wputools_is_cli) {
+    $execution_time = ini_get('max_execution_time');
+    if ($execution_time < 5 || $execution_time > 120) {
+        $wputools_errors[] = sprintf('WordPress : max_execution_time should be set roughly to 30 seconds. Current value is %s seconds.', $execution_time);
     }
 }
 
