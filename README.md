@@ -218,3 +218,4 @@ function wputools_backup_uploads_cleanup(){
 ## Thanks
 
 * To @JulioPotier for https://github.com/JulioPotier/SecuPress-Backdoor-User
+* To @vrana for https://github.com/vrana/adminer
