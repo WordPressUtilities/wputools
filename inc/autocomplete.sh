@@ -15,6 +15,7 @@ _wputools_complete() {
     local _base_wp_dir_plugins="${_base_wp_dir_content}plugins";
     local _list_backup_dir=( "../backups/" "../" "../local-backups/" );
     local _backup_extensions=( ".tar.gz" ".sql" ".sql.gz" );
+    local _WPCLIPATH="$( dirname "${BASH_SOURCE[0]}" )/../wp-cli.phar";
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
@@ -63,7 +64,7 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_PLUGIN_LIST}" "${_WPUTOOLS_PLUGIN_FAV_LIST}")" -- $cur) )
             ;;
             "sample")
-                _reply=$(wp post-type list --public=1 --fields=name --format=csv 2>/dev/null | tail -n +2);
+                _reply=$("${_WPCLIPATH}" post-type list --public=1 --fields=name --format=csv 2>/dev/null | tail -n +2);
                 COMPREPLY=( $(compgen -W "all comment help user wptest ${_reply}" -- $cur) );
             ;;
             "update")
@@ -75,7 +76,7 @@ _wputools_complete() {
             ;;
             "wp")
                 # Thanks to https://github.com/wp-cli/wp-cli/issues/6012
-                _reply=$(echo 'foreach (WP_CLI::get_root_command()->get_subcommands() as $name => $details) { echo $name. " "; }' | wp shell);
+                _reply=$(echo 'foreach (WP_CLI::get_root_command()->get_subcommands() as $name => $details) { echo $name. " "; }' | "${_WPCLIPATH}" shell);
                 COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
             ;;
             "wpuwoo")
@@ -94,7 +95,7 @@ _wputools_complete() {
             local _tmp_reply='foreach (WP_CLI::get_root_command()->get_subcommands() as $name => $details) {if($name == "';
             _tmp_reply+=$prev;
             _tmp_reply+='") {foreach ($details->get_subcommands() as $subname => $subdetails) { echo $subname. " "; } }} ';
-            _reply=$(echo "${_tmp_reply}" | wp shell);
+            _reply=$(echo "${_tmp_reply}" | "${_WPCLIPATH}" shell);
             COMPREPLY=( $(compgen -W "${_reply}" -- $cur) );
         fi;
 
