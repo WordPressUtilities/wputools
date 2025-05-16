@@ -245,6 +245,12 @@ if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
         $wputools_errors[] = 'WordPress : WP_DEBUG_LOG should not be a boolean, but a dynamic file path.';
     }
     if (strlen(WP_DEBUG_LOG) > 6 && is_dir(dirname(WP_DEBUG_LOG))) {
+        $debug_log_dir = realpath(dirname(WP_DEBUG_LOG));
+
+        /* Check that log path is not in wp-content/debug.log */
+        if (strpos($debug_log_dir, ABSPATH) !== false) {
+            $wputools_errors[] = 'WordPress : WP_DEBUG_LOG should be located outside the project directory.' . $debug_log_dir;
+        }
 
         /* Check that logs are correctly written */
         $log_file = WP_DEBUG_LOG;
@@ -260,7 +266,7 @@ if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
         }
 
         /* Check debug log weight */
-        $logs = glob(dirname(WP_DEBUG_LOG) . '/*.log');
+        $logs = glob($debug_log_dir . '/*.log');
         $logs_count = 0;
         $logs_weight = 0;
         if (is_array($logs)) {
