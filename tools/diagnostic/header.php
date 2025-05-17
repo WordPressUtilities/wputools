@@ -31,10 +31,10 @@ if (empty($wputools_errors) && empty($wputools_notices)) {
     echo "No errors !";
 } else {
     foreach ($wputools_errors as $error) {
-        echo "\033[31m- " . $error . "\033[0m\n"; // Red color for errors
+        echo($wputools_is_cli ? ("\033[31m- " . $error . "\033[0m") : $error) . "\n"; // Red color for errors
     }
     foreach ($wputools_notices as $notice) {
-        echo "\033[33m- " . $notice . "\033[0m\n"; // Yellow color for notices
+        echo($wputools_is_cli ? ("\033[33m- " . $notice . "\033[0m") : $notice) . "\n"; // Yellow color for notices
     }
 }
 if (!$wputools_is_public) {

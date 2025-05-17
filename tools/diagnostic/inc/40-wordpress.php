@@ -491,6 +491,7 @@ if (is_array($info) && isset($info['total_time']) && $info['total_time'] > 0.2) 
 
 function wputools_test_rss_feed($rss_url) {
     global $wputools_errors;
+    global $wputools_notices;
 
     libxml_use_internal_errors(true);
 
@@ -499,7 +500,16 @@ function wputools_test_rss_feed($rss_url) {
         return;
     }
 
-    $rss_content = @simplexml_load_file($rss_url);
+    $rss_content_text = file_get_contents($rss_url);
+    $rss_content = @simplexml_load_string($rss_content_text);
+    if ($rss_content === false) {
+        $rss_content_text = html_entity_decode($rss_content_text);
+        $rss_content = @simplexml_load_string($rss_content_text);
+        if ($rss_content) {
+            $wputools_notices[] = __('The RSS Feed was parsed, but had an encoding problem.');
+        }
+    }
+
     if ($rss_content === false) {
         $error_text = '';
         foreach (libxml_get_errors() as $error) {
