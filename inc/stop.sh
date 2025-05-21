@@ -34,6 +34,7 @@ unset -f wputools__update_all_submodules;
 unset -f wputools__update_all_themes;
 unset -f wputools__update_core;
 unset -f wputools__update_plugin;
+unset -f wputools__wpconfig_set_values;
 unset -f wputools_add_files_to_excludes;
 unset -f wputools_archive_logs;
 unset -f wputools_anonymize_db;
@@ -170,6 +171,7 @@ unset -v wputools_has_git_repo;
 unset -v wputools_use_backup_dir;
 unset -v wputools_use_home_url;
 unset -v wputools_use_site_name;
+unset -v wputools_wpconfig_ask_overwrite;
 unset -v wputools_wp_config_path;
 
 . "${_TOOLSDIR}BashUtilities/modules/stop.sh";

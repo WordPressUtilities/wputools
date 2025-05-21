@@ -1,9 +1,32 @@
 #!/bin/bash
 
+
 echo "# WP Config";
+
+###################################
+## Set values
+###################################
+
+function wputools__wpconfig_set_values(){
+    _WPCLICOMMAND config set DISABLE_WP_CRON true;
+    _WPCLICOMMAND config set EMPTY_TRASH_DAYS 7;
+    _WPCLICOMMAND config set WP_POST_REVISIONS 6;
+    _WPCLICOMMAND config set WP_MEMORY_LIMIT 128M;
+    _WPCLICOMMAND config set WP_MAX_MEMORY_LIMIT 256M;
+    _WPCLICOMMAND config set AUTOMATIC_UPDATER_DISABLED true;
+    _WPCLICOMMAND config set WP_AUTO_UPDATE_CORE false;
+}
+
+###################################
+## Check config
+###################################
 
 if [[ -f "${_CURRENT_DIR}wp-config.php" || -f "${_CURRENT_DIR}../wp-config.php" ]];then
     bashutilities_message "There is already a wp-config.php file available" 'error';
+    wputools_wpconfig_ask_overwrite="$(bashutilities_get_yn "- Do you want to force add some values?" 'n')";
+    if [[ "${wputools_wpconfig_ask_overwrite}" == 'y' ]];then
+        wputools__wpconfig_set_values;
+    fi;
     return 0;
 fi;
 
@@ -53,23 +76,8 @@ if(!isset(\$_SERVER['SERVER_PROTOCOL']) || !\$_SERVER['SERVER_PROTOCOL']){
 define('WP_SITEURL', 'http://' . \$_SERVER['HTTP_HOST'] . '/');
 define('WP_HOME', 'http://' . \$_SERVER['HTTP_HOST'] . '/');
 
-# CRONs
-define('DISABLE_WP_CRON', true);
-
 # Environment
 define('WP_ENVIRONMENT_TYPE', 'local');
-
-# Config
-define('EMPTY_TRASH_DAYS', 7);
-define('WP_POST_REVISIONS', 6);
-
-# Memory
-define('WP_MEMORY_LIMIT', '128M');
-define('WP_MAX_MEMORY_LIMIT', '256M');
-
-# Updates
-define('AUTOMATIC_UPDATER_DISABLED', true);
-define('WP_AUTO_UPDATE_CORE', false);
 
 # Block external access
 #define('WP_HTTP_BLOCK_EXTERNAL', true);
@@ -95,3 +103,6 @@ if (WP_DEBUG) {
     }
 }
 PHP
+
+
+wputools__wpconfig_set_values;
