@@ -197,7 +197,7 @@ foreach ($post_types as $pt => $post_type) {
                     pll_set_post_language($translated_post_id, $lang_code);
                     pll_save_post_translations(array_merge(pll_get_post_translations($post_id), [$lang_code => $translated_post_id]));
                 }
-                if($thumbnail_id){
+                if ($thumbnail_id) {
                     set_post_thumbnail($translated_post_id, $thumbnail_id);
                 }
             }
@@ -207,7 +207,7 @@ foreach ($post_types as $pt => $post_type) {
             if (in_array($tax_name, array('post_format', 'post_translations', 'language'))) {
                 continue;
             }
-            $nb_tax = mt_rand($_samples_nb_min, min($_samples_nb, 10));
+            $nb_tax = mt_rand(min($_samples_nb_min, 10), min($_samples_nb, 10));
             $nb_start = mt_rand(1, $nb_tax);
             for ($y = $nb_start; $y <= $nb_tax; $y++) {
                 wp_set_object_terms($post_id, $tax_name . ' ' . $y, $tax_name, true);
