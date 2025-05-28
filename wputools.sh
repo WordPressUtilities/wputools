@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.124.1';
+local _WPUTOOLS_VERSION='0.125.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.3 8.4 8.5 9.0)
@@ -252,7 +252,18 @@ case "$1" in
         _WPCLICOMMAND "${@:2}";
     ;;
     "help" | "" | * )
-        . "${_SOURCEDIR}bin/help.sh";
+        if [[ "$1" == extension-* ]]; then
+            extension_name="${1#extension-}";
+            extension_launch="${_SOURCEDIR}extensions/${extension_name}/launch.sh";
+            if [[ -f "${extension_launch}" ]]; then
+                . "${extension_launch}" "${@:2}";
+            else
+                bashutilities_message "Extension '${extension_name}' not found." 'error';
+                . "${_SOURCEDIR}bin/help.sh";
+            fi
+        else
+            . "${_SOURCEDIR}bin/help.sh";
+        fi;
     ;;
 esac
 

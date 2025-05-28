@@ -8,3 +8,4 @@
 /wputools-dbimport-after.sh
 /wputools-cache-after-purge.sh
 /plugins/*
+/extensions/*
