@@ -649,7 +649,9 @@ if (($is_debug_env && $env_type != 'local') && !$search_engines_blocked) {
   Check posts
 ---------------------------------------------------------- */
 
-$post_types = get_post_types();
+$post_types = get_post_types(array(
+    'public' => true
+));
 if (isset($post_types['nav_menu_item'])) {
     unset($post_types['nav_menu_item']);
 }

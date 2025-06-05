@@ -15,6 +15,7 @@ cat "${_TOOLSDIR}adminer/adminer.php" > "${_CURRENT_DIR}${_WPUADM_FILE}";
 
 # Customize URL
 _WPUADM_URL="${_HOME_URL}/${_WPUADM_FILE}?wputools=1";
+
 _WPUADM_DB_NAME=$(wputools__get_db_name);
 if [[ -n "${_WPUADM_DB_NAME}" ]];then
     _WPUADM_URL="${_WPUADM_URL}&db=${_WPUADM_DB_NAME}";
@@ -30,10 +31,16 @@ fi;
 
 # Open in a new window if it exists
 _WPUTOOLS_TEXT_MESSAGE="Please follow the link below";
+
 if [[ -f "/usr/bin/open" ]];then
-    _WPUTOOLS_TEXT_MESSAGE="${_WPUTOOLS_TEXT_MESSAGE} or go to the opened browser window";
-    /usr/bin/open "${_WPUADM_URL}";
+    if [[ "${_WPUADM_URL}" == http:* ]]; then
+        bashutilities_message "Adminer is being served over HTTP. Automatic opening is disabled." 'warning';
+    else
+        _WPUTOOLS_TEXT_MESSAGE="${_WPUTOOLS_TEXT_MESSAGE} or go to the opened browser window";
+        /usr/bin/open "${_WPUADM_URL}";
+    fi
 fi
+
 
 echo "${_WPUTOOLS_TEXT_MESSAGE} to login :";
 echo "${_WPUADM_URL}";
