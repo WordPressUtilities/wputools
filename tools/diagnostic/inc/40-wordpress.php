@@ -633,6 +633,31 @@ if (count($admins) > 1) {
 }
 
 /* ----------------------------------------------------------
+  Templates
+---------------------------------------------------------- */
+
+/* If no attachment template, the link to an attachment should be redirected */
+if(!is_readable(get_stylesheet_directory().'/attachment.php')) {
+    $attachments = get_posts(array(
+        'post_type' => 'attachment',
+        'posts_per_page' => 1,
+        'post_status' => 'inherit'
+    ));
+    if (!empty($attachments)) {
+        $attachment_url = get_attachment_link($attachments[0]->ID);
+        if ($attachment_url) {
+            $response = wp_remote_get($attachment_url, array('redirection' => 0));
+            if (!is_wp_error($response)) {
+                $redirected_url = wp_remote_retrieve_header($response, 'location');
+                if (empty($redirected_url)) {
+                    $wputools_errors[] = sprintf('Attachment URL %s is not redirected.', $attachment_url);
+                }
+            }
+        }
+    }
+}
+
+/* ----------------------------------------------------------
   Check public setting
 ---------------------------------------------------------- */
 
@@ -645,6 +670,7 @@ if ((!$is_debug_env || $env_type == 'local') && $search_engines_blocked) {
 if (($is_debug_env && $env_type != 'local') && !$search_engines_blocked) {
     $wputools_errors[] = sprintf('WordPress : Search engines are not blocked while the environment is defined as “%s”.', wp_get_environment_type());
 }
+
 /* ----------------------------------------------------------
   Check posts
 ---------------------------------------------------------- */
