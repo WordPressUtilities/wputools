@@ -473,25 +473,26 @@ if (!$is_https && !$is_test_extension) {
 /* Check redirection
 -------------------------- */
 
-$site_has_www = strpos($site_url, '/www.') !== false;
-$site_before_redirection = $site_has_www ? str_replace('/www.', '/', $site_url) : str_replace('://', '://www.', $site_url);
-$response = wp_remote_get($site_before_redirection, array('redirection' => 0));
-$redirection_ok = false;
-if (!is_wp_error($response)) {
-    $redirected_url = wp_remote_retrieve_header($response, 'location');
-    if ($redirected_url) {
-        if ($site_has_www && strpos($redirected_url, '/www.') !== false) {
-            $redirection_ok = true;
+if ($env_type == 'production') {
+    $site_has_www = strpos($site_url, '/www.') !== false;
+    $site_before_redirection = $site_has_www ? str_replace('/www.', '/', $site_url) : str_replace('://', '://www.', $site_url);
+    $response = wp_remote_get($site_before_redirection, array('redirection' => 0));
+    $redirection_ok = false;
+    if (!is_wp_error($response)) {
+        $redirected_url = wp_remote_retrieve_header($response, 'location');
+        if ($redirected_url) {
+            if ($site_has_www && strpos($redirected_url, '/www.') !== false) {
+                $redirection_ok = true;
+            }
+            if (!$site_has_www && strpos($redirected_url, '/www.') === false) {
+                $redirection_ok = true;
+            }
+        } else {
+            $wputools_errors[] = __('WWW Redirection could not be tested : The location header is missing in the response.');
         }
-        if (!$site_has_www && strpos($redirected_url, '/www.') === false) {
-            $redirection_ok = true;
+        if (!$redirection_ok) {
+            $wputools_errors[] = sprintf('The URL "%s" should redirect to the %s version.', $site_before_redirection, $site_has_www ? 'www' : 'non-www');
         }
-    }
-    else {
-        $wputools_errors[] = __('WWW Redirection could not be tested : The location header is missing in the response.');
-    }
-    if (!$redirection_ok) {
-        $wputools_errors[] = sprintf('The URL "%s" should redirect to the %s version.', $site_before_redirection, $site_has_www ? 'www' : 'non-www');
     }
 }
 
@@ -637,7 +638,7 @@ if (count($admins) > 1) {
 ---------------------------------------------------------- */
 
 /* If no attachment template, the link to an attachment should be redirected */
-if(!is_readable(get_stylesheet_directory().'/attachment.php')) {
+if (!is_readable(get_stylesheet_directory() . '/attachment.php')) {
     $attachments = get_posts(array(
         'post_type' => 'attachment',
         'posts_per_page' => 1,

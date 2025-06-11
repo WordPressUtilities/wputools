@@ -3,6 +3,7 @@
 echo "# HELP";
 
 cat <<EOF
+# Commands
 wputools adminer;         # Open an adminer session.
 wputools anonymizedb;     # Anonymize the database.
 wputools archivelogs;     # Archive old logs.
@@ -37,4 +38,14 @@ wputools wp;              # Execute a WP-CLI Task.
 wputools wpconfig;        # Quick Wizard to generate a wp-config.php file.
 wputools wpuwoo;          # Execute a WPU Woo Import Export Task.
 EOF
+
+
+if [ -d "${_SOURCEDIR}extensions" ] && [ "$(ls -A "${_SOURCEDIR}extensions")" ]; then
+    echo "# Extensions"
+    for dir in "${_SOURCEDIR}extensions"/*/; do
+        if [[ -d "$dir" ]]; then
+            echo "wputools extension-$(basename "$dir"); "
+        fi
+    done
+fi
 

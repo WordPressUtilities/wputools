@@ -15,14 +15,22 @@ _wputools_complete() {
     local _base_wp_dir_plugins="${_base_wp_dir_content}plugins";
     local _list_backup_dir=( "../backups/" "../" "../local-backups/" );
     local _backup_extensions=( ".tar.gz" ".sql" ".sql.gz" );
-    local _WPCLIPATH="$( dirname "${BASH_SOURCE[0]}" )/../wp-cli.phar";
+    local _WPUTOOLS_ROOT_PATH="$( dirname "${BASH_SOURCE[0]}" )/../";
+    local _WPCLIPATH="${_WPUTOOLS_ROOT_PATH}wp-cli.phar";
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
     prev=${COMP_WORDS[COMP_CWORD-1]}
 
     if [ $COMP_CWORD -eq 1 ]; then
-        COMPREPLY=( $(compgen -W "adminer anonymizedb archivelogs backup bduser cache cachewarm clean cleanhack codechecker dbexport dbimport debugfile detecthack diagnostic duplicatemenu generatemenus go importsite login muplugin nginx-convert plugin quickinstall sample sandbox settings self-update src update wp wpconfig wpuwoo" -- $cur) )
+        _reply="";
+        # Load extensions
+        for dir in "${_WPUTOOLS_ROOT_PATH}extensions"/*/; do
+            if [[ -d "$dir" ]]; then
+                _reply+="extension-$(basename "$dir") "
+            fi
+        done
+        COMPREPLY=( $(compgen -W "adminer anonymizedb archivelogs backup bduser cache cachewarm clean cleanhack codechecker dbexport dbimport debugfile detecthack diagnostic duplicatemenu generatemenus go importsite login muplugin nginx-convert plugin quickinstall sample sandbox settings self-update src update wp wpconfig wpuwoo ${_reply}" -- $cur) )
     elif [ $COMP_CWORD -eq 2 ]; then
         case "$prev" in
             "archivelogs")
