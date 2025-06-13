@@ -263,8 +263,16 @@ function wputools__update_core(){
 
 function wputools__update_plugin() {
     local _PLUGIN_ID="${1}";
-    local _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
+    local _MUPLUGIN_DIR_BASE="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}";
+    local _PLUGIN_DIR_BASE="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}";
+    local _PLUGIN_DIR="${_PLUGIN_DIR}/";
     local _PLUGIN_LANG="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
+
+    # Plugin is a file or a mu-plugin
+    if [[ -f "${_PLUGIN_DIR_BASE}.php" || -f "${_MUPLUGIN_DIR_BASE}.php" ]];then
+        bashutilities_message "The plugin \"${_PLUGIN_ID}\" is a file or a mu-plugin" 'error';
+        return;
+    fi;
 
     # Check if plugin dir exists
     if [[ ! -d "${_PLUGIN_DIR}" ]];then
@@ -301,7 +309,7 @@ function wputools__update_plugin() {
 function wputools__update_all_plugins() {
     echo '# Updating WordPress plugins';
     local _plugin_id;
-    for _plugin_id in $(_WPCLICOMMAND plugin list --field=name); do
+    for _plugin_id in $(_WPCLICOMMAND plugin list --field=name --status=active,active-network,inactive); do
        wputools__update_plugin "${_plugin_id}";
     done
 }
