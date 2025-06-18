@@ -695,6 +695,8 @@ $lorem_ipsum_strings = array(
 
 $empty_pages = array();
 $lorem_pages = array();
+$empty_titles = array();
+$invalid_slugs = array();
 foreach ($all_posts as $p) {
     if (empty($p->post_content) && empty($p->post_excerpt)) {
         $empty_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
@@ -706,6 +708,12 @@ foreach ($all_posts as $p) {
             }
         }
     }
+    if (empty($p->post_title)) {
+        $empty_titles[] = get_permalink($p) . ' (' . $p->post_type . ')';
+    }
+    if ($p->post_name == $p->ID || (is_numeric($p->post_name) && $p->post_title && !is_numeric($p->post_title))) {
+        $invalid_slugs[] = get_permalink($p) . ' (' . $p->post_type . ')';
+    }
 }
 
 if (!empty($empty_pages)) {
@@ -714,6 +722,14 @@ if (!empty($empty_pages)) {
 
 if (!empty($lorem_pages)) {
     $wputools_errors[] = sprintf("The following posts contains some lorem ipsum: \n-- %s", implode("\n-- ", $lorem_pages));
+}
+
+if (!empty($empty_titles)) {
+    $wputools_errors[] = sprintf("The following posts don't have any title: \n-- %s", implode("\n-- ", $empty_titles));
+}
+
+if (!empty($invalid_slugs)) {
+    $wputools_errors[] = sprintf("The following posts have an invalid slug: \n-- %s", implode("\n-- ", $invalid_slugs));
 }
 
 /* ----------------------------------------------------------
