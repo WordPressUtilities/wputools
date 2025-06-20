@@ -4,16 +4,13 @@
   Test folders
 ---------------------------------------------------------- */
 
-$folders = array('.', 'wp-content', 'wp-content/uploads');
+$folders = array('.', 'wp-content', 'wp-content/uploads', 'wp-content/cache');
 foreach ($folders as $folder) {
     if (!is_dir($folder)) {
         $wputools_errors[] = sprintf('The %s folder should exist !', $folder);
         continue;
     }
-    $tmp_file = $folder . '/tmp-' . uniqid();
-    $file_creation = file_put_contents($tmp_file, '1');
-    unlink($tmp_file);
-    if (!$file_creation) {
+    if (!is_writable($folder)) {
         $wputools_errors[] = sprintf('The folder %s should be writable !', $folder);
         continue;
     }
@@ -159,7 +156,7 @@ foreach ($chmod_items as $item => $mode) {
     if ($current_mode != $mode) {
         $wputools_errors[] = sprintf('The %s %s should have the %s mode !', $file_type, $item, $mode);
     }
-    if(!is_writable($item)) {
+    if (!is_writable($item)) {
         $wputools_errors[] = sprintf('The %s %s should be writable !', $file_type, $item);
     }
 }

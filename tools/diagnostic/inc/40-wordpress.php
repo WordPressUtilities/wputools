@@ -162,13 +162,29 @@ if (isset($url_parts['host'])) {
 $is_test_extension = $host_extension && in_array($host_extension, $ignored_extensions);
 
 /* ----------------------------------------------------------
-  Htaccess
+  Htaccess : test file
+---------------------------------------------------------- */
+
+$htaccess_file = ABSPATH . '.htaccess';
+if(!is_file($htaccess_file)) {
+    $wputools_errors[] = 'The root .htaccess file is missing !';
+} else {
+    if(!is_writable($htaccess_file)) {
+        $wputools_errors[] = 'The root .htaccess file is not writable !';
+    }
+}
+
+/* ----------------------------------------------------------
+  Htaccess : test directory protection
 ---------------------------------------------------------- */
 
 $temp_dir_name = 'wputools_temp_dir_' . uniqid();
 $wputools_temp_dir = wp_upload_dir()['basedir'] . '/' . $temp_dir_name;
 $wputools_temp_url = wp_upload_dir()['baseurl'] . '/' . $temp_dir_name;
-mkdir($wputools_temp_dir, 0755, true);
+try {
+    mkdir($wputools_temp_dir, 0755, true);
+} catch (Exception $e) {}
+
 if (!is_dir($wputools_temp_dir)) {
     $wputools_errors[] = sprintf('The temporary directory %s could not be created', $wputools_temp_dir);
 } else {
@@ -518,6 +534,11 @@ if (is_array($info) && isset($info['total_time']) && $info['total_time'] > 0.2) 
 function wputools_test_rss_feed($rss_url) {
     global $wputools_errors;
     global $wputools_notices;
+
+    if (!function_exists('libxml_use_internal_errors') || !function_exists('simplexml_load_string')) {
+        $wputools_errors[] = __('The XML extension is not available.');
+        return;
+    }
 
     libxml_use_internal_errors(true);
 
