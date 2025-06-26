@@ -634,7 +634,7 @@ $admins = get_users(array(
 
 /* Check 2FA */
 if (!$is_debug_env) {
-    if (!in_array('two-factor/two-factor.php', get_option('active_plugins'))) {
+    if (!in_array('two-factor/two-factor.php', get_option('active_plugins')) && !is_plugin_active_for_network('two-factor/two-factor.php')) {
         $wputools_errors[] = 'You should have an active 2FA plugin.';
     } else {
         foreach ($admins as $user) {

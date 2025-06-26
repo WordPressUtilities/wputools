@@ -14,8 +14,18 @@ fi;
 ## Flush Rewrite rules
 ###################################
 
-echo '# Flushing Rewrite rules';
-_WPCLICOMMAND rewrite flush --hard;
+_wputools_multisite_urls=$(wputools_get_multisite_urls);
+if ! wputools_is_multisite; then
+    echo '# Flushing Rewrite rules';
+    _WPCLICOMMAND rewrite flush --hard;
+else
+    # Loop through each multisite URL
+    for _wputools_multisite_url in ${_wputools_multisite_urls}; do
+        echo "# Flushing rewrite rules for ${_wputools_multisite_url}";
+        _WPCLICOMMAND --url="${_wputools_multisite_url}" rewrite flush --hard;
+    done
+fi;
+
 
 _cache_type='all';
 if [[ "${1}" != "" ]];then
@@ -79,10 +89,13 @@ cat "${_TOOLSDIR}cache.php" > "${_CURRENT_DIR}${_STATIC_FILE}";
 echo '# Clearing static cache';
 if [[ "${_cache_type}" == 'purge-cli' ]];then
     _cache_type='all';
-    echo '- Launching purge via CLI';
+    echo '## Launching purge via CLI';
     $_PHP_COMMAND "${_STATIC_FILE}";
 else
-    wputools_call_url "${_HOME_URL}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
+    for _wputools_multisite_url in ${_wputools_multisite_urls}; do
+        echo "## Clearing static cache for ${_wputools_multisite_url}";
+        wputools_call_url "${_wputools_multisite_url}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
+    done;
 fi;
 rm "${_CURRENT_DIR}${_STATIC_FILE}";
 
@@ -91,7 +104,11 @@ rm "${_CURRENT_DIR}${_STATIC_FILE}";
 ###################################
 
 echo '# Cache warming';
-wputools_call_url "${_HOME_URL}" > /dev/null;
+
+for _wputools_multisite_url in ${_wputools_multisite_urls}; do
+    echo "## Cache warming for ${_wputools_multisite_url}";
+    wputools_call_url "${_wputools_multisite_url}" > /dev/null;
+done;
 
 # After all
 wputools_execute_file "wputools-cache-after-purge.sh";

@@ -328,14 +328,14 @@ function wputools_is_wp_installed(){
 ## Check if it is a multisite
 ###################################
 
+function wputools_is_multisite(){
+    _WPCLICOMMAND site list --field=url >/dev/null 2>&1
+}
+
 function wputools_select_multisite(){
-    local wputools_wp_config_path=$(wputools__get_wp_config_path);
-    if ! grep -q "SITE_ID_CURRENT_SITE" "${wputools_wp_config_path}"; then
+    if ! wputools_is_multisite; then
         return;
-    fi;
-    if [[ $(_WPCLICOMMAND config get SITE_ID_CURRENT_SITE) == "" ]];then
-        return;
-    fi;
+    fi
     # List all sites home URLs
     echo "Multiple sites detected. Please choose one site to continue:"
     local _wputools_sites=($(_WPCLICOMMAND site list --field=url))
@@ -347,4 +347,13 @@ function wputools_select_multisite(){
             echo "Invalid site. Please try again.";
         fi
     done
+}
+
+function wputools_get_multisite_urls(){
+    if ! wputools_is_multisite; then
+        echo "${_HOME_URL}";
+        return;
+    fi
+    _wputools_multisite_urls=$(_WPCLICOMMAND site list --field=url);
+    echo "${_wputools_multisite_urls}";
 }
