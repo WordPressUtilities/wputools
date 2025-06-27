@@ -26,9 +26,18 @@ fi;
 ## Initial datas
 ###################################
 
+_WPUDIAG_SITE='';
 _WPUDIAG_BRANCH_NAME='';
 if [[ -d "${_CURRENT_DIR}.git" ]];then
     _WPUDIAG_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD);
+fi;
+if [[ -n "${2}" ]]; then
+    _WPUDIAG_SITE="${2}";
+    _WPUDIAG_SITES=$(_WPCLICOMMAND site list --field=domain);
+    if ! echo "$_WPUDIAG_SITES" | grep -qx "${_WPUDIAG_SITE}"; then
+        bashutilities_message "Site does not exist: ${_WPUDIAG_SITE}" "error";
+        return 1;
+    fi;
 fi;
 
 _WPUDIAG_FILE=$(wputools_create_random_file "diagnostic");
@@ -36,6 +45,7 @@ echo "<?php" > "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 echo "\$wpudiag_file='${_WPUDIAG_FILE}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 echo "\$wpudiag_branch_name='${_WPUDIAG_BRANCH_NAME}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 echo "\$wpudiag_path='${_CURRENT_DIR}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
+echo "\$wpudiag_site='${_WPUDIAG_SITE}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 echo "include '${_TOOLSDIR}diagnostic/header.php';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
 
 ###################################

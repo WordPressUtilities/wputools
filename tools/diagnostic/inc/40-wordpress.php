@@ -25,6 +25,17 @@ $_SERVER['PHP_SELF'] = '/wp-admin/index.php';
 /* Include wp load */
 require_once $bootstrap;
 
+/* Load a site */
+if ($wpudiag_site) {
+    $site = get_site_by_path($wpudiag_site, '/');
+    if ($site) {
+        switch_to_blog($site->blog_id);
+    } else {
+        $wputools_errors[] = sprintf('The site "%s" does not exist.', $wpudiag_site);
+        return;
+    }
+}
+
 /* ----------------------------------------------------------
   Initial checks
 ---------------------------------------------------------- */
@@ -166,10 +177,10 @@ $is_test_extension = $host_extension && in_array($host_extension, $ignored_exten
 ---------------------------------------------------------- */
 
 $htaccess_file = ABSPATH . '.htaccess';
-if(!is_file($htaccess_file)) {
+if (!is_file($htaccess_file)) {
     $wputools_errors[] = 'The root .htaccess file is missing !';
 } else {
-    if(!is_writable($htaccess_file)) {
+    if (!is_writable($htaccess_file)) {
         $wputools_errors[] = 'The root .htaccess file is not writable !';
     }
 }
