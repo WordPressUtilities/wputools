@@ -769,7 +769,7 @@ if (!empty($invalid_slugs)) {
 ---------------------------------------------------------- */
 
 $all_image_sizes = get_intermediate_image_sizes();
-$max_nb_image_sizes = 7;
+$max_nb_image_sizes = (defined('WPUTOOLS_MAX_IMAGE_SIZES') && is_numeric(WPUTOOLS_MAX_IMAGE_SIZES)) ? WPUTOOLS_MAX_IMAGE_SIZES : 7;
 $nb_all_image_sizes = count($all_image_sizes);
 if ($nb_all_image_sizes > $max_nb_image_sizes) {
     $additional_wp_sizes = wp_get_additional_image_sizes();

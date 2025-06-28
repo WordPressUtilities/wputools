@@ -143,6 +143,7 @@ $chmod_items = array(
     '.htaccess' => '644',
     'wp-config.php' => '644',
     'wp-content' => '755',
+    'wp-content/cache' => '755',
     'wp-content/uploads' => '755',
     'wp-content/uploads/' . date('Y') => '755'
 );
