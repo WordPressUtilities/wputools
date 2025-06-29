@@ -717,6 +717,7 @@ if (isset($post_types['nav_menu_item'])) {
 $all_posts = get_posts(array(
     'posts_per_page' => 100,
     'post_status' => 'publish',
+    'lang' => '', // Get posts in all languages
     'post_type' => $post_types
 ));
 
@@ -725,10 +726,30 @@ $lorem_ipsum_strings = array(
     'needs dreamers and the world'
 );
 
+$url_languages = array();
+$default_language = false;
+$default_home_url = false;
+if (function_exists('pll_languages_list') && function_exists('pll_home_url') && function_exists('pll_default_language')) {
+    $languages = pll_languages_list(array(
+        'hide_empty' => false,
+        'fields' => 'slug'
+    ));
+
+    $default_language = pll_default_language();
+    foreach ($languages as $lang) {
+        if ($lang == $default_language) {
+            continue;
+        }
+        $url_languages[$lang] = pll_home_url($lang);
+    }
+    $default_home_url = pll_home_url($default_language);
+}
+
 $empty_pages = array();
 $lorem_pages = array();
 $empty_titles = array();
 $invalid_slugs = array();
+$invalid_languages = array();
 foreach ($all_posts as $p) {
     if (empty($p->post_content) && empty($p->post_excerpt)) {
         $empty_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
@@ -746,6 +767,41 @@ foreach ($all_posts as $p) {
     if ($p->post_name == $p->ID || (is_numeric($p->post_name) && $p->post_title && !is_numeric($p->post_title))) {
         $invalid_slugs[] = get_permalink($p) . ' (' . $p->post_type . ')';
     }
+
+    $post_lang = false;
+    if (function_exists('pll_get_post_language') && !empty($url_languages)) {
+        $post_lang = pll_get_post_language($p->ID);
+    }
+
+    if ($post_lang && isset($url_languages[$post_lang])) {
+        if ($post_lang == $default_language) {
+            /* Post lang has the default lang : check links containing another url*/
+            foreach ($url_languages as $lang_code => $lang_url) {
+                if (strpos($p->post_content, $lang_url) !== false) {
+                    $invalid_languages[] = get_permalink($p) . ' (' . $p->post_type . ') links to ' . $lang_url;
+                }
+            }
+        } else if ($post_lang != $default_language && strpos($p->post_content, $default_home_url) !== false && !strpos($p->post_content, $url_languages[$post_lang])) {
+            /* Not the default lang : find all links containing the default home url but not the current lang */
+            $urls_with_default_home = array();
+            preg_match_all('/https?:\/\/[^\s"\']+/', $p->post_content, $matches);
+            foreach ($matches[0] as $url) {
+                /* Exclude invalid links */
+                if (strpos($url, $default_home_url) === false || strpos($url, 'wp-') !== false) {
+                    continue;
+                }
+                /* Links not containing the current language */
+                if (strpos($url, $url_languages[$post_lang]) === false) {
+                    $urls_with_default_home[] = $url;
+                }
+            }
+            if (!empty($urls_with_default_home)) {
+                $tab_url = "\n---- ";
+                $invalid_languages[] = get_permalink($p) . ' (' . $p->post_type . ') contains links to posts to a wrong language: ' . $tab_url . implode($tab_url, $urls_with_default_home);
+            }
+        }
+    }
+
 }
 
 if (!empty($empty_pages)) {
@@ -762,6 +818,10 @@ if (!empty($empty_titles)) {
 
 if (!empty($invalid_slugs)) {
     $wputools_errors[] = sprintf("The following posts have an invalid slug: \n-- %s", implode("\n-- ", $invalid_slugs));
+}
+
+if (!empty($invalid_languages)) {
+    $wputools_errors[] = sprintf("The following posts have a link to a post in another language: \n-- %s", implode("\n-- ", $invalid_languages));
 }
 
 /* ----------------------------------------------------------
