@@ -25,6 +25,7 @@ unset -f wputools__get_db_user;
 unset -f wputools__get_wp_config_path;
 unset -f wputools__muplugin;
 unset -f wputools__nginx_convert;
+unset -f wputools__optimize_image;
 unset -f wputools__plugin;
 unset -f wputools__sample_wptest;
 unset -f wputools__sandbox;

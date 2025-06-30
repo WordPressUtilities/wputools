@@ -26,6 +26,7 @@ wputools generatemenus;   # Generate default menus.
 wputools importsite;      # Import a distant website.
 wputools muplugin;        # Install a WordPressUtilities mu-plugin.
 wputools nginx-convert;   # Convert some htaccess rules to nginx
+wputools optimizeimage;   # Optimize an image using TinyPNG.
 wputools plugin;          # Install a WordPressUtilities plugin.
 wputools quickinstall;    # Quick WordPress Install.
 wputools sample;          # Insert sample posts & images.
