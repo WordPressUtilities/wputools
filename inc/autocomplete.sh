@@ -68,6 +68,10 @@ _wputools_complete() {
             "muplugin")
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_MUPLUGIN_LIST}" "${_WPUTOOLS_PLUGIN_LIST}" )" -- $cur) )
             ;;
+            "optimizeimage")
+                _reply=$(ls -1 . 2>/dev/null | grep -E '\.(jpg|jpeg|png|gif|webp)$')
+                COMPREPLY=( $(compgen -W "${_reply}" -- $cur) )
+            ;;
             "plugin")
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_PLUGIN_LIST}" "${_WPUTOOLS_PLUGIN_FAV_LIST}")" -- $cur) )
             ;;
