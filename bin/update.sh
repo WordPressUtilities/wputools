@@ -164,6 +164,30 @@ if [[ "$1" == "" ]];then
 fi;
 
 ###################################
+## Check if Polylang Pro license is available
+###################################
+
+
+function wputools__check_polylang_pro_install(){
+    if [[ ! -f "${_CURRENT_DIR}wp-content/plugins/polylang-pro/polylang.php" ]];then
+        return 0;
+    fi;
+
+    local _license_opt=$(_WPCLICOMMAND option --quiet get polylang_licenses 2> /dev/null);
+    if [[ "${_license_opt}" != "" ]];then
+        return 0;
+    fi;
+
+    bashutilities_message "You seem to have installed Polylang Pro, but no license is defined." "error";
+}
+
+
+if [[ "$1" == "" ]];then
+    wputools__check_polylang_pro_install;
+fi;
+
+
+###################################
 ## Initial checks
 ###################################
 
@@ -310,19 +334,19 @@ function wputools__update_all_plugins() {
     echo '# Updating WordPress plugins';
     local _plugin_id;
     for _plugin_id in $(_WPCLICOMMAND plugin list --field=name --status=active,active-network,inactive); do
-       wputools__update_plugin "${_plugin_id}";
+        wputools__update_plugin "${_plugin_id}";
     done
 }
 
 function wputools__update_all_submodules() {
-   echo '# Updating submodules';
-   git submodule foreach 'git fetch; git checkout master; git checkout main; git pull origin';
+    echo '# Updating submodules';
+    git submodule foreach 'git fetch; git checkout master; git checkout main; git pull origin';
 
-   # Update
-   commit_without_protect "Update Submodules";
+    # Update
+    commit_without_protect "Update Submodules";
 
-   # Fix sub-sub-modules behavior.
-   git submodule update --init --recursive;
+    # Fix sub-sub-modules behavior.
+    git submodule update --init --recursive;
 }
 
 function wputools__update_all_themes() {
@@ -349,8 +373,11 @@ function wputools__update_all_features() {
 _PLUGIN_ID="$1";
 if [[ "${1}" == 'core' ]];then
     wputools__update_core;
+elif [[ "${1}" == 'pll-pro' ]];then
+    wputools__check_polylang_pro_install;
 elif [[ "${1}" == 'all-plugins' ]];then
     wputools__check_acf_pro_install;
+    wputools__check_polylang_pro_install;
     wputools__update_all_plugins;
 elif [[ "${1}" == 'all-features' ]];then
     wputools__update_all_features;
@@ -361,6 +388,7 @@ elif [[ ! -z "${_PLUGIN_ID}" ]];then
 else
 
     wputools__check_acf_pro_install;
+    wputools__check_polylang_pro_install;
 
     ###################################
     ## CORE
