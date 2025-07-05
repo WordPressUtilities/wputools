@@ -12,6 +12,7 @@ unset -f run_test_after;
 unset -f run_test_after_regenerate;
 unset -f run_test_before;
 unset -f wputools__check_acf_pro_install;
+unset -f wputools__check_polylang_pro_install;
 unset -f wputools__debug_display_file;
 unset -f wputools__delete_old_files;
 unset -f wputools__duplicate_menu;
