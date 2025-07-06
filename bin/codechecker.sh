@@ -17,6 +17,12 @@ function _wputools_code_checker__dir_contains(){
 # Detect common errors
 function _wputools_code_checker_common_tests(){
     echo "# Checking '${1}'";
+
+    if [[ ! -d "${1}" ]];then
+        echo "Directory not found: ${1}";
+        return 0;
+    fi;
+
     # Not Clean
     _wputools_code_checker__dir_contains "><?php" "${1}";
     _wputools_code_checker__dir_contains "lorem" "${1}";
@@ -58,9 +64,6 @@ function _wputools_code_checker_theme(){
 function _wputools_code_checker_muplugins(){
     local _theme_name=$(_WPCLICOMMAND option get stylesheet);
     local _muplugins_dir="./wp-content/mu-plugins/${_theme_name}";
-    if [[ ! -d "${_muplugins_dir}" ]];then
-        return 0;
-    fi;
     _wputools_code_checker_common_tests "${_muplugins_dir}";
 }
 
