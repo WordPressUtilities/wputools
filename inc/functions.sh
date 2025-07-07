@@ -338,7 +338,7 @@ function wputools_select_multisite(){
     fi
     # List all sites home URLs
     echo "Multiple sites detected. Please choose one site to continue:"
-    local _wputools_sites=($(_WPCLICOMMAND site list --field=url))
+    local _wputools_sites=($(wputools_get_multisite_urls))
     select _wputools_site in "${_wputools_sites[@]}"; do
         if [[ -n "$_wputools_site" ]]; then
             _HOME_URL="$_wputools_site"
@@ -354,6 +354,7 @@ function wputools_get_multisite_urls(){
         echo "${_HOME_URL}";
         return;
     fi
-    _wputools_multisite_urls=$(_WPCLICOMMAND site list --field=url);
+    _wputools_multisite_urls=$(_WPCLICOMMAND site list --fields=url,archived --format=csv | grep ',0$');
+    _wputools_multisite_urls=$(echo "${_wputools_multisite_urls}" | sed 's/,0$//' | tr -d '\r' | tr '\n' ' ');
     echo "${_wputools_multisite_urls}";
 }
