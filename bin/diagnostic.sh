@@ -41,12 +41,23 @@ if [[ -n "${2}" ]]; then
 fi;
 
 _WPUDIAG_FILE=$(wputools_create_random_file "diagnostic");
-echo "<?php" > "${_CURRENT_DIR}${_WPUDIAG_FILE}";
-echo "\$wpudiag_file='${_WPUDIAG_FILE}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
-echo "\$wpudiag_branch_name='${_WPUDIAG_BRANCH_NAME}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
-echo "\$wpudiag_path='${_CURRENT_DIR}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
-echo "\$wpudiag_site='${_WPUDIAG_SITE}';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
-echo "include '${_TOOLSDIR}diagnostic/header.php';" >> "${_CURRENT_DIR}${_WPUDIAG_FILE}";
+
+cat <<EOF >> "${_CURRENT_DIR}${_WPUDIAG_FILE}"
+<?php
+
+\$wpudiag_file = '${_WPUDIAG_FILE}';
+\$wpudiag_branch_name = '${_WPUDIAG_BRANCH_NAME}';
+\$wpudiag_path = '${_CURRENT_DIR}';
+\$wpudiag_site = '${_WPUDIAG_SITE}';
+
+if (filemtime(__FILE__) < time() - 120) {
+    http_response_code(410);
+    die('This file has expired.');
+}
+
+include '${_TOOLSDIR}diagnostic/header.php';
+
+EOF
 
 ###################################
 ## Launch
