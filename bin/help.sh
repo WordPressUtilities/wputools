@@ -31,6 +31,7 @@ wputools plugin;          # Install a WordPressUtilities plugin.
 wputools quickinstall;    # Quick WordPress Install.
 wputools sample;          # Insert sample posts & images.
 wputools sandbox;         # Create a WordPress sandbox.
+wputools search;          # Search content in the database.
 wputools self-update;     # Update this tool.
 wputools settings;        # Create an override settings file.
 wputools src;             # Go to this tool source.

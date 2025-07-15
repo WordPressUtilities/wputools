@@ -152,6 +152,10 @@ Add CLI shortcut :
 
 `wputools sandbox;`
 
+### Search content in the database.
+
+`wputools search;`
+
 ### Go to this tool source.
 
 `wputools src;`

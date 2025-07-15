@@ -30,6 +30,7 @@ unset -f wputools__optimize_image;
 unset -f wputools__plugin;
 unset -f wputools__sample_wptest;
 unset -f wputools__sandbox;
+unset -f wputools__search;
 unset -f wputools__update_all_features;
 unset -f wputools__update_all_plugins;
 unset -f wputools__update_all_submodules;
