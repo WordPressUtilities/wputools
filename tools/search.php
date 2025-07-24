@@ -26,7 +26,7 @@ if (empty($_GET) || !isset($_GET['s'])) {
 }
 
 global $wpdb;
-$search = sanitize_text_field($_GET['s']);
+$search = sanitize_text_field(trim($_GET['s']));
 $search_q = "'%" . $wpdb->esc_like($search) . "%'";
 $post_results = array();
 

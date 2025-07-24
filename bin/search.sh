@@ -12,7 +12,8 @@ function wputools__search(){
 
     # Use first argument as search term if no other arguments are provided
     if [[ -z "${_ARGS}" && -n "${1}" ]]; then
-        _ARGS="s=${1}";
+        _ARGS="s=${*}";
+        _ARGS=${_ARGS// /+};  # Replace spaces with plus signs
     fi;
 
     # Stop if no arguments provided
