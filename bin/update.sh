@@ -62,6 +62,20 @@ if [[ "${_has_core_updated_lock}" != "" || "${_has_auto_updated_lock}" != "" ]];
     return;
 fi;
 
+
+_WP_DISALLOW_FILE_EDIT=$(_WPCLICOMMAND config has DISALLOW_FILE_EDIT && _WPCLICOMMAND config get DISALLOW_FILE_EDIT);
+_WP_DISALLOW_FILE_MODS=$(_WPCLICOMMAND config has DISALLOW_FILE_MODS && _WPCLICOMMAND config get DISALLOW_FILE_MODS);
+if [[ "${_WP_DISALLOW_FILE_EDIT}" == '1' || "${_WP_DISALLOW_FILE_MODS}" == '1' ]];then
+    bashutilities_message "Error : You can't update when file edits are disabled" 'error';
+    if [[ "${_WP_DISALLOW_FILE_EDIT}" == '1' ]];then
+        echo "Please disable DISALLOW_FILE_EDIT in the wp-config file.";
+    fi;
+    if [[ "${_WP_DISALLOW_FILE_MODS}" == '1' ]];then
+        echo "Please disable DISALLOW_FILE_MODS in the wp-config file.";
+    fi;
+    return;
+fi;
+
 # Check online status
 if [[ "$(wputools_is_online)" == '0' ]];then
     bashutilities_message "Error : You can't update when offline" 'error';

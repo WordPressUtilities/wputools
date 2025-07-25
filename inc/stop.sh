@@ -109,6 +109,8 @@ unset -v _tmp_dump;
 unset -v _tmp_folder;
 unset -v _TMPLINE;
 unset -v _WP_PROJECT_ENV;
+unset -v _WP_DISALLOW_FILE_EDIT;
+unset -v _WP_DISALLOW_FILE_MODS;
 unset -v _WPDB_BACKUP_LOCAL_DIR;
 unset -v _WPDB_REPLACE_AFTER;
 unset -v _WPDB_REPLACE_BEFORE;
