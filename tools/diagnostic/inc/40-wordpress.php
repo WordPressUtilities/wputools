@@ -551,7 +551,7 @@ function wputools_test_rss_feed($rss_url) {
         return;
     }
 
-    if (!ini_get('allow_url_fopen')) {
+    if (!filter_var(ini_get('allow_url_fopen'), FILTER_VALIDATE_BOOLEAN)) {
         $wputools_errors[] = __('The PHP setting allow_url_fopen is disabled. RSS fetching may fail.');
         return;
     }
