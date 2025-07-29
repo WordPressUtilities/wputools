@@ -34,7 +34,7 @@ wputools_select_multisite;
 
 # Open in a new window if it exists
 _WPUTOOLS_TEXT_MESSAGE="Please follow the link below";
-if [[ -f "/usr/bin/open" ]];then
+if wputools_has_browser_available;then
     _WPUTOOLS_TEXT_MESSAGE="${_WPUTOOLS_TEXT_MESSAGE} or go to the opened browser window";
     /usr/bin/open "${_HOME_URL}/${_BD_FILE}";
 fi

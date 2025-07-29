@@ -32,7 +32,7 @@ fi;
 # Open in a new window if it exists
 _WPUTOOLS_TEXT_MESSAGE="Please follow the link below";
 
-if [[ -f "/usr/bin/open" ]];then
+if wputools_has_browser_available;then
     if [[ "${_WPUADM_URL}" == http:* ]]; then
         bashutilities_message "Adminer is being served over HTTP. Automatic opening is disabled." 'warning';
     else

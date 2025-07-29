@@ -20,6 +20,7 @@ function wputools__debug_display_file() {
         return;
     fi;
     bashutilities_message "Start displaying debug file log from ${_debug_file_filename}" 'success';
+    . "${_SOURCEDIR}inc/stop.sh";
     tail -f "${_debug_file}";
 }
 wputools__debug_display_file;

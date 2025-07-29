@@ -358,3 +358,16 @@ function wputools_get_multisite_urls(){
     _wputools_multisite_urls=$(echo "${_wputools_multisite_urls}" | sed 's/,0$//' | tr -d '\r' | tr '\n' ' ');
     echo "${_wputools_multisite_urls}";
 }
+
+function wputools_has_browser_available(){
+    if [[ ! -f "/usr/bin/open" ]];then
+        return 1;
+    fi;
+
+    # Check for GUI session
+    if [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ] || [[ "$OSTYPE" == "darwin"* ]]; then
+        return 0;
+    fi
+
+    return 1;
+}
