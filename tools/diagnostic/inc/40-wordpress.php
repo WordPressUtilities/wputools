@@ -186,6 +186,34 @@ if (!is_file($htaccess_file)) {
 }
 
 /* ----------------------------------------------------------
+  Test if there is a case sensitive config
+---------------------------------------------------------- */
+
+$wputools_temp_file = wp_upload_dir()['basedir'] . '/wputools_TEMP_file_' . uniqid() . '.txt';
+$wputools_temp_file_lower = strtolower($wputools_temp_file);
+
+try {
+    file_put_contents($wputools_temp_file, 'file');
+} catch (Exception $e) {
+    $wputools_errors[] = 'Failed to create case sensitive test file.';
+}
+
+if (!file_exists($wputools_temp_file)) {
+    $wputools_errors[] = 'Failed to create case sensitive test file.';
+}
+
+if (is_readable($wputools_temp_file_lower)) {
+    $wputools_notices[] = 'The file ' . basename($wputools_temp_file_lower) . ' is readable, which means the filesystem is case insensitive.';
+} else {
+    $wputools_errors[] = 'The file ' . basename($wputools_temp_file_lower) . ' is not readable, which means the filesystem is case sensitive.';
+}
+
+/* Clean up the temporary file */
+if (file_exists($wputools_temp_file)) {
+    unlink($wputools_temp_file);
+}
+
+/* ----------------------------------------------------------
   Htaccess : test directory protection
 ---------------------------------------------------------- */
 
@@ -194,7 +222,9 @@ $wputools_temp_dir = wp_upload_dir()['basedir'] . '/' . $temp_dir_name;
 $wputools_temp_url = wp_upload_dir()['baseurl'] . '/' . $temp_dir_name;
 try {
     mkdir($wputools_temp_dir, 0755, true);
-} catch (Exception $e) {}
+} catch (Exception $e) {
+    $wputools_errors[] = sprintf('The temporary directory %s could not be created', $wputools_temp_dir);
+}
 
 if (!is_dir($wputools_temp_dir)) {
     $wputools_errors[] = sprintf('The temporary directory %s could not be created', $wputools_temp_dir);
