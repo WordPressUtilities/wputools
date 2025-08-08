@@ -20,6 +20,9 @@ foreach ($included_files as $included_file) {
     include $included_file;
 }
 
+$wputools_errors = apply_filters('wputools_diagnostic_errors', $wputools_errors);
+$wputools_notices = apply_filters('wputools_diagnostic_notices', $wputools_notices);
+
 /* ----------------------------------------------------------
   Display success or errors
 ---------------------------------------------------------- */

@@ -693,11 +693,12 @@ if (!$is_debug_env) {
 }
 
 /* Check user name */
-if (count($admins) > 1) {
+$max_nb_admins = (defined('WPUTOOLS_MAX_ADMIN_USERS_COUNT') && is_numeric(WPUTOOLS_MAX_ADMIN_USERS_COUNT)) ? WPUTOOLS_MAX_ADMIN_USERS_COUNT : 1;
+if (count($admins) > $max_nb_admins) {
     $admins = array_map(function ($c) {
         return $c->user_nicename;
     }, $admins);
-    $wputools_errors[] = sprintf('You should not have more than one administrator. List of admins: “%s”.', implode('”, “', $admins));
+    $wputools_errors[] = sprintf('You should not have more than %d administrator(s). List of admins: “%s”.', $max_nb_admins, implode('”, “', $admins));
 }
 
 /* ----------------------------------------------------------
