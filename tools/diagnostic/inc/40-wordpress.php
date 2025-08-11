@@ -469,6 +469,7 @@ if ($env_type == 'local' && !is_file($local_override_file)) {
 
 $uris = array(
     '/.git/config',
+    '/wp-sitemap-users-1.xml',
     '/wp-json/wp/v2/users',
     '/wp-json/wp/v2/pages',
     '/wp-admin/index.php',
