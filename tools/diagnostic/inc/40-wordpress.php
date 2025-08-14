@@ -205,7 +205,7 @@ if (!file_exists($wputools_temp_file)) {
 if (is_readable($wputools_temp_file_lower)) {
     $wputools_notices[] = 'The file ' . basename($wputools_temp_file_lower) . ' is readable, which means the filesystem is case insensitive.';
 } else {
-    $wputools_errors[] = 'The file ' . basename($wputools_temp_file_lower) . ' is not readable, which means the filesystem is case sensitive.';
+    $wputools_notices[] = 'The file ' . basename($wputools_temp_file_lower) . ' is not readable, which means the filesystem is case sensitive.';
 }
 
 /* Clean up the temporary file */
@@ -319,6 +319,12 @@ if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
             $log_content = file_get_contents($log_file);
             if (strpos($log_content, $log_test_value) === false) {
                 $wputools_errors[] = 'WordPress : The log file is not correctly written.';
+            } else {
+                $log_lines = explode("\n", $log_content);
+                $filtered_lines = array_filter($log_lines, function ($line) use ($log_test_value) {
+                    return strpos($line, $log_test_value) === false;
+                });
+                file_put_contents($log_file, implode("\n", $filtered_lines));
             }
         }
 
@@ -760,6 +766,7 @@ $all_posts = get_posts(array(
 
 $lorem_ipsum_strings = array(
     'lorem ipsum',
+    'consectetur adipiscing elit',
     'needs dreamers and the world'
 );
 
@@ -794,7 +801,7 @@ foreach ($all_posts as $p) {
     if (!empty($p->post_content)) {
         foreach ($lorem_ipsum_strings as $lorem_ipsum_string) {
             if (strpos($p->post_content, $lorem_ipsum_string) !== false) {
-                $lorem_pages[] = get_permalink($p) . ' (' . $p->post_type . ')';
+                $lorem_pages[] = get_permalink($p) . ' (' . $p->post_type . ') : ' . $lorem_ipsum_string;
             }
         }
     }
