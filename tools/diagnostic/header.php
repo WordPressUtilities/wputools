@@ -10,6 +10,19 @@ $wputools_is_public = $wputools_is_cli || isset($_GET['from_cli']) || (strpos($w
 $wputools_errors = array();
 $wputools_notices = array();
 
+$wpudiag_args = array();
+if (isset($wpudiag_args_raw) && $wpudiag_args_raw) {
+    parse_str($wpudiag_args_raw, $wpudiag_args);
+}
+
+$wpudiag_args = array_merge(array(
+    'show_errors' => 1,
+    'show_notices' => 1
+), $wpudiag_args);
+
+$wpudiag_args['show_errors'] = intval($wpudiag_args['show_errors']);
+$wpudiag_args['show_notices'] = intval($wpudiag_args['show_notices']);
+
 /* ----------------------------------------------------------
   Load tests
 ---------------------------------------------------------- */
@@ -33,11 +46,15 @@ if (!$wputools_is_public) {
 if (empty($wputools_errors) && empty($wputools_notices)) {
     echo "No errors !";
 } else {
-    foreach ($wputools_errors as $error) {
-        echo($wputools_is_cli ? ("\033[31m- " . $error . "\033[0m") : $error) . "\n"; // Red color for errors
+    if ($wpudiag_args['show_errors']) {
+        foreach ($wputools_errors as $error) {
+            echo($wputools_is_cli ? ("\033[31m- " . $error . "\033[0m") : $error) . "\n"; // Red color for errors
+        }
     }
-    foreach ($wputools_notices as $notice) {
-        echo($wputools_is_cli ? ("\033[33m- " . $notice . "\033[0m") : $notice) . "\n"; // Yellow color for notices
+    if ($wpudiag_args['show_notices']) {
+        foreach ($wputools_notices as $notice) {
+            echo($wputools_is_cli ? ("\033[33m- " . $notice . "\033[0m") : $notice) . "\n"; // Yellow color for notices
+        }
     }
 }
 if (!$wputools_is_public) {

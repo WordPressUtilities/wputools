@@ -31,7 +31,7 @@ _WPUDIAG_BRANCH_NAME='';
 if [[ -d "${_CURRENT_DIR}.git" ]];then
     _WPUDIAG_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD);
 fi;
-if [[ -n "${2}" ]]; then
+if [[ -n "${2}" && "${2:0:2}" != "--" ]]; then
     _WPUDIAG_SITE="${2}";
     _WPUDIAG_SITES=$(_WPCLICOMMAND site list --field=domain);
     if ! echo "$_WPUDIAG_SITES" | grep -qx "${_WPUDIAG_SITE}"; then
@@ -41,6 +41,7 @@ if [[ -n "${2}" ]]; then
 fi;
 
 _WPUDIAG_FILE=$(wputools_create_random_file "diagnostic");
+_WPUDIAG_ARGS=$(wputools_convert_args_to_url "$@");
 
 cat <<EOF >> "${_CURRENT_DIR}${_WPUDIAG_FILE}"
 <?php
@@ -49,6 +50,7 @@ cat <<EOF >> "${_CURRENT_DIR}${_WPUDIAG_FILE}"
 \$wpudiag_branch_name = '${_WPUDIAG_BRANCH_NAME}';
 \$wpudiag_path = '${_CURRENT_DIR}';
 \$wpudiag_site = '${_WPUDIAG_SITE}';
+\$wpudiag_args_raw = '${_WPUDIAG_ARGS}';
 
 if (filemtime(__FILE__) < time() - 120) {
     http_response_code(410);

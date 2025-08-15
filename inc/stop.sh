@@ -128,6 +128,7 @@ unset -v _WPUADM_URL;
 unset -v _WPPLUGINSTMPLIST;
 unset -v _WPPLUGINSTMPCOUNT;
 unset -v _WPPLUGINSTMPLISTSIZE;
+unset -v _WPUDIAG_ARGS;
 unset -v _WPUDIAG_BRANCH_NAME;
 unset -v _WPUDIAG_FILE;
 unset -v _WPUDIAG_SITE;
