@@ -288,7 +288,21 @@ function wputools_is_online(){
         echo "1";
         return;
     fi;
-    ping -q -c 1 1.1.1.1 &>/dev/null && echo "1" || echo "0";
+
+    # Successful ping
+    if ping -q -c 1 1.1.1.1 &>/dev/null; then
+        echo "1";
+        return;
+    fi
+
+    # Github is reachable
+    if curl -Is https://raw.githubusercontent.com/ >/dev/null 2>&1; then
+        echo "1";
+        return;
+    fi
+
+    echo "0";
+
 }
 
 ###################################
