@@ -7,7 +7,7 @@ echo "# CODE CHECKER";
 ###################################
 
 function _wputools_code_checker__dir_contains(){
-    local _test_lorem=$(grep -Ril --exclude-dir=node_modules "${1}" "${2}" | xargs ls);
+    local _test_lorem=$(grep -Ril --exclude-dir=node_modules --exclude-dir=vendor "${1}" "${2}" | xargs ls);
     echo "-> Searching files containing “${1}”";
     if [[ "${_test_lorem}" != "" ]];then
         printf "%b" "\e[1;31mThese files contains ${1} :\n${_test_lorem}\e[0m\n";
@@ -36,6 +36,16 @@ function _wputools_code_checker_common_tests(){
     _wputools_code_checker__dir_contains "echo get_sub_field" "${1}";
     _wputools_code_checker__dir_contains "echo get_field" "${1}";
     _wputools_code_checker__dir_contains "the_field" "${1}";
+
+
+    local _METHODS=("GET" "POST");
+    local _method;
+    for _method in "${_METHODS[@]}"; do
+        _wputools_code_checker__dir_contains "= \$_${_method}" "${1}";
+        _wputools_code_checker__dir_contains "\. \$_${_method}" "${1}";
+        _wputools_code_checker__dir_contains "\.\$_${_method}" "${1}";
+        _wputools_code_checker__dir_contains "echo \$_${_method}" "${1}";
+    done
 
     # Should not be called
     _wputools_code_checker__dir_contains "wp_footer(" "${1}";

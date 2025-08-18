@@ -40,5 +40,5 @@ else if (version_compare($phpversion, '8.2', '<')) {
 /** Check if crontab binary exists */
 $crontab_bin = '/usr/bin/crontab';
 if (!file_exists($crontab_bin)) {
-    $wputools_errors[] = sprintf('The crontab binary was not found at %s', $crontab_bin);
+    $wputoolsnotices[] = sprintf('The crontab binary was not found at %s', $crontab_bin);
 }
