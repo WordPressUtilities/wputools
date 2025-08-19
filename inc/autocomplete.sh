@@ -45,6 +45,9 @@ _wputools_complete() {
             "cache")
                 COMPREPLY=( $(compgen -W "all opcache wprocket w3tc transient fvm object url purge-cli" -- $cur) )
             ;;
+            "codechecker")
+                COMPREPLY=( $(compgen -W "all current muplugins theme" -- $cur) )
+            ;;
             "diagnostic")
                 COMPREPLY=( $(compgen -W "code-profiler cli now view web" -- $cur) )
             ;;

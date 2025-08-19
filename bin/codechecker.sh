@@ -7,7 +7,7 @@ echo "# CODE CHECKER";
 ###################################
 
 function _wputools_code_checker__dir_contains(){
-    local _test_lorem=$(grep -Ril --exclude-dir=node_modules --exclude-dir=vendor "${1}" "${2}" | xargs ls);
+    local _test_lorem=$(grep -Ril --exclude-dir=node_modules --exclude-dir=wpu --exclude-dir=WPUTheme --exclude-dir=vendor "${1}" "${2}" | xargs ls);
     echo "-> Searching files containing “${1}”";
     if [[ "${_test_lorem}" != "" ]];then
         printf "%b" "\e[1;31mThese files contains ${1} :\n${_test_lorem}\e[0m\n";
@@ -65,18 +65,22 @@ function _wputools_code_checker_common_tests(){
 
 function _wputools_code_checker_theme(){
     local _theme_path=$(_WPCLICOMMAND theme path);
-    local _theme_name=$(_WPCLICOMMAND option get stylesheet);
-    local _theme_dir="${_theme_path}/${_theme_name}";
-    _theme_dir="${_theme_dir/"$(pwd)"/.}";
-    _wputools_code_checker_common_tests "${_theme_dir}";
+    _theme_path="${_theme_path/"$(pwd)"/.}";
+    _wputools_code_checker_common_tests "${_theme_path}";
 }
 
 function _wputools_code_checker_muplugins(){
-    local _theme_name=$(_WPCLICOMMAND option get stylesheet);
-    local _muplugins_dir="./wp-content/mu-plugins/${_theme_name}";
-    _wputools_code_checker_common_tests "${_muplugins_dir}";
+    _wputools_code_checker_common_tests "./wp-content/mu-plugins";
 }
 
-_wputools_code_checker_theme;
-_wputools_code_checker_muplugins;
 
+if [[ "${1}" == 'theme' ]]; then
+    _wputools_code_checker_theme;
+elif [[ "${1}" == 'muplugins' ]]; then
+    _wputools_code_checker_muplugins;
+elif [[ "${1}" == 'current' ]]; then
+    _wputools_code_checker_common_tests "${_SCRIPTSTARTDIR}";
+else
+    _wputools_code_checker_theme;
+    _wputools_code_checker_muplugins;
+fi;
