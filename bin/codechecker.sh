@@ -7,7 +7,7 @@ echo "# CODE CHECKER";
 ###################################
 
 function _wputools_code_checker__dir_contains(){
-    local _test_lorem=$(grep -Ril --exclude-dir=node_modules --exclude-dir=wpu --exclude-dir=WPUTheme --exclude-dir=vendor "${1}" "${2}" | xargs ls);
+    local _test_lorem=$(grep -Ril --include=*.php --exclude-dir=node_modules --exclude-dir=wpu --exclude-dir=WPUTheme --exclude-dir=vendor "${1}" "${2}" | xargs ls);
     echo "-> Searching files containing “${1}”";
     if [[ "${_test_lorem}" != "" ]];then
         printf "%b" "\e[1;31mThese files contains ${1} :\n${_test_lorem}\e[0m\n";
@@ -22,6 +22,9 @@ function _wputools_code_checker_common_tests(){
         echo "Directory not found: ${1}";
         return 0;
     fi;
+
+    # Common errors
+    _wputools_code_checker__dir_contains "echo the_" "${1}";
 
     # Not Clean
     _wputools_code_checker__dir_contains "><?php" "${1}";
@@ -80,6 +83,7 @@ elif [[ "${1}" == 'muplugins' ]]; then
     _wputools_code_checker_muplugins;
 elif [[ "${1}" == 'current' ]]; then
     _wputools_code_checker_common_tests "${_SCRIPTSTARTDIR}";
+    cd "${_SCRIPTSTARTDIR}";
 else
     _wputools_code_checker_theme;
     _wputools_code_checker_muplugins;
