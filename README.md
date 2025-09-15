@@ -124,6 +124,10 @@ Add CLI shortcut :
 
 `wputools wpuwoo import-export-post import 10`
 
+### Duplicate a WordPress site in a multisite network.
+
+`wputools multisite-duplicate;`
+
 ### Install a WordPressUtilities mu-plugin
 
 `wputools mu-plugin wpu_file_cache;`
