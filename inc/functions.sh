@@ -385,3 +385,16 @@ function wputools_has_browser_available(){
 
     return 1;
 }
+
+function wputools_is_website_id_valid(){
+    if ! wputools_is_multisite; then
+        return 1;
+    fi
+    local _wputools_site_ids=($(_WPCLICOMMAND site list --field=blog_id))
+    for id in "${_wputools_site_ids[@]}"; do
+        if [[ "$id" == "$1" ]]; then
+            return 0;
+        fi
+    done
+    return 1;
+}

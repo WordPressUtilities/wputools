@@ -4,11 +4,26 @@ echo "# MULTISITE-DUPLICATE";
 
 function wputools_multisite_duplicate(){
 
+    if ! wputools_is_multisite; then
+        echo "# This is not a multisite installation";
+        return;
+    fi
+
     ## VARS
     ###################################
 
+    _WPCLICOMMAND site list --fields=blog_id,url;
+
     local source_site_id=$(bashutilities_get_user_var "- What is the source site ID?" "1");
+    if ! wputools_is_website_id_valid "$source_site_id"; then
+        echo "# Source site ID $source_site_id is not valid";
+        return;
+    fi
     local target_site_url=$(bashutilities_get_user_var "- What is the target site url?" "http://example.test");
+
+    ## Data
+    ###################################
+
     local source_site_url=$(_WPCLICOMMAND site list --field=url --site__in="$source_site_id");
     local source_site_admin=$(_WPCLICOMMAND option get admin_email --url="$source_site_url");
     local rand_site_id=$(bashutilities_rand_string 6);
@@ -59,7 +74,10 @@ function wputools_multisite_duplicate(){
     # Export database
     local _DB_FILE="source-$rand_site_id.sql"
     local _DBPREFIX=$(_WPCLICOMMAND db prefix);
-    local _TABPREFIX_SRC="${_DBPREFIX}${source_site_id}_";
+    local _TABPREFIX_SRC="${_DBPREFIX}";
+    if [ "$source_site_id" != "1" ]; then
+        _TABPREFIX_SRC="${_DBPREFIX}${source_site_id}_";
+    fi
     local _TABPREFIX_NEW="${_DBPREFIX}${new_site_id}_";
     local _TABLES=$(_WPCLICOMMAND db tables --all-tables-with-prefix | grep "${_TABPREFIX_SRC}" | tr '\n' ',');
     _WPCLICOMMAND db export "${_DB_FILE}" --tables="$_TABLES";
