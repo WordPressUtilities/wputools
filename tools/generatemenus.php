@@ -102,6 +102,18 @@ function generatemenus_get_random_item_name($type = 'default') {
     return $item_names[rand(0, count($item_names) - 1)];
 }
 
+function generatemenus_get_random_item(){
+    $p = get_posts(array(
+        'post_type' => 'any',
+        'posts_per_page' => 1,
+        'orderby' => 'rand'
+    ));
+    return array(
+        'menu-item-title' => $p ? $p[0]->post_title : generatemenus_get_random_item_name(),
+        'menu-item-url' => $p ? get_permalink($p[0]->ID) : get_site_url(),
+    );
+}
+
 /* ----------------------------------------------------------
   Generate menus
 ---------------------------------------------------------- */
@@ -130,17 +142,19 @@ foreach ($nav_menus as $menu_slug => $menu_name) {
             // Add random items to the menu
             for ($i = 1; $i <= 2; $i++) {
                 $random_item = $page_item;
-                $random_item['menu-item-title'] = generatemenus_get_random_item_name($args['generate_type']) . $i;
-                $random_item['menu-item-url'] = get_site_url();
+                $random_item_params = generatemenus_get_random_item();
+                $random_item['menu-item-title'] = $random_item_params['menu-item-title'];
+                $random_item['menu-item-url'] = $random_item_params['menu-item-url'];
                 $parent_item_id = wp_update_nav_menu_item($menu_id, 0, $random_item);
                 $number_of_children = rand(3, 6);
                 if ($args['depth'] > 1) {
                     for ($j = 1; $j <= $number_of_children; $j++) {
+                        $random_item_params = generatemenus_get_random_item();
                         $sub_item = array(
                             'menu-item-db-id' => 0,
                             'menu-item-type' => 'custom',
-                            'menu-item-title' => generatemenus_get_random_item_name($args['generate_type']) . $j,
-                            'menu-item-url' => get_site_url(),
+                            'menu-item-title' => $random_item_params['menu-item-title'] . $j,
+                            'menu-item-url' => $random_item_params['menu-item-url'],
                             'menu-item-parent-id' => $parent_item_id,
                             'menu-item-status' => 'publish'
                         );
