@@ -33,6 +33,7 @@ $langs = array(
 $args = wp_parse_args($_GET, array(
     'force_add' => 0,
     'depth' => 2,
+    'num_items' => 2,
     'menu_id' => 'all',
     'generate_type' => 'default'
 ));
@@ -102,15 +103,16 @@ function generatemenus_get_random_item_name($type = 'default') {
     return $item_names[rand(0, count($item_names) - 1)];
 }
 
-function generatemenus_get_random_item(){
+function generatemenus_get_random_item() {
     $p = get_posts(array(
         'post_type' => 'any',
         'posts_per_page' => 1,
         'orderby' => 'rand'
     ));
     return array(
+        'menu-item-db-id' => 0,
         'menu-item-title' => $p ? $p[0]->post_title : generatemenus_get_random_item_name(),
-        'menu-item-url' => $p ? get_permalink($p[0]->ID) : get_site_url(),
+        'menu-item-url' => $p ? get_permalink($p[0]->ID) : get_site_url()
     );
 }
 
@@ -140,27 +142,8 @@ foreach ($nav_menus as $menu_slug => $menu_name) {
 
             echo "- Adding random items to menu {$menu_name_lang}.\n";
             // Add random items to the menu
-            for ($i = 1; $i <= 2; $i++) {
-                $random_item = $page_item;
-                $random_item_params = generatemenus_get_random_item();
-                $random_item['menu-item-title'] = $random_item_params['menu-item-title'];
-                $random_item['menu-item-url'] = $random_item_params['menu-item-url'];
-                $parent_item_id = wp_update_nav_menu_item($menu_id, 0, $random_item);
-                $number_of_children = rand(3, 6);
-                if ($args['depth'] > 1) {
-                    for ($j = 1; $j <= $number_of_children; $j++) {
-                        $random_item_params = generatemenus_get_random_item();
-                        $sub_item = array(
-                            'menu-item-db-id' => 0,
-                            'menu-item-type' => 'custom',
-                            'menu-item-title' => $random_item_params['menu-item-title'] . $j,
-                            'menu-item-url' => $random_item_params['menu-item-url'],
-                            'menu-item-parent-id' => $parent_item_id,
-                            'menu-item-status' => 'publish'
-                        );
-                        wp_update_nav_menu_item($menu_id, 0, $sub_item);
-                    }
-                }
+            for ($i = 1; $i <= $args['num_items']; $i++) {
+                wputools_generatemenus($page_item, $menu_id, $args);
             }
 
             continue;
@@ -170,7 +153,9 @@ foreach ($nav_menus as $menu_slug => $menu_name) {
         $menu_id = wp_create_nav_menu($menu_name_lang);
 
         /* Generate alternate lang menus */
+        $has_lang = false;
         if (isset($polylang_options['nav_menus'])) {
+            $has_lang = true;
             $page_item['menu-item-url'] = pll_home_url($lang_id);
             if (!isset($polylang_options['nav_menus'][get_stylesheet()][$menu_slug])) {
                 $polylang_options['nav_menus'][get_stylesheet()][$menu_slug] = array();
@@ -179,11 +164,42 @@ foreach ($nav_menus as $menu_slug => $menu_name) {
         }
         $locations[$menu_slug] = $menu_id;
 
-        /* Set up default menu items */
-        wp_update_nav_menu_item($menu_id, 0, $page_item);
+        if($has_lang){
+            /* Set up default menu item */
+            wp_update_nav_menu_item($menu_id, 0, $page_item);
+        }
+        else {
+            /* Add random items */
+            for ($i = 1; $i <= $args['num_items']; $i++) {
+                wputools_generatemenus($page_item, $menu_id, $args);
+            }
+        }
+
         $has_modification = true;
         /* Success message */
         echo "- Created {$menu_name_lang}\n";
+    }
+}
+
+function wputools_generatemenus($random_item, $menu_id = 0, $args = array()) {
+    $random_item_params = generatemenus_get_random_item();
+    $random_item['menu-item-title'] = $random_item_params['menu-item-title'];
+    $random_item['menu-item-url'] = $random_item_params['menu-item-url'];
+    $parent_item_id = wp_update_nav_menu_item($menu_id, 0, $random_item);
+    $number_of_children = rand(3, 6);
+    if ($args['depth'] > 1) {
+        for ($j = 1; $j <= $number_of_children; $j++) {
+            $sub_item = generatemenus_get_random_item();
+            $sub_item = array(
+                'menu-item-db-id' => 0,
+                'menu-item-type' => 'custom',
+                'menu-item-title' => $random_item_params['menu-item-title'] . $j,
+                'menu-item-url' => $random_item_params['menu-item-url'],
+                'menu-item-parent-id' => $parent_item_id,
+                'menu-item-status' => 'publish'
+            );
+            wp_update_nav_menu_item($menu_id, 0, $sub_item);
+        }
     }
 }
 
