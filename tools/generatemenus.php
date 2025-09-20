@@ -32,7 +32,7 @@ $langs = array(
 
 $args = wp_parse_args($_GET, array(
     'force_add' => 0,
-    'depth' => 2,
+    'depth' => 3,
     'num_items' => 2,
     'menu_id' => 'all',
     'generate_type' => 'default'
@@ -104,6 +104,7 @@ function generatemenus_get_random_item($args = array()) {
 
     $menu_item = array(
         'menu-item-db-id' => 0,
+        'menu-item-parent-id' => 0,
         'menu-item-type' => 'custom',
         'menu-item-status' => 'publish'
     );
@@ -190,14 +191,23 @@ foreach ($nav_menus as $menu_slug => $menu_name) {
 }
 
 function wputools_generatemenus($menu_id = 0, $args = array()) {
+    if(!is_array($args)) {
+        $args = array();
+    }
+    $args = wp_parse_args($args, array(
+        'depth' => 0,
+        'num_items' => 1,
+        'parent_item_id' => 0
+    ));
     $random_item = generatemenus_get_random_item($args);
+    $random_item['menu-item-parent-id'] = $args['parent_item_id'];
     $parent_item_id = wp_update_nav_menu_item($menu_id, 0, $random_item);
-    $number_of_children = rand(3, 6);
     if ($args['depth'] > 1) {
-        for ($j = 1; $j <= $number_of_children; $j++) {
-            $sub_item = generatemenus_get_random_item();
-            $sub_item['menu-item-parent-id'] = $parent_item_id;
-            wp_update_nav_menu_item($menu_id, 0, $sub_item);
+        for ($j = 1; $j <= $args['num_items']; $j++) {
+            wputools_generatemenus($menu_id, array_merge($args, array(
+                'depth' => $args['depth'] - 1,
+                'parent_item_id' => $parent_item_id
+            )));
         }
     }
 }
