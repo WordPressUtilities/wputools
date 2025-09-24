@@ -754,8 +754,11 @@ if (($is_debug_env && $env_type != 'local') && !$search_engines_blocked) {
 $post_types = get_post_types(array(
     'public' => true
 ));
-if (isset($post_types['nav_menu_item'])) {
-    unset($post_types['nav_menu_item']);
+$excluded_post_types = array('nav_menu_item', 'elementor_library');
+foreach ($excluded_post_types as $excluded_post_type) {
+    if (isset($post_types[$excluded_post_type])) {
+        unset($post_types[$excluded_post_type]);
+    }
 }
 $all_posts = get_posts(array(
     'posts_per_page' => 100,

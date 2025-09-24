@@ -112,15 +112,47 @@ function generatemenus_get_random_item($args = array()) {
         $menu_item['menu-item-title'] = 'Home';
         $menu_item['menu-item-url'] = get_site_url();
     } else {
-        $p = get_posts(array(
-            'post_type' => 'any',
-            'posts_per_page' => 1,
-            'orderby' => 'rand'
-        ));
-        $menu_item['menu-item-title'] = $p ? $p[0]->post_title : generatemenus_get_random_item_name();
-        $menu_item['menu-item-url'] = $p ? get_permalink($p[0]->ID) : get_site_url();
+
+        $archive = false;
+        /* Try to get a random public archive */
+        if (rand(0, 4) == 0) {
+            $archive = generatemenus_get_random_public_archive();
+            if ($archive) {
+                $menu_item['menu-item-title'] = $archive->labels->name;
+                $menu_item['menu-item-url'] = get_post_type_archive_link($archive->name);
+            }
+        }
+
+        if (!$archive) {
+            $p = get_posts(array(
+                'post_type' => 'any',
+                'posts_per_page' => 1,
+                'orderby' => 'rand'
+            ));
+            $menu_item['menu-item-title'] = $p ? $p[0]->post_title : generatemenus_get_random_item_name();
+            $menu_item['menu-item-url'] = $p ? get_permalink($p[0]->ID) : get_site_url();
+        }
     }
     return $menu_item;
+}
+
+function generatemenus_get_random_public_archive() {
+    $post_types = get_post_types(array(
+        'public' => true,
+        '_builtin' => false
+    ), 'objects');
+    $post_types = array_filter($post_types, function ($post_type) {
+        return !empty($post_type->has_archive);
+    });
+    if (empty($post_types)) {
+        return false;
+    }
+    $post_types_keys = array_keys($post_types);
+    $random_post_type = $post_types_keys[rand(0, count($post_types_keys) - 1)];
+    if (!$post_types[$random_post_type]->has_archive) {
+        return false;
+    }
+    return $post_types[$random_post_type];
 }
 
 /* ----------------------------------------------------------
@@ -191,7 +223,7 @@ foreach ($nav_menus as $menu_slug => $menu_name) {
 }
 
 function wputools_generatemenus($menu_id = 0, $args = array()) {
-    if(!is_array($args)) {
+    if (!is_array($args)) {
         $args = array();
     }
     $args = wp_parse_args($args, array(
