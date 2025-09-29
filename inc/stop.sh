@@ -50,6 +50,7 @@ unset -f wputools_create_random_file;
 unset -f wputools_convert_args_to_url;
 unset -f wputools_echo_message;
 unset -f wputools_execute_file;
+unset -f wputools_format_home_url;
 unset -f wputools_get_multisite_urls;
 unset -f wputools_get_real_option;
 unset -f wputools_get_siteurl;

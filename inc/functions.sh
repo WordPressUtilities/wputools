@@ -350,9 +350,31 @@ function wputools_select_multisite(){
     if ! wputools_is_multisite; then
         return;
     fi
+
+    local _wputools_sites=($(wputools_get_multisite_urls));
+    local _tmp_home_url="";
+
+    # If an argument named url exists, use it
+    for arg in "$@"; do
+        if [[ "$arg" == *-url=* ]]; then
+
+            # Clean argument
+            _tmp_home_url=$(wputools_format_home_url "${arg#*-url=}");
+            for site in "${_wputools_sites[@]}"; do
+
+                # If the URL matches a website, use it
+                if [[ "$site" == "$_tmp_home_url" || "$site" == "${_tmp_home_url}/" ]]; then
+                    _HOME_URL="$_tmp_home_url"
+                    echo "Site URL set to ${_HOME_URL} from argument.";
+                    return;
+                fi
+            done
+        fi
+    done
+
+
     # List all sites home URLs
     echo "Multiple sites detected. Please choose one site to continue:"
-    local _wputools_sites=($(wputools_get_multisite_urls))
     select _wputools_site in "${_wputools_sites[@]}"; do
         if [[ -n "$_wputools_site" ]]; then
             _HOME_URL="$_wputools_site"
@@ -397,4 +419,15 @@ function wputools_is_website_id_valid(){
         fi
     done
     return 1;
+}
+
+function wputools_format_home_url(){
+    local _formatted_url="${1%/}";
+    if [[ "${_formatted_url}" != http*://* ]]; then
+        _formatted_url="http://${_formatted_url}";
+    fi
+    if [[ "${_HAS_HTTPS}" == '1' && "${_formatted_url}" != https://* ]]; then
+        _formatted_url="https:${_formatted_url#http:}";
+    fi
+    echo "${_formatted_url}";
 }

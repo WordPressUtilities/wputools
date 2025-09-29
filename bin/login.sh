@@ -13,7 +13,7 @@ fi;
 ## Detect multisite
 ###################################
 
-wputools_select_multisite;
+wputools_select_multisite "$@";
 
 ###################################
 ## Initial datas
@@ -32,7 +32,7 @@ cat "${_TOOLSDIR}login.php" > "${_CURRENT_DIR}${_WPULOG_FILE}";
 ###################################
 
 _WPUTOOLS_LOGIN_URL="${_HOME_URL}/${_WPULOG_FILE}"
-if [[ "${1}" != "" && "${1}" != "--quiet" ]];then
+if [[ "${1:0:1}" =~ [0-9] ]]; then
     _WPUTOOLS_LOGIN_URL="${_WPUTOOLS_LOGIN_URL}?user_id=${1}";
 fi;
 

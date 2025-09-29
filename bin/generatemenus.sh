@@ -15,7 +15,7 @@ function wputools__generate_menus(){
     cat "${_TOOLSDIR}generatemenus.php" > "${_CURRENT_DIR}${_FILE}";
 
     # Detect multisite
-    wputools_select_multisite;
+    wputools_select_multisite "$@";
 
     # Call file
     wputools_call_url "${_HOME_URL}/${_FILE}?${_ARGS}";

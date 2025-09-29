@@ -34,7 +34,7 @@ fi;
 ## Detect multisite
 ###################################
 
-wputools_select_multisite;
+wputools_select_multisite "$@";
 
 ###################################
 ## WP Test

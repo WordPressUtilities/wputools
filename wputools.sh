@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.140.0';
+local _WPUTOOLS_VERSION='0.141.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.3 8.4 8.5 9.0)
@@ -27,6 +27,7 @@ local _TOOLSDIR="${_SOURCEDIR}tools/";
 local _UPDATE_CONTROL_FILE="${_SOURCEDIR}control.txt";
 local _UPDATE_CHECK_EVERY_SEC=86400;
 local _HOME_URL='';
+local _HAS_HTTPS='0';
 local _SITE_ID=1;
 local _SITE_NAME='';
 local _BACKUP_DIR='';
@@ -232,6 +233,9 @@ _SITE_NAME='';
 if [[ -f "${wputools_wp_config_path}" ]];then
     if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
         _HOME_URL=$(_WPCLICOMMAND option get home --quiet --skip-plugins --skip-themes --skip-packages);
+        if [[ "${_HOME_URL}" == https://* ]]; then
+            _HAS_HTTPS='1';
+        fi;
     fi;
     if [[ -z "${_SITE_NAME}" || "${_SITE_NAME}" == '' ]];then
         _SITE_NAME=$(_WPCLICOMMAND option get blogname --quiet --skip-plugins --skip-themes --skip-packages);

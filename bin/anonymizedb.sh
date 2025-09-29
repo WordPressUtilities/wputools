@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function wputools_anonymize_db(){
-    wputools_select_multisite;
+    wputools_select_multisite "$@";
 
     local _FILE=$(wputools_create_random_file "adminer");
     cat "${_TOOLSDIR}anonymizedb.php" > "${_CURRENT_DIR}${_FILE}";
@@ -13,4 +13,4 @@ function wputools_anonymize_db(){
     rm "${_CURRENT_DIR}${_FILE}";
 
 }
-wputools_anonymize_db;
+wputools_anonymize_db "$@";

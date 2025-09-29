@@ -26,7 +26,7 @@ bashutilities_sed "s/'dash';/'read';/g" "${_CURRENT_DIR}${_BD_FILE}";
 ## Detect multisite
 ###################################
 
-wputools_select_multisite;
+wputools_select_multisite "$@";
 
 ###################################
 ## Information

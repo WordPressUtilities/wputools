@@ -11,7 +11,7 @@ function wputools__duplicate_menu(){
     cat "${_TOOLSDIR}duplicatemenu.php" > "${_CURRENT_DIR}${_FILE}";
 
     # Detect multisite
-    wputools_select_multisite;
+    wputools_select_multisite "$@";
 
     # Call file
     wputools_call_url "${_HOME_URL}/${_FILE}?menu_id=${1}";
@@ -20,4 +20,4 @@ function wputools__duplicate_menu(){
     rm "${_CURRENT_DIR}${_FILE}";
 
 }
-wputools__duplicate_menu "${1}";
+wputools__duplicate_menu "$@";
