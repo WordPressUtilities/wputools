@@ -303,7 +303,7 @@ function wputools__update_plugin() {
     local _PLUGIN_ID="${1}";
     local _MUPLUGIN_DIR_BASE="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}";
     local _PLUGIN_DIR_BASE="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}";
-    local _PLUGIN_DIR="${_PLUGIN_DIR}/";
+    local _PLUGIN_DIR="${_PLUGIN_DIR_BASE}/";
     local _PLUGIN_LANG="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
 
     # Plugin is a file or a mu-plugin
