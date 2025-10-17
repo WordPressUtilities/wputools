@@ -161,6 +161,7 @@ unset -v _WPUTOOLS_LOCAL_PATH;
 unset -v _WPUTOOLS_LOCAL_PATH_ASK;
 unset -v _WPUTOOLS_LOGS_DIR;
 unset -v _WPUTOOLS_LOGIN_URL;
+unset -v _WPUTOOLS_LOGIN_ID;
 unset -v _wputools_multisite_url;
 unset -v _wputools_multisite_urls;
 unset -v _WPUTOOLS_MAINTENANCE_FILE;
