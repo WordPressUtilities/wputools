@@ -190,5 +190,12 @@ unset -v wputools_use_home_url;
 unset -v wputools_use_site_name;
 unset -v wputools_wpconfig_ask_overwrite;
 unset -v wputools_wp_config_path;
+unset -v wputools__mysql_host;
+unset -v wputools__mysql_user;
+unset -v wputools__mysql_password;
+unset -v wputools__mysql_database;
+unset -v wputools__project_raw_domain;
+unset -v wputools__protocol;
+unset -v wputools__use_https;
 
 . "${_TOOLSDIR}BashUtilities/modules/stop.sh";

@@ -15,6 +15,7 @@ function wputools__wpconfig_set_values(){
     _WPCLICOMMAND config set WP_MAX_MEMORY_LIMIT 256M;
     _WPCLICOMMAND config set AUTOMATIC_UPDATER_DISABLED true;
     _WPCLICOMMAND config set WP_AUTO_UPDATE_CORE false;
+    _WPCLICOMMAND config set WP_ENVIRONMENT_TYPE 'local';
 }
 
 ###################################
@@ -38,19 +39,26 @@ wpconfig_site_id=$(bashutilities_get_user_var "- What is your project ID?" "proj
 wpconfig_site_prefix=$(bashutilities_get_user_var "- What is your site prefix?" "wp_");
 
 # Default values
-mysql_host='localhost';
-mysql_user='root';
-mysql_password='root';
-mysql_database="${wpconfig_site_id}";
-project_raw_domain="${wpconfig_site_id}.test";
+wputools__mysql_host='localhost';
+wputools__mysql_user='root';
+wputools__mysql_password='root';
+wputools__mysql_database="${wpconfig_site_id}";
+wputools__project_raw_domain="${wpconfig_site_id}.test";
+wputools__use_https='n';
+wputools__protocol='http';
 
 wpconfig_default_settings=$(bashutilities_get_yn "- Use default settings? (localhost/root/root)" 'y');
 if [[ "${wpconfig_default_settings}" != 'y' ]];then
-    mysql_host=$(bashutilities_get_user_var "- What is the MySQL host?" "localhost");
-    mysql_user=$(bashutilities_get_user_var "- What is the MySQL user?" "root");
-    mysql_password=$(bashutilities_get_user_var "- What is the MySQL password?" "root");
-    mysql_database=$(bashutilities_get_user_var "- What is the MySQL database?" "${wpconfig_site_id}");
-    project_raw_domain=$(bashutilities_get_user_var "- What is the project domain name?" "${wpconfig_site_id}.test");
+    wputools__mysql_host=$(bashutilities_get_user_var "- What is the MySQL host?" "localhost");
+    wputools__mysql_user=$(bashutilities_get_user_var "- What is the MySQL user?" "root");
+    wputools__mysql_password=$(bashutilities_get_user_var "- What is the MySQL password?" "root");
+    wputools__mysql_database=$(bashutilities_get_user_var "- What is the MySQL database?" "${wpconfig_site_id}");
+    wputools__project_raw_domain=$(bashutilities_get_user_var "- What is the project domain name?" "${wpconfig_site_id}.test");
+    wputools__use_https=$(bashutilities_get_yn "- Use HTTPS for site URL?" 'n');
+fi;
+
+if [[ "${wputools__use_https}" == 'y' ]];then
+    wputools__protocol='https';
 fi;
 
 ###################################
@@ -59,25 +67,22 @@ fi;
 
 _WPCLICOMMAND core config \
     --skip-check \
-    --dbhost="${mysql_host}" \
-    --dbname="${mysql_database}" \
-    --dbuser="${mysql_user}" \
-    --dbpass="${mysql_password}" \
+    --dbhost="${wputools__mysql_host}" \
+    --dbname="${wputools__mysql_database}" \
+    --dbuser="${wputools__mysql_user}" \
+    --dbpass="${wputools__mysql_password}" \
     --dbprefix="${wpconfig_site_prefix}" \
     --extra-php <<PHP
 
 # URLs
 if(!isset(\$_SERVER['HTTP_HOST']) || !\$_SERVER['HTTP_HOST']){
-    \$_SERVER['HTTP_HOST'] = '${project_raw_domain}';
+    \$_SERVER['HTTP_HOST'] = '${wputools__project_raw_domain}';
 }
 if(!isset(\$_SERVER['SERVER_PROTOCOL']) || !\$_SERVER['SERVER_PROTOCOL']){
     \$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
 }
-define('WP_SITEURL', 'http://' . \$_SERVER['HTTP_HOST'] . '/');
-define('WP_HOME', 'http://' . \$_SERVER['HTTP_HOST'] . '/');
-
-# Environment
-define('WP_ENVIRONMENT_TYPE', 'local');
+define('WP_SITEURL', '${wputools__protocol}://' . \$_SERVER['HTTP_HOST'] . '/');
+define('WP_HOME', '${wputools__protocol}://' . \$_SERVER['HTTP_HOST'] . '/');
 
 # Block external access
 #define('WP_HTTP_BLOCK_EXTERNAL', true);
