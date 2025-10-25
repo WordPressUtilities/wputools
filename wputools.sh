@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.141.4';
+local _WPUTOOLS_VERSION='0.142.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.3 8.4 8.5 9.0)
@@ -222,6 +222,15 @@ else
     rm "${_WPUTESTFILE_PATH}";
 fi;
 
+###################################
+## Get cache dir
+###################################
+
+local _FOLDER_CHECKSUM=$(bashutilities_get_folder_checksum "${_CURRENT_DIR}");
+local _WPUTOOLS_CACHE_DIR="/tmp/wputools-cache-${_FOLDER_CHECKSUM}/";
+if [[ ! -d "${_WPUTOOLS_CACHE_DIR}" ]];then
+    mkdir -p "${_WPUTOOLS_CACHE_DIR}";
+fi;
 
 ###################################
 ## Getting vars
@@ -230,6 +239,19 @@ fi;
 local wputools_wp_config_path=$(wputools__get_wp_config_path);
 _HOME_URL='';
 _SITE_NAME='';
+
+# Check for cached home_url
+local _HOME_URL_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}home_url.txt"
+if [[ -f "${_HOME_URL_CACHE_FILE}" && $(find "${_HOME_URL_CACHE_FILE}" -mmin -5) ]]; then
+    _HOME_URL=$(cat "${_HOME_URL_CACHE_FILE}")
+fi
+
+# Check for cached site_name
+local _SITE_NAME_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}site_name.txt"
+if [[ -f "${_SITE_NAME_CACHE_FILE}" && $(find "${_SITE_NAME_CACHE_FILE}" -mmin -5) ]]; then
+    _SITE_NAME=$(cat "${_SITE_NAME_CACHE_FILE}")
+fi
+
 if [[ -f "${wputools_wp_config_path}" ]];then
     if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
         _HOME_URL=$(_WPCLICOMMAND option get home --quiet --skip-plugins --skip-themes --skip-packages);
@@ -241,6 +263,16 @@ if [[ -f "${wputools_wp_config_path}" ]];then
         _SITE_NAME=$(_WPCLICOMMAND option get blogname --quiet --skip-plugins --skip-themes --skip-packages);
     fi;
 fi;
+
+# Cache home_url
+if [[ -n "${_HOME_URL}" && ! -f "${_HOME_URL_CACHE_FILE}" ]]; then
+    echo "${_HOME_URL}" > "${_HOME_URL_CACHE_FILE}"
+fi
+
+# Cache site_name
+if [[ -n "${_SITE_NAME}" && ! -f "${_SITE_NAME_CACHE_FILE}" ]]; then
+    echo "${_SITE_NAME}" > "${_SITE_NAME_CACHE_FILE}"
+fi
 
 ###################################
 ## Router
