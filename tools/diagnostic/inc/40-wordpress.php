@@ -259,6 +259,19 @@ if (!is_dir($wputools_temp_dir)) {
         }
     }
 
+    /* Test UTF-8 encoding */
+    $test_string = 'àéîõü ÄËÏÖÜ ñ Ñ ç Ç ß € µ © ® ™';
+    $temp_utf8_file = '/utf8_test.txt';
+    file_put_contents($wputools_temp_dir . $temp_utf8_file, $test_string);
+    $response = wp_remote_get($wputools_temp_url . $temp_utf8_file);
+    if (!is_wp_error($response)) {
+        $headers = wp_remote_retrieve_headers($response);
+        $header_content_type = isset($headers['content-type']) ? $headers['content-type'] : '';
+        if (strpos(strtolower($header_content_type), 'utf-8') === false) {
+            $wputools_errors[] = 'Content-Type header is not UTF-8. Current header: "' . $header_content_type . '"';
+        }
+    }
+
     rmdir($wputools_temp_dir);
 }
 
