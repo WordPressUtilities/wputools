@@ -11,8 +11,12 @@ if [[ "${_wputools_test__file}" != '' ]];then
     bashutilities_message "A wputools-urls.txt file already exists." 'warning';
 fi;
 if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' && "${_wputools_test__file}" != '' ]];then
-    bashutilities_message "All files already exists." 'error';
-    return 0;
+    bashutilities_message "Main files already exists." 'error';
+    if [[ $(bashutilities_get_yn "Continue anyway ?" 'y') == 'y' ]];then
+        bashutilities_message "Restarting the setup..." 'info';
+    else
+        return 0;
+    fi;
 fi;
 if [[ "${_HOME_URL}" == '' || "${_SITE_NAME}" == '' ]];then
     bashutilities_message "The WordPress install is not ready." 'error';
