@@ -394,7 +394,7 @@ if (!$is_debug_env && defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
 }
 
 /* ----------------------------------------------------------
-  check RAM
+  Check memory limits
 ---------------------------------------------------------- */
 
 $ram_vars = array('WP_MEMORY_LIMIT', 'WP_MAX_MEMORY_LIMIT');
@@ -470,6 +470,17 @@ $php_constants = array('WP_CACHE_KEY_SALT');
 foreach ($php_constants as $constant) {
     if (!defined($constant)) {
         $wputools_errors[] = sprintf('WordPress : the constant %s should be defined : wputools wp config shuffle-salts WP_CACHE_KEY_SALT --force', $constant);
+    }
+}
+
+/* ----------------------------------------------------------
+  Check multisite
+---------------------------------------------------------- */
+
+if (!is_multisite()) {
+    $blogs_table_name = $wpdb->prefix . 'blogs';
+    if ($wpdb->get_var("SHOW TABLES LIKE '{$blogs_table_name}'") === $blogs_table_name) {
+        $wputools_errors[] = 'WordPress : The installation is not a multisite but the blogs table exists.';
     }
 }
 
