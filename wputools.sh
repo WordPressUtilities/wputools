@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.142.3';
+local _WPUTOOLS_VERSION='0.142.4';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.3 8.4 8.5 9.0)
@@ -37,6 +37,7 @@ local _HAS_WPUTOOLS_LOCAL='0';
 local _WPUTOOLS_NO_UPDATE='0';
 local _WPUTOOLS_DBIMPORT_IGNORE_LOCALOVERRIDES='0';
 local _WPUTOOLS_ACF_PRO_LICENSE='LICENSE';
+local _WPUTOOLS_LOCAL_LOADED=();
 _WPUWOO_ACTION_DIR="${_TOOLSDIR}wpuwooimportexport/";
 _WPUTOOLS_PLUGIN_LIST="${_TOOLSDIR}plugins.txt";
 _WPUTOOLS_PLUGIN_FAV_LIST="${_TOOLSDIR}plugins-favorites.txt";
@@ -48,10 +49,12 @@ fi;
 if [[ -f "${_CURRENT_DIR}../wputools-local.sh" ]];then
     . "${_CURRENT_DIR}../wputools-local.sh";
     _HAS_WPUTOOLS_LOCAL='1';
+    _WPUTOOLS_LOCAL_LOADED+=("${_CURRENT_DIR}../wputools-local.sh");
 fi;
 if [[ -f "${_CURRENT_DIR}wputools-local.sh" ]];then
     . "${_CURRENT_DIR}wputools-local.sh";
     _HAS_WPUTOOLS_LOCAL='1';
+    _WPUTOOLS_LOCAL_LOADED+=("${_CURRENT_DIR}wputools-local.sh");
 fi;
 
 ###################################
