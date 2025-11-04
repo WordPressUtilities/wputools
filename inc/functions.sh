@@ -36,6 +36,9 @@ function wputools_test_check_urls(){
 }
 
 function run_test_after_regenerate(){
+    if [[ "${_WPUTOOLS_IGNORE_TESTS_UPDATE}" == '1' ]];then
+        return 0;
+    fi;
     echo '# RUNNING TESTS : AFTER ACTION';
     local _wputools_test_simple_content=$(wputools_test_check_urls);
     echo "${_wputools_test_simple_content}" > diff-after.txt;
@@ -45,6 +48,9 @@ function run_test_after_regenerate(){
 }
 
 function run_test_instant(){
+    if [[ "${_WPUTOOLS_IGNORE_TESTS_UPDATE}" == '1' ]];then
+        return 0;
+    fi;
     if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : INSTANT TEST';
         _wputools_test_instant_content=$(wputools_test_check_urls);
@@ -54,6 +60,9 @@ function run_test_instant(){
 }
 
 function run_test_before(){
+    if [[ "${_WPUTOOLS_IGNORE_TESTS_UPDATE}" == '1' ]];then
+        return 0;
+    fi;
     if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : BEFORE ACTION';
         _wputools_test_before_content=$(wputools_test_check_urls);
@@ -62,6 +71,9 @@ function run_test_before(){
 }
 
 function run_test_after(){
+    if [[ "${_WPUTOOLS_IGNORE_TESTS_UPDATE}" == '1' ]];then
+        return 0;
+    fi;
     if [[ -n "${_wputools_test__file}" && -f "${_wputools_test__file}" ]];then
         echo '# RUNNING TESTS : AFTER ACTION';
         _wputools_test_after_content=$(wputools_test_check_urls);

@@ -262,10 +262,21 @@ function commit_without_protect(){
 function wputools__update_core(){
     echo '# Updating WordPress core';
     local _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
-    local _LATEST_WORDPRESS=$(_WPCLICOMMAND core check-update --force-check --major --field=version);
+    local _LATEST_WORDPRESS=$(_WPCLICOMMAND core check-update --force-check --field=version);
     if [[ "${_LATEST_WORDPRESS}" == *"uccess"* ]]; then
         _LATEST_WORDPRESS="${_CURRENT_WORDPRESS}"
     fi
+    _LATEST_WORDPRESS=$(echo "${_LATEST_WORDPRESS}" | tail -n 1)
+
+    if [[ "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "" && "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "${_LATEST_WORDPRESS}" ]]; then
+        local _use_target_version=$(bashutilities_get_yn "- Do you want to update from ${_CURRENT_WORDPRESS} to ${_WPUTOOLS_CORE_UPDATE_TARGET} instead of going to ${_LATEST_WORDPRESS} ?" 'n');
+        if [[ "${_use_target_version}" == 'y' ]];then
+            _LATEST_WORDPRESS="${_WPUTOOLS_CORE_UPDATE_TARGET}";
+        else
+            bashutilities_message "Using latest version ${_LATEST_WORDPRESS} instead of target version."
+        fi;
+    fi;
+
 
     if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == "major" && "${_LATEST_WORDPRESS}" != "${_CURRENT_WORDPRESS}" ]]; then
         local _CURRENT_MINOR_VERSION=$(echo "${_CURRENT_WORDPRESS}" | cut -d'.' -f1-2)
@@ -280,7 +291,7 @@ function wputools__update_core(){
     fi
 
     if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
-        _WPCLICOMMAND core update --skip-themes;
+        _WPCLICOMMAND core update --skip-themes --version="${_LATEST_WORDPRESS}";
     else
         _WPCLICOMMAND core update --skip-themes --minor;
     fi;
