@@ -389,6 +389,7 @@ function wputools_select_multisite(){
             local _tmp_blog_id="${arg#*-blog_id=}";
             if wputools_is_website_id_valid "$_tmp_blog_id"; then
                 _HOME_URL=$(_WPCLICOMMAND site list --fields=blog_id,url --format=csv | awk -F',' -v id="$_tmp_blog_id" '$1==id {print $2}');
+                _HOME_URL=$(wputools_format_home_url "${_HOME_URL}");
                 echo "Site URL set to ${_HOME_URL} from argument.";
                 return;
             else
