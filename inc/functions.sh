@@ -366,8 +366,9 @@ function wputools_select_multisite(){
     local _wputools_sites=($(wputools_get_multisite_urls));
     local _tmp_home_url="";
 
-    # If an argument named url exists, use it
     for arg in "$@"; do
+
+        # If an argument named url exists, use it
         if [[ "$arg" == *-url=* ]]; then
 
             # Clean argument
@@ -382,6 +383,19 @@ function wputools_select_multisite(){
                 fi
             done
         fi
+
+        # If an argument named blog_id exists, use it
+        if [[ "$arg" == *-blog_id=* ]]; then
+            local _tmp_blog_id="${arg#*-blog_id=}";
+            if wputools_is_website_id_valid "$_tmp_blog_id"; then
+                _HOME_URL=$(_WPCLICOMMAND site list --fields=blog_id,url --format=csv | awk -F',' -v id="$_tmp_blog_id" '$1==id {print $2}');
+                echo "Site URL set to ${_HOME_URL} from argument.";
+                return;
+            else
+                echo "The blog_id '$_tmp_blog_id' is not valid.";
+            fi
+        fi
+
     done
 
 

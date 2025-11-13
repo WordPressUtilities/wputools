@@ -43,7 +43,7 @@ wputools wpuwoo;                # Execute a WPU Woo Import Export Task.
 EOF
 
 
-if [ -d "${_SOURCEDIR}extensions" ] && [ "$(ls -A "${_SOURCEDIR}extensions")" ]; then
+if [ -d "${_SOURCEDIR}extensions" ] && [ "$(ls -A "${_SOURCEDIR}extensions")" ] && [ -n "$(find "${_SOURCEDIR}extensions" -mindepth 1 -type d -print -quit)" ] ; then
     echo "# Extensions"
     for dir in "${_SOURCEDIR}extensions"/*/; do
         if [[ -d "$dir" ]]; then
