@@ -8,13 +8,13 @@ echo "# WP Config";
 ###################################
 
 function wputools__wpconfig_set_values(){
-    _WPCLICOMMAND config set DISABLE_WP_CRON true;
-    _WPCLICOMMAND config set EMPTY_TRASH_DAYS 7;
-    _WPCLICOMMAND config set WP_POST_REVISIONS 6;
+    _WPCLICOMMAND config set DISABLE_WP_CRON true --raw;
+    _WPCLICOMMAND config set EMPTY_TRASH_DAYS 7 --raw;
+    _WPCLICOMMAND config set WP_POST_REVISIONS 6 --raw;
     _WPCLICOMMAND config set WP_MEMORY_LIMIT 128M;
     _WPCLICOMMAND config set WP_MAX_MEMORY_LIMIT 256M;
-    _WPCLICOMMAND config set AUTOMATIC_UPDATER_DISABLED true;
-    _WPCLICOMMAND config set WP_AUTO_UPDATE_CORE false;
+    _WPCLICOMMAND config set AUTOMATIC_UPDATER_DISABLED true --raw;
+    _WPCLICOMMAND config set WP_AUTO_UPDATE_CORE false --raw;
     _WPCLICOMMAND config set WP_ENVIRONMENT_TYPE 'local';
 }
 
