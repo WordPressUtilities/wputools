@@ -941,3 +941,17 @@ if ($privacy_page_id) {
 } else {
     $wputools_errors[] = sprintf('The privacy policy page is not set.');
 }
+
+/* ----------------------------------------------------------
+  Check WPU Pages
+---------------------------------------------------------- */
+
+$wputh_pages_site = apply_filters('wputh_pages_site', array());
+if (!empty($wputh_pages_site)) {
+    /* Home */
+    if (isset($wputh_pages_site['home__page_id'])) {
+        if (!isset($wputh_pages_site['home__page_id']['disable_deletion'])) {
+            $wputools_errors[] = 'The Home page should be protected from deletion.';
+        }
+    }
+}
