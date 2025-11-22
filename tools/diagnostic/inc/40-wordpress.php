@@ -772,6 +772,40 @@ if (($is_debug_env && $env_type != 'local') && !$search_engines_blocked) {
 }
 
 /* ----------------------------------------------------------
+  Check robots.txt
+---------------------------------------------------------- */
+
+$response_robots = wp_remote_get(site_url('/robots.txt'));
+if (!is_wp_error($response_robots) && wp_remote_retrieve_response_code($response_robots) == 200) {
+
+    $robots_body = wp_remote_retrieve_body($response_robots);
+
+    /* Check that robots.txt does not block everything */
+    $disallow_all_patterns = array(
+        '/^Disallow:\s*\/\s*$/mi',
+        '/^User-agent:\s*\*\s*Disallow:\s*\/\s*$/mi'
+    );
+    foreach ($disallow_all_patterns as $pattern) {
+        if (preg_match($pattern, $robots_body)) {
+            $wputools_errors[] = 'robots.txt seems to block all crawlers from the whole site.';
+            break;
+        }
+    }
+
+    /* Check that robots.txt contains at least one sitemap link */
+    $has_sitemap = false;
+    foreach (array('Sitemap:', 'sitemap.xml') as $sitemap_hint) {
+        if (stripos($robots_body, $sitemap_hint) !== false) {
+            $has_sitemap = true;
+            break;
+        }
+    }
+    if (!$has_sitemap) {
+        $wputools_errors[] = 'robots.txt should contain a link to the sitemap.';
+    }
+}
+
+/* ----------------------------------------------------------
   Check posts
 ---------------------------------------------------------- */
 
