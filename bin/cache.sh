@@ -22,7 +22,7 @@ else
     # Loop through each multisite URL
     for _wputools_multisite_url in ${_wputools_multisite_urls}; do
         echo "# Flushing rewrite rules for ${_wputools_multisite_url}";
-        _WPCLICOMMAND --url="${_wputools_multisite_url}" rewrite flush --hard;
+        _WPCLICOMMAND --url="${_wputools_multisite_url}" rewrite flush;
     done
 fi;
 

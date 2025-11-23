@@ -365,6 +365,8 @@ function wputools_select_multisite(){
 
     local _wputools_sites=($(wputools_get_multisite_urls));
     local _tmp_home_url="";
+    local _tmp_url_www="";
+    local _tmp_site_www="";
 
     for arg in "$@"; do
 
@@ -373,11 +375,20 @@ function wputools_select_multisite(){
 
             # Clean argument
             _tmp_home_url=$(wputools_format_home_url "${arg#*-url=}");
+            _tmp_url_www=${_tmp_home_url/\/\//\/\/www\.};
             for site in "${_wputools_sites[@]}"; do
+                _tmp_site_www=${site/\/\//\/\/www\.};
 
                 # If the URL matches a website, use it
-                if [[ "$site" == "$_tmp_home_url" || "$site" == "${_tmp_home_url}/" ]]; then
-                    _HOME_URL="$_tmp_home_url"
+                if [[
+                    "${site}" == "${_tmp_home_url}" ||
+                    "${site}" == "${_tmp_home_url}/" ||
+                    "${_tmp_site_www}" == "${_tmp_home_url}" ||
+                    "${site}" == "${_tmp_url_www}" ||
+                    "${_tmp_site_www}" == "${_tmp_home_url}/" ||
+                    "${site}" == "${_tmp_url_www}/"
+                    ]]; then
+                    _HOME_URL="$site"
                     echo "Site URL set to ${_HOME_URL} from argument.";
                     return;
                 fi
