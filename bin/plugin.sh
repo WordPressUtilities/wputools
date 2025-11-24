@@ -20,6 +20,13 @@ function wputools__plugin(){
         fi;
     done
 
+    # Check WPU repo if not found in list
+    if [[ "${_IS_WPU}" == '0' ]];then
+        if git ls-remote "https://github.com/WordPressUtilities/${_PLUGIN_ID}.git" >/dev/null 2>&1; then
+            _IS_WPU='1';
+        fi
+    fi
+
     # Base vars
     local _PLUGIN_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}/";
     local _MUPLUGIN_DIR="${_CURRENT_DIR}wp-content/mu-plugins/wpu/${_PLUGIN_ID}/";
