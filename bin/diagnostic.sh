@@ -26,18 +26,12 @@ fi;
 ## Initial datas
 ###################################
 
-_WPUDIAG_SITE='';
 _WPUDIAG_BRANCH_NAME='';
 if [[ -d "${_CURRENT_DIR}.git" ]];then
     _WPUDIAG_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD);
 fi;
-if [[ -n "${2}" && "${2:0:2}" != "--" ]]; then
-    _WPUDIAG_SITE="${2}";
-    _WPUDIAG_SITES=$(_WPCLICOMMAND site list --field=domain);
-    if ! echo "$_WPUDIAG_SITES" | grep -qx "${_WPUDIAG_SITE}"; then
-        bashutilities_message "Site does not exist: ${_WPUDIAG_SITE}" "error";
-        return 1;
-    fi;
+if [[ -n "${2}" ]]; then
+    wputools_select_multisite "$@";
 fi;
 
 _WPUDIAG_FILE=$(wputools_create_random_file "diagnostic");
@@ -49,7 +43,7 @@ cat <<EOF >> "${_CURRENT_DIR}${_WPUDIAG_FILE}"
 \$wpudiag_file = '${_WPUDIAG_FILE}';
 \$wpudiag_branch_name = '${_WPUDIAG_BRANCH_NAME}';
 \$wpudiag_path = '${_CURRENT_DIR}';
-\$wpudiag_site = '${_WPUDIAG_SITE}';
+\$wpudiag_site = '${_HOME_URL}';
 \$wpudiag_args_raw = '${_WPUDIAG_ARGS}';
 
 if (filemtime(__FILE__) < time() - 120) {

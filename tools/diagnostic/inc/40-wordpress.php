@@ -27,6 +27,7 @@ require_once $bootstrap;
 
 /* Load a site */
 if ($wpudiag_site) {
+    $wpudiag_site = parse_url($wpudiag_site, PHP_URL_HOST);
     $site = get_site_by_path($wpudiag_site, '/');
     if ($site) {
         switch_to_blog($site->blog_id);
