@@ -26,7 +26,7 @@ $_SERVER['PHP_SELF'] = '/wp-admin/index.php';
 require_once $bootstrap;
 
 /* Load a site */
-if ($wpudiag_site) {
+if ($wpudiag_site && function_exists('get_site_by_path')) {
     $wpudiag_site = parse_url($wpudiag_site, PHP_URL_HOST);
     $site = get_site_by_path($wpudiag_site, '/');
     if ($site) {
