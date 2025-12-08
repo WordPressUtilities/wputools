@@ -41,7 +41,7 @@ fi;
 
 # If ID is set, add it to URL
 if [[ -n "${_WPUTOOLS_LOGIN_ID}" ]]; then
-    if wp user get "${_WPUTOOLS_LOGIN_ID}" --field=ID >/dev/null 2>&1; then
+    if _WPCLICOMMAND user get "${_WPUTOOLS_LOGIN_ID}" --field=ID >/dev/null 2>&1; then
         _WPUTOOLS_LOGIN_URL="${_WPUTOOLS_LOGIN_URL}?user_id=${_WPUTOOLS_LOGIN_ID}";
     else
         echo "User ${_WPUTOOLS_LOGIN_ID} does not exist.";
