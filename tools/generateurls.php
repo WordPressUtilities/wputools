@@ -20,13 +20,28 @@ define('WP_USE_THEMES', false);
 require 'wp-load.php';
 wp();
 
-$links = array(site_url(), home_url());
+$site_url = site_url();
+$links = array();
+
+if (function_exists('pll_languages_list')) {
+    $languages = pll_languages_list(array('hide_empty' => 0));
+    foreach ($languages as $lang) {
+        $links[] = pll_home_url($lang);
+    }
+} else {
+    $links[] = site_url();
+}
+
+function wputools_generateurls_are_identical_urls($left, $right) {
+    $left = rtrim($left, '/');
+    $right = rtrim($right, '/');
+    return $left === $right;
+}
 
 /* ----------------------------------------------------------
   Extract all links from menus
 ---------------------------------------------------------- */
 
-$site_url = site_url();
 $locations = get_nav_menu_locations();
 foreach ($locations as $location => $menu_id) {
     $menu_items = wp_get_nav_menu_items($menu_id);
@@ -35,8 +50,12 @@ foreach ($locations as $location => $menu_id) {
         if (!filter_var($item->url, FILTER_VALIDATE_URL)) {
             continue;
         }
+        /* Exclude links with parents */
+        if ($item->menu_item_parent != 0) {
+            continue;
+        }
         /* Exclude site */
-        if ($item->url == $site_url || $item->url == $site_url . '/') {
+        if (wputools_generateurls_are_identical_urls($item->url, $site_url)) {
             continue;
         }
         /* Should contain site url */
@@ -51,6 +70,10 @@ foreach ($locations as $location => $menu_id) {
   Extract 2 items from every post type
 ---------------------------------------------------------- */
 
+$home_page_id = 0;
+if (get_option('show_on_front') == 'page') {
+    $home_page_id = get_option('page_on_front');
+}
 $post_types = get_post_types(array(
     'public' => true
 ));
@@ -60,15 +83,19 @@ foreach ($post_types as $pt) {
     }
     $posts = get_posts(array(
         'post_type' => $pt,
-        'posts_per_page' => 2
+        'posts_per_page' => 2,
+        'post__not_in' => array($home_page_id)
     ));
     foreach ($posts as $post) {
         $link = get_permalink($post);
+        if (wputools_generateurls_are_identical_urls($link, $site_url)) {
+            continue;
+        }
         if ($link) {
             $links[] = $link;
         }
     }
-    if (get_post_type_archive_link($pt)) {
+    if (get_post_type_archive_link($pt) && !in_array($pt, array('post', 'page'))) {
         $links[] = get_post_type_archive_link($pt);
     }
 }
@@ -105,9 +132,9 @@ $links = array_unique($links);
 
 /* URLs file : warming cache or checking pages */
 $wputools_urls_file_content =
-    site_url() . '/robots.txt' . "\n" .
-    site_url() . '/feed' . "\n" .
-    site_url() . '/wp-sitemap.xml' . "\n";
+site_url() . '/robots.txt' . "\n" .
+site_url() . '/feed' . "\n" .
+site_url() . '/wp-sitemap.xml' . "\n";
 foreach ($links as $link) {
     $wputools_urls_file_content .= $link . "\n";
 }
