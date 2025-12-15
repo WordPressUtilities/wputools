@@ -183,6 +183,15 @@ foreach ($post_types as $pt => $post_type) {
         $post_id = wp_insert_post($post_infos);
         $_hasImport = true;
 
+        /* Post metas */
+        $post_metas = apply_filters('wputools_sample_post_metas', array(), $pt);
+        foreach ($post_metas as $meta_key => $meta_value) {
+            if (!$meta_value) {
+                $meta_value = $raw_contents[mt_rand(0, $nb_raw_contents - 1)];
+            }
+            update_post_meta($post_id, $meta_key, $meta_value);
+        }
+
         /* Taxonomies */
         $thumbnail_id = false;
         if ($post_id && !empty($random_images)) {
