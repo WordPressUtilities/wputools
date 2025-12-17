@@ -32,6 +32,7 @@ if (filemtime(__FILE__) < time() - 60) {
 /* Disable default environment */
 define('WP_USE_THEMES', false);
 define('WP_ADMIN', true);
+define('DOING_AJAX', false);
 
 /* Fool login check */
 $_SERVER['PHP_SELF'] = '/wp-admin/index.php';
