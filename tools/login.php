@@ -70,7 +70,9 @@ if (isset($_GET['user_id'])) {
 } else {
     $users = get_users(array(
         'role' => 'administrator',
-        'fields' => 'id'
+        'fields' => 'id',
+        'orderby' => 'ID',
+        'order' => 'ASC',
     ));
 
     if (empty($users) || !isset($users[0]) || !is_numeric($users[0])) {
