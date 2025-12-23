@@ -82,6 +82,16 @@ if (isset($wpudiag_branch_name) && $wpudiag_branch_name) {
     }
 }
 
+/* Checksum
+-------------------------- */
+
+if ($wpudiag_checksum) {
+    $wpudiag_checksum = strtolower($wpudiag_checksum);
+    if (strpos($wpudiag_checksum, 'success') === false) {
+        $wputools_errors[] = 'WordPress : Some core files have been modified : ' . strip_tags($wpudiag_checksum);
+    }
+}
+
 /* Path
 -------------------------- */
 
@@ -608,6 +618,10 @@ function wputools_test_rss_feed($rss_url) {
     global $wputools_errors;
     global $wputools_notices;
 
+    if (apply_filters('wpudisabler__disable_feeds', true)) {
+        return;
+    }
+
     if (!function_exists('libxml_use_internal_errors') || !function_exists('simplexml_load_string')) {
         $wputools_errors[] = __('The XML extension is not available.');
         return;
@@ -642,7 +656,7 @@ function wputools_test_rss_feed($rss_url) {
                 $error_text .= 'line ' . $error->line . ': ' . $error->message;
             }
         }
-        $wputools_errors[] = sprintf(__("Failed to parse RSS feed :\n%s"), $error_text);
+        $wputools_errors[] = $error_text ? sprintf(__("Failed to parse RSS feed :\n%s"), $error_text) : __('Failed to parse RSS feed.');
         return;
     }
 
@@ -813,10 +827,11 @@ if (!is_wp_error($response_robots) && wp_remote_retrieve_response_code($response
 $post_types = get_post_types(array(
     'public' => true
 ));
-$excluded_post_types = array('nav_menu_item', 'elementor_library');
-foreach ($excluded_post_types as $excluded_post_type) {
-    if (isset($post_types[$excluded_post_type])) {
-        unset($post_types[$excluded_post_type]);
+foreach ($post_types as $key => $post_type) {
+    $post_type_details = get_post_type_object($post_type);
+    if (!$post_type_details->publicly_queryable) {
+        unset($post_types[$key]);
+        continue;
     }
 }
 $all_posts = get_posts(array(

@@ -36,6 +36,7 @@ fi;
 
 _WPUDIAG_FILE=$(wputools_create_random_file "diagnostic");
 _WPUDIAG_ARGS=$(wputools_convert_args_to_url "$@");
+_WPUDIAG_CHECKSUM=$(_WPCLICOMMAND core verify-checksums --exclude=xmlrpc.php,wp-comments-post.php,wp-trackback.php,readme.html,license.txt,wp-signup.php,wp-links-opml.php  2>&1 >/dev/null)
 
 cat <<EOF >> "${_CURRENT_DIR}${_WPUDIAG_FILE}"
 <?php
@@ -45,6 +46,9 @@ cat <<EOF >> "${_CURRENT_DIR}${_WPUDIAG_FILE}"
 \$wpudiag_path = '${_CURRENT_DIR}';
 \$wpudiag_site = '${_HOME_URL}';
 \$wpudiag_args_raw = '${_WPUDIAG_ARGS}';
+\$wpudiag_checksum = <<<EOT
+${_WPUDIAG_CHECKSUM}
+EOT;
 
 if (filemtime(__FILE__) < time() - 120) {
     http_response_code(410);
