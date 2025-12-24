@@ -23,6 +23,29 @@ if [[ "${1}" == 'code-profiler' ]];then
 fi;
 
 ###################################
+## Checksums
+###################################
+
+_WPUDIAG_CHECKSUM_FILES=(
+    "xmlrpc.php"
+    "wp-comments-post.php"
+    "wp-trackback.php"
+    "readme.html"
+    "license.txt"
+    "wp-signup.php"
+    "wp-links-opml.php"
+);
+# Remove files from _WPUDIAG_CHECKSUM_FILES if they exist
+for i in "${!_WPUDIAG_CHECKSUM_FILES[@]}"; do
+    if [[ -f "${_CURRENT_DIR}${_WPUDIAG_CHECKSUM_FILES[$i]}" ]]; then
+        unset '_WPUDIAG_CHECKSUM_FILES[i]'
+    fi
+done
+
+_WPUDIAG_CHECKSUM_FILES_STR=$(IFS=, ; echo "${_WPUDIAG_CHECKSUM_FILES[*]}")
+_WPUDIAG_CHECKSUM=$(_WPCLICOMMAND core verify-checksums --exclude="${_WPUDIAG_CHECKSUM_FILES_STR}"  2>&1 >/dev/null)
+
+###################################
 ## Initial datas
 ###################################
 
@@ -36,7 +59,6 @@ fi;
 
 _WPUDIAG_FILE=$(wputools_create_random_file "diagnostic");
 _WPUDIAG_ARGS=$(wputools_convert_args_to_url "$@");
-_WPUDIAG_CHECKSUM=$(_WPCLICOMMAND core verify-checksums --exclude=xmlrpc.php,wp-comments-post.php,wp-trackback.php,readme.html,license.txt,wp-signup.php,wp-links-opml.php  2>&1 >/dev/null)
 
 cat <<EOF >> "${_CURRENT_DIR}${_WPUDIAG_FILE}"
 <?php
