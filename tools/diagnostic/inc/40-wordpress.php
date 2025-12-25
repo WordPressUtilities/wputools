@@ -477,10 +477,12 @@ if (method_exists($wpdb, 'db_server_info')) {
   Check some constants
 ---------------------------------------------------------- */
 
-$php_constants = array('WP_CACHE_KEY_SALT');
-foreach ($php_constants as $constant) {
+$php_constants = array(
+    'WP_CACHE_KEY_SALT' => 'shuffle-salts WP_CACHE_KEY_SALT --force'
+);
+foreach ($php_constants as $constant => $info) {
     if (!defined($constant)) {
-        $wputools_errors[] = sprintf('WordPress : the constant %s should be defined : wputools wp config shuffle-salts WP_CACHE_KEY_SALT --force', $constant);
+        $wputools_errors[] = sprintf('WordPress : the constant %s should be defined : wputools wp config %s', $constant, $info);
     }
 }
 
@@ -599,15 +601,15 @@ if ($env_type == 'production') {
   Check home page speed
 ---------------------------------------------------------- */
 
-$info = false;
-$ch = curl_init($site_url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-if (curl_exec($ch)) {
-    $info = curl_getinfo($ch);
-}
-curl_close($ch);
-if (is_array($info) && isset($info['total_time']) && $info['total_time'] > 0.2) {
-    $wputools_errors[] = sprintf('Homepage took %s seconds to load.', $info['total_time']);
+
+$start_time = microtime(true);
+$response = wp_remote_get($site_url);
+$end_time = microtime(true);
+if (!is_wp_error($response)) {
+    $total_time = $end_time - $start_time;
+    if ($total_time > 0.2) {
+        $wputools_errors[] = sprintf('Homepage took %s seconds to load.', round($total_time, 3));
+    }
 }
 
 /* ----------------------------------------------------------
@@ -952,6 +954,7 @@ if (!empty($invalid_languages)) {
 $all_image_sizes = get_intermediate_image_sizes();
 $max_nb_image_sizes = (defined('WPUTOOLS_MAX_IMAGE_SIZES') && is_numeric(WPUTOOLS_MAX_IMAGE_SIZES)) ? WPUTOOLS_MAX_IMAGE_SIZES : 7;
 $nb_all_image_sizes = count($all_image_sizes);
+$useless_image_sizes = array('medium_large', '1536x1536', '2048x2048');
 if ($nb_all_image_sizes > $max_nb_image_sizes) {
     $additional_wp_sizes = wp_get_additional_image_sizes();
     $image_sizes_text = '';
@@ -973,6 +976,9 @@ if ($nb_all_image_sizes > $max_nb_image_sizes) {
             $size_values['height'] = $additional_wp_sizes[$size]['height'];
         }
         $image_sizes_text .= "\n-- " . $size . ': ' . $size_values['width'] . '×' . $size_values['height'];
+        if (in_array($size, $useless_image_sizes)) {
+            $image_sizes_text .= ' (default useless size)';
+        }
     }
 
     $wputools_notices[] = sprintf('There are %d images sizes, please check if they are useful : %s', $nb_all_image_sizes, $image_sizes_text);
