@@ -21,6 +21,7 @@ define('WP_USE_THEMES', false);
 /* Fix for qtranslate and other plugins */
 define('WP_ADMIN', true);
 $_SERVER['PHP_SELF'] = '/wp-admin/index.php';
+$_SERVER['REQUEST_METHOD'] = 'GET';
 
 /* Include wp load */
 require_once $bootstrap;
