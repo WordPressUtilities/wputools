@@ -126,7 +126,7 @@ function wputools__check_acf_pro_install(){
     fi;
 
     # Check if this is a version which does not support the license in constant.
-    _version_info=$(_WPCLICOMMAND plugin get advanced-custom-fields-pro --fields=version --format=csv);
+    _version_info=$(_WPCLICOMMAND plugin --debug=false --quiet get advanced-custom-fields-pro --fields=version --format=csv);
     _version_info=$(echo $_version_info | xargs);
     _version_info="${_version_info/Field,Value version,/}";
 
@@ -312,7 +312,7 @@ function wputools__update_core(){
 
 function wputools__update_plugin() {
     local _PLUGIN_ID="${1}";
-    local _MUPLUGIN_DIR_BASE="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}";
+    local _MUPLUGIN_DIR_BASE="${_CURRENT_DIR}wp-content/mu-plugins/${_PLUGIN_ID}";
     local _PLUGIN_DIR_BASE="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}";
     local _PLUGIN_DIR="${_PLUGIN_DIR_BASE}/";
     local _PLUGIN_LANG="${_CURRENT_DIR}wp-content/languages/plugins/${_PLUGIN_ID}*";
@@ -327,7 +327,7 @@ function wputools__update_plugin() {
     if [[ ! -d "${_PLUGIN_DIR}" ]];then
         bashutilities_message "The plugin \"${_PLUGIN_ID}\" does not exists" 'error';
     else
-        local _PLUGIN_VERSION_OLD=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=version);
+        local _PLUGIN_VERSION_OLD=$(_WPCLICOMMAND plugin --debug=false --quiet get "${_PLUGIN_ID}" --field=version);
         # Reset git status
         git reset;
         # Update
@@ -338,12 +338,24 @@ function wputools__update_plugin() {
         else
             # Update plugin with WP-CLI
             echo '# Update from WP-CLI';
-            _WPCLICOMMAND plugin update "${_PLUGIN_ID}";
-            _WPCLICOMMAND language plugin update "${_PLUGIN_ID}";
+
+            if [[ "${_PLUGIN_ID}" == 'advanced-custom-fields-pro' ]];then
+                local _acf_api_key=$(_WPCLICOMMAND config --debug=false --quiet get ACF_PRO_LICENSE 2> /dev/null);
+                if [[ "${_acf_api_key}" == "" ]];then
+                    bashutilities_message "ACF Pro license is not defined. Plugin wont be updated." 'error';
+                    return;
+                fi;
+                rm -rf "${_PLUGIN_DIR}";
+                _WPCLICOMMAND plugin --debug=false --quiet install "https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${_acf_api_key}";
+            else
+                _WPCLICOMMAND plugin --debug=false --quiet update "${_PLUGIN_ID}";
+            fi;
+
+            _WPCLICOMMAND language plugin --debug=false --quiet update "${_PLUGIN_ID}";
         fi;
         # Commit plugin update
-        local _PLUGIN_VERSION=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=version);
-        local _PLUGIN_TITLE=$(_WPCLICOMMAND plugin get "${_PLUGIN_ID}" --field=title);
+        local _PLUGIN_VERSION=$(_WPCLICOMMAND plugin --debug=false --quiet get "${_PLUGIN_ID}" --field=version);
+        local _PLUGIN_TITLE=$(_WPCLICOMMAND plugin --debug=false --quiet get "${_PLUGIN_ID}" --field=title);
         local _PLUGIN_COMMIT_TEXT="Update Plugin ${_PLUGIN_TITLE} from v${_PLUGIN_VERSION_OLD} to v${_PLUGIN_VERSION}";
         if [[ "${_PLUGIN_VERSION_OLD}" == "${_PLUGIN_VERSION}" ]];then
             local _PLUGIN_COMMIT_TEXT="Update Plugin ${_PLUGIN_TITLE}";
