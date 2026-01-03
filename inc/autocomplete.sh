@@ -8,7 +8,7 @@ _WPUTOOLS_AUTOCOMPLETE_WPUWOO_ACTION_DIR="${_WPUWOO_ACTION_DIR}";
 
 # Thanks : https://stackoverflow.com/a/5303225
 _wputools_complete() {
-    local cur prev prev2 dir ext _reply;
+    local cur prev prev2 dir ext _reply _val;
 
     local _base_wp_dir=$(awk -F '/wp-content'  '{print $1}'  <<<  "${PWD}");
     local _base_wp_dir_content="${_base_wp_dir}/wp-content/";
@@ -20,7 +20,33 @@ _wputools_complete() {
 
     COMPREPLY=()
     cur=${COMP_WORDS[COMP_CWORD]}
-    prev=${COMP_WORDS[COMP_CWORD-1]}
+    if [ $COMP_CWORD -ge 1 ]; then
+        prev=${COMP_WORDS[COMP_CWORD-1]}
+    fi;
+    if [ $COMP_CWORD -ge 2 ]; then
+        prev2=${COMP_WORDS[COMP_CWORD-2]}
+    fi
+
+    # Handle some arguments
+    case "$cur" in
+        --url=*)
+            _val="${cur#--url=}"
+            COMPREPLY=(
+                $(compgen -W "$(${_WPCLIPATH} site list --field=domain 2>/dev/null | sort -u)" -- "$_val")
+            )
+            return 0;
+            ;;
+
+        --blog_id=*)
+            _val="${cur#--blog_id=}"
+            COMPREPLY=(
+                $(compgen -W "$(${_WPCLIPATH} site list --field=blog_id 2>/dev/null | sort -u)" -- "$_val")
+            )
+            return 0;
+            ;;
+    esac
+
+
 
     if [ $COMP_CWORD -eq 1 ]; then
         _reply="";
@@ -103,8 +129,6 @@ _wputools_complete() {
             ;;
         esac
     elif [ $COMP_CWORD -eq 3 ]; then
-        prev2=${COMP_WORDS[COMP_CWORD-2]}
-
         if [[ "$prev2" == 'wp' ]];then
             # Load all subcommands
             local _tmp_reply='foreach (WP_CLI::get_root_command()->get_subcommands() as $name => $details) {if($name == "';
@@ -130,8 +154,14 @@ _wputools_complete() {
 
     fi
 
+    # Add a trailing space when there's exactly one completion (compopt is not supported in all bash versions)
+    if [ "${#COMPREPLY[@]}" -eq 1 ]; then
+        COMPREPLY[0]="${COMPREPLY[0]} "
+    fi
+
+
     return 0
 }
 
-complete -F _wputools_complete wputools
+complete -F _wputools_complete -o nospace wputools
 
