@@ -8,7 +8,7 @@ _WPUTOOLS_AUTOCOMPLETE_WPUWOO_ACTION_DIR="${_WPUWOO_ACTION_DIR}";
 
 # Thanks : https://stackoverflow.com/a/5303225
 _wputools_complete() {
-    local cur prev prev2 dir ext _reply _val;
+    local cur prev prev2 dir ext _reply _val _prefix;
 
     local _base_wp_dir=$(awk -F '/wp-content'  '{print $1}'  <<<  "${PWD}");
     local _base_wp_dir_content="${_base_wp_dir}/wp-content/";
@@ -27,25 +27,34 @@ _wputools_complete() {
         prev2=${COMP_WORDS[COMP_CWORD-2]}
     fi
 
-    # Handle some arguments
+
+    if [[ "$cur" == --* ]]; then
+        COMP_WORDBREAKS="${COMP_WORDBREAKS//=}"
+    fi
+
     case "$cur" in
         --url=*)
-            _val="${cur#--url=}"
+            _prefix="--url="
+            _val="${cur#${_prefix}}"
+
             COMPREPLY=(
                 $(compgen -W "$(${_WPCLIPATH} site list --field=domain 2>/dev/null | sort -u)" -- "$_val")
             )
-            return 0;
+            COMPREPLY=("${COMPREPLY[@]/#/${_prefix}}")
+            return 0
             ;;
 
         --blog_id=*)
-            _val="${cur#--blog_id=}"
+            _prefix="--blog_id="
+            _val="${cur#${_prefix}}"
+
             COMPREPLY=(
                 $(compgen -W "$(${_WPCLIPATH} site list --field=blog_id 2>/dev/null | sort -u)" -- "$_val")
             )
-            return 0;
+            COMPREPLY=("${COMPREPLY[@]/#/${_prefix}}")
+            return 0
             ;;
     esac
-
 
 
     if [ $COMP_CWORD -eq 1 ]; then
