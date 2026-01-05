@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.148.1';
+local _WPUTOOLS_VERSION='0.148.2';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.4 8.5 9.0)
@@ -242,6 +242,7 @@ fi;
 local wputools_wp_config_path=$(wputools__get_wp_config_path);
 _HOME_URL='';
 _SITE_NAME='';
+_WPUTOOLS_MULTISITE_URLS=();
 
 # Check for cached home_url
 local _HOME_URL_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}home_url.txt"
@@ -255,6 +256,12 @@ if [[ -f "${_SITE_NAME_CACHE_FILE}" && $(find "${_SITE_NAME_CACHE_FILE}" -mmin -
     _SITE_NAME=$(cat "${_SITE_NAME_CACHE_FILE}")
 fi
 
+# Check for cached multisite URLs
+local _MULTISITE_URLS_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}multisite_urls.txt"
+if [[ -f "${_MULTISITE_URLS_CACHE_FILE}" && $(find "${_MULTISITE_URLS_CACHE_FILE}" -mmin -5) ]]; then
+    _WPUTOOLS_MULTISITE_URLS=($(cat "${_MULTISITE_URLS_CACHE_FILE}"));
+fi
+
 if [[ -f "${wputools_wp_config_path}" ]];then
     if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
         _HOME_URL=$(_WPCLICOMMAND option get home --quiet --skip-plugins --skip-themes --skip-packages);
@@ -265,6 +272,14 @@ if [[ -f "${wputools_wp_config_path}" ]];then
     if [[ -z "${_SITE_NAME}" || "${_SITE_NAME}" == '' ]];then
         _SITE_NAME=$(_WPCLICOMMAND option get blogname --quiet --skip-plugins --skip-themes --skip-packages);
     fi;
+    if grep -q "MULTISITE" "${wputools_wp_config_path}"; then
+    echo "Multisite detected";
+        if [[ ${_WPUTOOLS_MULTISITE_URLS} == "" ]]; then
+            local _multisite_urls_raw=$(_WPCLICOMMAND site list --field=domain --skip-plugins --skip-themes --skip-packages);
+            echo "${_multisite_urls_raw}" > "${_MULTISITE_URLS_CACHE_FILE}";
+        fi
+    fi;
+
 fi;
 
 # Cache home_url

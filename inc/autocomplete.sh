@@ -36,9 +36,8 @@ _wputools_complete() {
         --url=*)
             _prefix="--url="
             _val="${cur#${_prefix}}"
-
             COMPREPLY=(
-                $(compgen -W "$(${_WPCLIPATH} site list --field=domain 2>/dev/null | sort -u)" -- "$_val")
+                $(compgen -W "$(echo "${_WPUTOOLS_MULTISITE_URLS[*]}" | sort -u)" -- "$_val")
             )
             COMPREPLY=("${COMPREPLY[@]/#/${_prefix}}")
             return 0
