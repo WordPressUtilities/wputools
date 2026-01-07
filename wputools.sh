@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.148.2';
+local _WPUTOOLS_VERSION='0.148.3';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.4 8.5 9.0)
@@ -230,7 +230,7 @@ fi;
 ###################################
 
 local _FOLDER_CHECKSUM=$(bashutilities_get_folder_checksum "${_CURRENT_DIR}");
-local _WPUTOOLS_CACHE_DIR="/tmp/wputools-cache-${_FOLDER_CHECKSUM}/";
+local _WPUTOOLS_CACHE_DIR="${TMPDIR:-/tmp}/wputools-cache-${_FOLDER_CHECKSUM}";
 if [[ ! -d "${_WPUTOOLS_CACHE_DIR}" ]];then
     mkdir -p "${_WPUTOOLS_CACHE_DIR}";
 fi;
@@ -273,7 +273,6 @@ if [[ -f "${wputools_wp_config_path}" ]];then
         _SITE_NAME=$(_WPCLICOMMAND option get blogname --quiet --skip-plugins --skip-themes --skip-packages);
     fi;
     if grep -q "MULTISITE" "${wputools_wp_config_path}"; then
-    echo "Multisite detected";
         if [[ ${_WPUTOOLS_MULTISITE_URLS} == "" ]]; then
             local _multisite_urls_raw=$(_WPCLICOMMAND site list --field=domain --skip-plugins --skip-themes --skip-packages);
             echo "${_multisite_urls_raw}" > "${_MULTISITE_URLS_CACHE_FILE}";
