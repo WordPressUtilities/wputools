@@ -65,13 +65,17 @@ default:
 
 if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
 
+    $_unsplash_url = 'https://api.unsplash.com/photos/random?client_id=' . $_GET['unsplash_api_key'];
+    if (defined('WPUTOOLS_UNSPLASH_SUBJECT')) {
+        $_unsplash_url .= '&query=' . urlencode(WPUTOOLS_UNSPLASH_SUBJECT);
+    }
     $orientations = array('landscape', 'portrait', 'squarish');
     $nb_orientations = count($orientations);
     $images_list = array();
     if ($_GET['unsplash_api_key']) {
         for ($i = 0; $i < $_samples_nb; $i++) {
             $orientation = $orientations[$i % $nb_orientations];
-            $image = json_decode(wp_remote_retrieve_body(wp_remote_get('https://api.unsplash.com/photos/random?orientation=' . $orientation . '&client_id=' . $_GET['unsplash_api_key'])), true);
+            $image = json_decode(wp_remote_retrieve_body(wp_remote_get($_unsplash_url . '&orientation=' . $orientation)), true);
             if (isset($image['urls'])) {
                 $images_list[] = $image['urls']['regular'];
             }

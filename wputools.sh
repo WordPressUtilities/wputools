@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.148.3';
+local _WPUTOOLS_VERSION='0.148.4';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0)
 local _PHP_VERSIONS_ADVANCED=(8.4 8.5 9.0)
@@ -245,19 +245,19 @@ _SITE_NAME='';
 _WPUTOOLS_MULTISITE_URLS=();
 
 # Check for cached home_url
-local _HOME_URL_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}home_url.txt"
+local _HOME_URL_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}/home_url.txt"
 if [[ -f "${_HOME_URL_CACHE_FILE}" && $(find "${_HOME_URL_CACHE_FILE}" -mmin -5) ]]; then
     _HOME_URL=$(cat "${_HOME_URL_CACHE_FILE}")
 fi
 
 # Check for cached site_name
-local _SITE_NAME_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}site_name.txt"
+local _SITE_NAME_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}/site_name.txt"
 if [[ -f "${_SITE_NAME_CACHE_FILE}" && $(find "${_SITE_NAME_CACHE_FILE}" -mmin -5) ]]; then
     _SITE_NAME=$(cat "${_SITE_NAME_CACHE_FILE}")
 fi
 
 # Check for cached multisite URLs
-local _MULTISITE_URLS_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}multisite_urls.txt"
+local _MULTISITE_URLS_CACHE_FILE="${_WPUTOOLS_CACHE_DIR}/multisite_urls.txt"
 if [[ -f "${_MULTISITE_URLS_CACHE_FILE}" && $(find "${_MULTISITE_URLS_CACHE_FILE}" -mmin -5) ]]; then
     _WPUTOOLS_MULTISITE_URLS=($(cat "${_MULTISITE_URLS_CACHE_FILE}"));
 fi
