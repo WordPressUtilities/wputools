@@ -949,6 +949,30 @@ if (!empty($invalid_languages)) {
 }
 
 /* ----------------------------------------------------------
+  Languages
+---------------------------------------------------------- */
+
+if (function_exists('pll_languages_list')) {
+    $languages = pll_languages_list(array(
+        'hide_empty' => 0,
+        'fields' => 'locale'
+    ));
+    if (count($languages) < 1) {
+        $wputools_errors[] = 'Polylang : No language is defined.';
+    }
+
+    $lang_pack = get_available_languages();
+    foreach ($languages as $lang_locale) {
+        if ($lang_locale == 'en_US') {
+            continue;
+        }
+        if (!in_array($lang_locale, $lang_pack)) {
+            $wputools_errors[] = sprintf('Polylang : The language pack for "%s" is not installed.', $lang_locale);
+        }
+    }
+}
+
+/* ----------------------------------------------------------
   Check image sizes
 ---------------------------------------------------------- */
 
