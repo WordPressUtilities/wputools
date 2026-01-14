@@ -602,7 +602,6 @@ if ($env_type == 'production') {
   Check home page speed
 ---------------------------------------------------------- */
 
-
 $start_time = microtime(true);
 $response = wp_remote_get($site_url);
 $end_time = microtime(true);
@@ -962,12 +961,42 @@ if (function_exists('pll_languages_list')) {
     }
 
     $lang_pack = get_available_languages();
+    $theme_lang_dirs = array(
+        get_stylesheet_directory() . '/languages/',
+        get_stylesheet_directory() . '/lang/'
+    );
+    $theme_name = basename(get_stylesheet_directory());
+
     foreach ($languages as $lang_locale) {
         if ($lang_locale == 'en_US') {
             continue;
         }
         if (!in_array($lang_locale, $lang_pack)) {
             $wputools_errors[] = sprintf('Polylang : The language pack for "%s" is not installed.', $lang_locale);
+        }
+
+        $has_lang_file = false;
+        foreach ($theme_lang_dirs as $theme_lang_dir) {
+            $source_file = $theme_lang_dir . $lang_locale . '.po';
+            $test_file = $theme_lang_dir . $lang_locale . '.mo';
+            if (is_readable($test_file)) {
+                $has_lang_file = true;
+                if (!is_readable($source_file)) {
+                    $wputools_errors[] = sprintf('Polylang : The source language file (.po) for "%s" is missing in the theme "%s".', $lang_locale, $theme_name);
+                }
+                if (filesize($source_file) < 1000) {
+                    $wputools_errors[] = sprintf('Polylang : The source language file (.po) for "%s" in the theme "%s" seems too small (%skb).', $lang_locale, $theme_name, round(filesize($test_file) / 1024));
+                }
+                break;
+            }
+            if (is_readable($source_file)) {
+                $wputools_errors[] = sprintf('Polylang : The compiled language file (.mo) for "%s" is missing in the theme "%s".', $lang_locale, $theme_name);
+                $has_lang_file = true;
+                break;
+            }
+        }
+        if (!$has_lang_file) {
+            $wputools_errors[] = sprintf('Polylang : The language file for "%s" is not available in the theme "%s".', $lang_locale, $theme_name);
         }
     }
 }
