@@ -14,7 +14,7 @@ if (function_exists('apache_get_modules')) {
         'mod_expires',
         'mod_headers',
         'mod_mime',
-        'mod_rewrite',
+        'mod_rewrite'
     );
     foreach ($apache_modules_needed as $module) {
         if (!in_array($module, $apache_modules)) {
@@ -29,8 +29,7 @@ if (function_exists('apache_get_modules')) {
 $phpversion = phpversion();
 if (version_compare($phpversion, '8.0', '<')) {
     $wputools_errors[] = sprintf('PHP version %s is too old !', $phpversion);
-}
-else if (version_compare($phpversion, '8.2', '<')) {
+} else if (version_compare($phpversion, '8.2', '<')) {
     $wputools_notices[] = sprintf('PHP version %s is getting old.', $phpversion);
 }
 
@@ -40,5 +39,5 @@ else if (version_compare($phpversion, '8.2', '<')) {
 /** Check if crontab binary exists */
 $crontab_bin = '/usr/bin/crontab';
 if (!file_exists($crontab_bin)) {
-    $wputoolsnotices[] = sprintf('The crontab binary was not found at %s', $crontab_bin);
+    $wputools_notices[] = sprintf('The crontab binary was not found at %s', $crontab_bin);
 }

@@ -50,6 +50,14 @@ if (!function_exists('get_option')) {
     return;
 }
 
+/* Memory
+-------------------------- */
+
+$current_memory_usage = memory_get_usage();
+if ($current_memory_usage !== false && $current_memory_usage > 128 * 1024 * 1024) {
+    $wputools_errors[] = sprintf('Current memory usage is %s MB, which is quite high.', round($current_memory_usage / 1024 / 1024, 2));
+}
+
 /* Database
 -------------------------- */
 

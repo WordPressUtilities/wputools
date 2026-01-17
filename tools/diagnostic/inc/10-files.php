@@ -1,10 +1,26 @@
 <?php
 
 /* ----------------------------------------------------------
-  Test folders
+  Test disk space
 ---------------------------------------------------------- */
 
-$folders = array('.', 'wp-content', 'wp-content/uploads', 'wp-content/cache');
+$free_space = disk_free_space('.') / 1024 / 1024 / 1024;
+if ($free_space < 20) {
+    $wputools_errors[] = sprintf('There is only %sgb of disk space left on the server !', round($free_space));
+}
+
+/* ----------------------------------------------------------
+  Test folders which should exist and be writable
+---------------------------------------------------------- */
+
+$folders = array(
+    '.',
+    'wp-content',
+    'wp-content/cache',
+    'wp-content/uploads',
+    'wp-content/uploads/' . date('Y')
+);
+
 foreach ($folders as $folder) {
     if (!is_dir($folder)) {
         $wputools_errors[] = sprintf('The %s folder should exist !', $folder);
@@ -17,16 +33,7 @@ foreach ($folders as $folder) {
 }
 
 /* ----------------------------------------------------------
-  Test disk space
----------------------------------------------------------- */
-
-$free_space = disk_free_space('.') / 1024 / 1024 / 1024;
-if ($free_space < 20) {
-    $wputools_errors[] = sprintf('There is only %sgb of disk space left on the server !', round($free_space));
-}
-
-/* ----------------------------------------------------------
-  Test files which should exist and be writable
+  Test files which should exist
 ---------------------------------------------------------- */
 
 $files = array(
@@ -39,22 +46,6 @@ foreach ($files as $file) {
     }
     if (!file_exists($file[0]) && !file_exists($file[1])) {
         $wputools_errors[] = sprintf('The %s file should exist !', $file[0]);
-        continue;
-    }
-    if (!is_writable($file[0]) && !is_writable($file[1])) {
-        $wputools_errors[] = sprintf('The file %s should be writable !', $file[0]);
-        continue;
-    }
-}
-
-/* ----------------------------------------------------------
-  Test folders which should exist and be writable
----------------------------------------------------------- */
-
-$folders = array('wp-content', 'wp-content/uploads', 'wp-content/uploads/' . date('Y'));
-foreach ($folders as $folder) {
-    if (!is_writable($folder)) {
-        $wputools_errors[] = sprintf('The folder %s should be writable !', $folder);
         continue;
     }
 }
