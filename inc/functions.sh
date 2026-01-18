@@ -176,7 +176,12 @@ function wputools__get_db_name(){
 ###################################
 
 function wputools_query(){
-        # Create temp my.cnf
+    local _mysql_command="mysql";
+    if command -v mariadb >/dev/null 2>&1; then
+        alias _mysql_command="mariadb"
+    fi
+
+    # Create temp my.cnf
     local rand_cnf=$(bashutilities_rand_string 6);
     local cnf_file="my-${rand_cnf}-";
     local cnf_file_content=$(cat <<EOF
@@ -191,7 +196,7 @@ EOF
     # Do query
     case "${1}" in
         "select")
-            mysql --defaults-extra-file="${cnf_file}" --skip-column-names -se "${2}";
+            ${_mysql_command} --defaults-extra-file="${cnf_file}" --skip-column-names -se "${2}";
         ;;
     esac
 
