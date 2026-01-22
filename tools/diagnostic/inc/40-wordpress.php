@@ -1073,3 +1073,35 @@ if (!empty($wputh_pages_site)) {
         }
     }
 }
+
+/* ----------------------------------------------------------
+  Menus
+---------------------------------------------------------- */
+
+$nav_menus = wp_get_nav_menus();
+$all_menu_links = array();
+
+foreach ($nav_menus as $menu) {
+    $menu_items = wp_get_nav_menu_items($menu->term_id);
+    if (!$menu_items) {
+        continue;
+    }
+    foreach ($menu_items as $item) {
+        if ($item->object != 'custom') {
+            continue;
+        }
+
+        if (strpos($item->url, $site_url) !== 0 && substr($item->url, 0, 4) == 'http') {
+            continue;
+        }
+
+        if (!isset($all_menu_links[$menu->name])) {
+            $all_menu_links[$menu->name] = array();
+        }
+        $all_menu_links[$menu->name][] = $item->url;
+    }
+}
+
+foreach ($all_menu_links as $menu_name => $menu_links) {
+    $wputools_errors[] = sprintf('The menu "%s" contains %d custom local links: %s', $menu_name, count($menu_links), implode(', ', $menu_links));
+}
