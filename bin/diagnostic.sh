@@ -23,6 +23,19 @@ if [[ "${1}" == 'code-profiler' ]];then
 fi;
 
 ###################################
+## Memory
+###################################
+
+if [[ "${1}" == 'memory' ]];then
+    wputools_echo_message "### Memory Info";
+    _WPUDIAG_FILE=$(wputools_create_random_file "memory");
+    cat "${_TOOLSDIR}diagnostic/memory.php" > "${_CURRENT_DIR}${_WPUDIAG_FILE}";
+    $_PHP_COMMAND  "${_WPUDIAG_FILE}";
+    rm "${_CURRENT_DIR}${_WPUDIAG_FILE}";
+    return 0;
+fi;
+
+###################################
 ## Checksums
 ###################################
 

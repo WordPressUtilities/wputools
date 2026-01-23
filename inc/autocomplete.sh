@@ -83,7 +83,7 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "all current muplugins theme" -- $cur) )
             ;;
             "diagnostic")
-                COMPREPLY=( $(compgen -W "code-profiler cli now view web" -- $cur) )
+                COMPREPLY=( $(compgen -W "code-profiler cli memory now view web" -- $cur) )
             ;;
             "go")
                 COMPREPLY=( $(compgen -W "current_theme mu-plugins plugins themes uploads" -- $cur) )
