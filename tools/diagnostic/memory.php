@@ -8,12 +8,14 @@ function wputools__mem_mb($bytes) {
     return round($bytes / 1024 / 1024, 2);
 }
 
+$prev = null;
+
 function wputools__snapshot($label) {
     if (php_sapi_name() !== 'cli') {
         return;
     }
 
-    $prev = null;
+    global $prev;
 
     $usage = memory_get_usage(true);
     $peak = memory_get_peak_usage(true);
