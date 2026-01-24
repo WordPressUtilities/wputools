@@ -5,31 +5,32 @@
 ---------------------------------------------------------- */
 
 function wputools__mem_mb($bytes) {
-    return round($bytes / 1024 / 1024, 2);
+    return sprintf('%0.2f', round($bytes / 1024 / 1024, 2));
 }
 
-$prev = null;
+$wputools_memory_prev = null;
 
 function wputools__snapshot($label) {
     if (php_sapi_name() !== 'cli') {
         return;
     }
 
-    global $prev;
+    global $wputools_memory_prev;
 
     $usage = memory_get_usage(true);
     $peak = memory_get_peak_usage(true);
-    $delta = $prev === null ? 0 : $usage - $prev;
+    $delta = $wputools_memory_prev === null ? 0 : $usage - $wputools_memory_prev;
 
-    printf(
-        "%-80s | usage: %7.2f MB | delta: %+6.2f MB | peak: %7.2f MB\n",
-        $label,
-        wputools__mem_mb($usage),
-        wputools__mem_mb($delta),
-        wputools__mem_mb($peak)
+    $parts = array(
+        'label' => substr(str_pad($label, 60), 0, 60),
+        'usage' => 'Usage : ' . str_pad(wputools__mem_mb($usage), 6, ' ', STR_PAD_LEFT) . ' MB',
+        'delta' => 'Delta : '.($delta ? (str_pad(wputools__mem_mb($delta), 6, ' ', STR_PAD_LEFT) . ' MB') : str_pad('', 9)),
+        'peak' => 'Peak : ' . str_pad(wputools__mem_mb($peak), 6, ' ', STR_PAD_LEFT) . ' MB'
     );
 
-    $prev = $usage;
+    echo implode(' | ', $parts) . "\n";
+
+    $wputools_memory_prev = $usage;
 }
 
 function wputools_do_action_snapshot($label, $arg = null) {
@@ -52,21 +53,51 @@ $wp_settings_original_content = file_get_contents($wp_settings);
 -------------------------- */
 
 $wp_settings_content = $wp_settings_original_content;
-$wp_settings_content = str_replace('do_action', 'wputools_do_action_snapshot', $wp_settings_content);
-$wp_settings_content = str_replace('<?php', "<?php
 
+/* Snapshot on main hooks */
+$wp_settings_content = str_replace('do_action', 'wputools_do_action_snapshot', $wp_settings_content);
+
+/* Handle later hooks */
+$hook_insert = "\$GLOBALS['wp_roles']";
+$wp_settings_content = str_replace($hook_insert, "
+\$wputools_memory_hooks = array(
+    'parse_request',
+    'send_headers',
+    'parse_query',
+    'pre_get_posts',
+    'wp',
+    'template_redirect',
+    'wp_enqueue_scripts',
+    'wp_head',
+    'wp_footer',
+    'shutdown'
+);
+foreach(\$wputools_memory_hooks as \$hook) {
+    add_action(\$hook, function() use (\$hook) {
+        wputools__snapshot('Before - ' . \$hook);
+    }, -9999);
+    add_action(\$hook, function() use (\$hook) {
+        wputools__snapshot('After  - ' . \$hook);
+    }, 9999);
+}
+".$hook_insert, $wp_settings_content);
+
+/* Ensure live queries won't break */
+$wp_settings_content = str_replace('<?php', "<?php
 if(!function_exists('wputools_do_action_snapshot')){
     function wputools_do_action_snapshot(\$label, \$arg = null) {
         do_action(\$label, \$arg);
     }
 }
-
+if(!function_exists('wputools__snapshot')){
+    function wputools__snapshot(\$label) {}
+}
 ", $wp_settings_content);
+
+/* Insert modified wp-settings.php */
 file_put_contents($wp_settings, $wp_settings_content);
 
-/* Create a tmp file in case of early shutdown
--------------------------- */
-
+/* Create a tmp file in case of early shutdown */
 $tmp_wp_settings = dirname(__FILE__) . '/wp-settings-tmp.php';
 file_put_contents($tmp_wp_settings, $wp_settings_original_content);
 
