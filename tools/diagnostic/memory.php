@@ -4,31 +4,74 @@
   Helpers
 ---------------------------------------------------------- */
 
+define('WPUTOOLS_RAM_COL_WIDTH', 10);
+define('WPUTOOLS_TEXT_COL_WIDTH', 60);
+
+function wputools_cli_table_thead($columns, $separator = ' | ') {
+    $line_width = array_sum($columns) + (count($columns) - 1) * strlen($separator);
+    $parts = array();
+    foreach ($columns as $col_name => $col_width) {
+        $parts[] = substr(str_pad($col_name, $col_width, ' ', $col_width > 15 ? STR_PAD_RIGHT : STR_PAD_BOTH), 0, $col_width);
+    }
+    echo str_repeat('-', $line_width) . "\n";
+    echo implode($separator, $parts) . "\n";
+    echo str_repeat('-', $line_width) . "\n";
+}
+
+function wputools_cli_table_tr($values, $separator = ' | ') {
+    echo implode($separator, $values) . "\n";
+}
+
+/* Values
+-------------------------- */
+
 function wputools__mem_mb($bytes) {
     return sprintf('%0.2f', round($bytes / 1024 / 1024, 2));
 }
 
-$wputools_memory_prev = null;
+function wputools_mem_pad($value) {
+    $suffix = ' MB';
+    $suffix_length = strlen($suffix);
+    return $value ? str_pad(wputools__mem_mb($value), WPUTOOLS_RAM_COL_WIDTH - $suffix_length, ' ', STR_PAD_LEFT) . ' MB' : str_pad('', WPUTOOLS_RAM_COL_WIDTH);
+}
 
-function wputools__snapshot($label) {
+function wputools_text_pad($value) {
+    return substr(str_pad($value, WPUTOOLS_TEXT_COL_WIDTH), 0, WPUTOOLS_TEXT_COL_WIDTH);
+}
+
+/* Snapshot
+-------------------------- */
+
+$wputools_memory_prev = null;
+$wputools_microtime_start = microtime(true);
+function wputools__snapshot($label, $empty = false) {
     if (php_sapi_name() !== 'cli') {
         return;
     }
 
-    global $wputools_memory_prev;
+    if ($empty) {
+        echo wputools_cli_table_thead(array(
+            'Hook' => WPUTOOLS_TEXT_COL_WIDTH,
+            'Time' => WPUTOOLS_RAM_COL_WIDTH,
+            'Usage' => WPUTOOLS_RAM_COL_WIDTH,
+            'Delta' => WPUTOOLS_RAM_COL_WIDTH,
+            'Peak' => WPUTOOLS_RAM_COL_WIDTH,
+        ));
+        return;
+    }
+
+    global $wputools_memory_prev, $wputools_microtime_start;
 
     $usage = memory_get_usage(true);
-    $peak = memory_get_peak_usage(true);
     $delta = $wputools_memory_prev === null ? 0 : $usage - $wputools_memory_prev;
 
-    $parts = array(
-        'label' => substr(str_pad($label, 60), 0, 60),
-        'usage' => 'Usage : ' . str_pad(wputools__mem_mb($usage), 6, ' ', STR_PAD_LEFT) . ' MB',
-        'delta' => 'Delta : '.($delta ? (str_pad(wputools__mem_mb($delta), 6, ' ', STR_PAD_LEFT) . ' MB') : str_pad('', 9)),
-        'peak' => 'Peak : ' . str_pad(wputools__mem_mb($peak), 6, ' ', STR_PAD_LEFT) . ' MB'
-    );
-
-    echo implode(' | ', $parts) . "\n";
+    echo wputools_cli_table_tr(array(
+        'label' => wputools_text_pad($label),
+        'time' => str_pad(sprintf('%0.2f sec', microtime(true) - $wputools_microtime_start), WPUTOOLS_RAM_COL_WIDTH, ' ', STR_PAD_RIGHT),
+        'usage' => wputools_mem_pad($usage),
+        'delta' => wputools_mem_pad($delta),
+        'peak' => wputools_mem_pad(memory_get_peak_usage(true)),
+    ));
 
     $wputools_memory_prev = $usage;
 }
@@ -57,6 +100,35 @@ $wp_settings_content = $wp_settings_original_content;
 /* Snapshot on main hooks */
 $wp_settings_content = str_replace('do_action', 'wputools_do_action_snapshot', $wp_settings_content);
 
+/* Ensure live queries won't break */
+$wp_settings_content = str_replace('<?php', "<?php
+if(!function_exists('wputools_do_action_snapshot')){
+    function wputools_do_action_snapshot(\$label, \$arg = null) {
+        do_action(\$label, \$arg);
+    }
+}
+if(!function_exists('wputools__snapshot')){
+    function wputools__snapshot(\$label) {}
+}
+wputools__snapshot('Start',true);
+", $wp_settings_content);
+
+/* Additional snapshots */
+$strings_to_find = array(
+    'wp_check_php_mysql_versions()',
+    'wp_initial_constants()',
+    'wp_debug_mode()',
+    'wp_start_object_cache()',
+    'wp_not_installed()',
+    'wp_plugin_directory_constants()',
+);
+
+foreach ($strings_to_find as $string_to_find) {
+    $wp_settings_content = str_replace($string_to_find, "
+wputools__snapshot('Check : " . trim($string_to_find) . "');
+" . $string_to_find, $wp_settings_content);
+}
+
 /* Handle later hooks */
 $hook_insert = "\$GLOBALS['wp_roles']";
 $wp_settings_content = str_replace($hook_insert, "
@@ -80,19 +152,11 @@ foreach(\$wputools_memory_hooks as \$hook) {
         wputools__snapshot('After  - ' . \$hook);
     }, 9999);
 }
-".$hook_insert, $wp_settings_content);
+add_action('shutdown', function() {
+    wputools__snapshot('End', true);
+}, 10000);
 
-/* Ensure live queries won't break */
-$wp_settings_content = str_replace('<?php', "<?php
-if(!function_exists('wputools_do_action_snapshot')){
-    function wputools_do_action_snapshot(\$label, \$arg = null) {
-        do_action(\$label, \$arg);
-    }
-}
-if(!function_exists('wputools__snapshot')){
-    function wputools__snapshot(\$label) {}
-}
-", $wp_settings_content);
+" . $hook_insert, $wp_settings_content);
 
 /* Insert modified wp-settings.php */
 file_put_contents($wp_settings, $wp_settings_content);
