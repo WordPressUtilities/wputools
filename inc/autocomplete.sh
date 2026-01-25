@@ -77,7 +77,7 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "admins all-users" -- $cur) )
             ;;
             "cache")
-                COMPREPLY=( $(compgen -W "all opcache wprocket w3tc transient fvm object url purge-cli" -- $cur) )
+                COMPREPLY=( $(compgen -W "all opcache wprocket w3tc transient fvm object url purge-cli purge-wputools" -- $cur) )
             ;;
             "codechecker")
                 COMPREPLY=( $(compgen -W "all current muplugins theme" -- $cur) )

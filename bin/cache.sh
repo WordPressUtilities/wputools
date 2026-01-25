@@ -10,6 +10,31 @@ if [ -z "${_EXTRA_CURL_ARGS}" ];then
     _EXTRA_CURL_ARGS='';
 fi;
 
+_cache_type='all';
+if [[ "${1}" != "" ]];then
+    _cache_type="${1}";
+fi;
+
+_cache_arg='';
+if [[ "${2}" != "" ]];then
+    _cache_arg="${2}";
+fi;
+
+###################################
+## Purge WPUTOOLS vars
+###################################
+
+if [[ "${_cache_type}" == 'purge-wputools' ]];then
+    echo '# Purging WPUTOOLS cache';
+    if [[ -n "${_WPUTOOLS_CACHE_DIR}" && -d "${_WPUTOOLS_CACHE_DIR}" ]]; then
+        echo "# Deleting all WPUTOOLS cache files";
+        rm -rf "${_WPUTOOLS_CACHE_DIR}/"*;
+    else
+        echo "# Directory not found: ${_WPUTOOLS_CACHE_DIR}";
+    fi;
+    return 0;
+fi;
+
 ###################################
 ## Flush Rewrite rules
 ###################################
@@ -26,16 +51,6 @@ else
     done
 fi;
 
-
-_cache_type='all';
-if [[ "${1}" != "" ]];then
-    _cache_type="${1}";
-fi;
-
-_cache_arg='';
-if [[ "${2}" != "" ]];then
-    _cache_arg="${2}";
-fi;
 
 ###################################
 ## Clearing cache directories

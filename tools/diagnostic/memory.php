@@ -29,10 +29,20 @@ function wputools__mem_mb($bytes) {
     return sprintf('%0.2f', round($bytes / 1024 / 1024, 2));
 }
 
-function wputools_mem_pad($value) {
+function wputools__mem_time($time) {
+    return sprintf('%0.2f', round($time, 2));
+}
+
+function wputools_mem_pad_mb($value) {
     $suffix = ' MB';
     $suffix_length = strlen($suffix);
     return $value ? str_pad(wputools__mem_mb($value), WPUTOOLS_RAM_COL_WIDTH - $suffix_length, ' ', STR_PAD_LEFT) . ' MB' : str_pad('', WPUTOOLS_RAM_COL_WIDTH);
+}
+
+function wputools_mem_pad_time($value, $force = false) {
+    $suffix = ' sec';
+    $suffix_length = strlen($suffix);
+    return ($value > 0.02 || $force) ? str_pad(wputools__mem_time($value), WPUTOOLS_RAM_COL_WIDTH - $suffix_length, ' ', STR_PAD_LEFT) . ' sec' : str_pad('', WPUTOOLS_RAM_COL_WIDTH);
 }
 
 function wputools_text_pad($value) {
@@ -43,6 +53,7 @@ function wputools_text_pad($value) {
 -------------------------- */
 
 $wputools_memory_prev = null;
+$wputools_microtime_prev = null;
 $wputools_microtime_start = microtime(true);
 function wputools__snapshot($label, $empty = false) {
     if (php_sapi_name() !== 'cli') {
@@ -53,27 +64,32 @@ function wputools__snapshot($label, $empty = false) {
         echo wputools_cli_table_thead(array(
             'Hook' => WPUTOOLS_TEXT_COL_WIDTH,
             'Time' => WPUTOOLS_RAM_COL_WIDTH,
+            'Delta T' => WPUTOOLS_RAM_COL_WIDTH,
             'Usage' => WPUTOOLS_RAM_COL_WIDTH,
-            'Delta' => WPUTOOLS_RAM_COL_WIDTH,
-            'Peak' => WPUTOOLS_RAM_COL_WIDTH,
+            'Delta U' => WPUTOOLS_RAM_COL_WIDTH,
+            'Peak' => WPUTOOLS_RAM_COL_WIDTH
         ));
         return;
     }
 
-    global $wputools_memory_prev, $wputools_microtime_start;
+    global $wputools_memory_prev, $wputools_microtime_start, $wputools_microtime_prev;
 
     $usage = memory_get_usage(true);
+    $time = microtime(true);
     $delta = $wputools_memory_prev === null ? 0 : $usage - $wputools_memory_prev;
+    $delta_time = $wputools_microtime_prev === null ? 0 : microtime(true) - $wputools_microtime_prev;
 
     echo wputools_cli_table_tr(array(
         'label' => wputools_text_pad($label),
-        'time' => str_pad(sprintf('%0.2f sec', microtime(true) - $wputools_microtime_start), WPUTOOLS_RAM_COL_WIDTH, ' ', STR_PAD_RIGHT),
-        'usage' => wputools_mem_pad($usage),
-        'delta' => wputools_mem_pad($delta),
-        'peak' => wputools_mem_pad(memory_get_peak_usage(true)),
+        'time' => wputools_mem_pad_time($time - $wputools_microtime_start, true),
+        'delta_time' => wputools_mem_pad_time($delta_time),
+        'usage' => wputools_mem_pad_mb($usage),
+        'delta' => wputools_mem_pad_mb($delta),
+        'peak' => wputools_mem_pad_mb(memory_get_peak_usage(true))
     ));
 
     $wputools_memory_prev = $usage;
+    $wputools_microtime_prev = $time;
 }
 
 function wputools_do_action_snapshot($label, $arg = null) {
@@ -120,7 +136,7 @@ $strings_to_find = array(
     'wp_debug_mode()',
     'wp_start_object_cache()',
     'wp_not_installed()',
-    'wp_plugin_directory_constants()',
+    'wp_plugin_directory_constants()'
 );
 
 foreach ($strings_to_find as $string_to_find) {
