@@ -128,6 +128,10 @@ Add CLI shortcut :
 
 `wputools multisite-duplicate;`
 
+### Manage users in a multisite network.
+
+`wputools multisite-user create|addto`;
+
 ### Install a WordPressUtilities mu-plugin
 
 `wputools mu-plugin wpu_file_cache;`
