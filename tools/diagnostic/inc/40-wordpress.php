@@ -38,6 +38,9 @@ if ($wpudiag_site && function_exists('get_site_by_path')) {
     }
 }
 
+$wpudiag_upload = wp_upload_dir();
+$wpudiag_upload_dir = $wpudiag_upload['basedir'];
+
 /* ----------------------------------------------------------
   Initial checks
 ---------------------------------------------------------- */
@@ -209,7 +212,7 @@ if (!is_file($htaccess_file)) {
   Test if there is a case sensitive config
 ---------------------------------------------------------- */
 
-$wputools_temp_file = wp_upload_dir()['basedir'] . '/wputools_TEMP_file_' . uniqid() . '.txt';
+$wputools_temp_file = $wpudiag_upload_dir . '/wputools_TEMP_file_' . uniqid() . '.txt';
 $wputools_temp_file_lower = strtolower($wputools_temp_file);
 
 try {
@@ -238,8 +241,8 @@ if (file_exists($wputools_temp_file)) {
 ---------------------------------------------------------- */
 
 $temp_dir_name = 'wputools_temp_dir_' . uniqid();
-$wputools_temp_dir = wp_upload_dir()['basedir'] . '/' . $temp_dir_name;
-$wputools_temp_url = wp_upload_dir()['baseurl'] . '/' . $temp_dir_name;
+$wputools_temp_dir = $wpudiag_upload_dir . '/' . $temp_dir_name;
+$wputools_temp_url = $wpudiag_upload['baseurl'] . '/' . $temp_dir_name;
 try {
     mkdir($wputools_temp_dir, 0755, true);
 } catch (Exception $e) {
@@ -387,7 +390,8 @@ if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
 ---------------------------------------------------------- */
 
 global $wpdb;
-$q = "SHOW TABLES LIKE '%log%'";
+$like_query = (isset($wpudiag_args['url']) ? esc_sql($wpdb->prefix) : '') . '%log%';
+$q = "SHOW TABLES LIKE '" . $like_query . "'";
 $tables = $wpdb->get_results($q);
 foreach ($tables as $table) {
     $logs_table = implode('', get_object_vars($table));
@@ -1081,6 +1085,8 @@ if (!empty($wputh_pages_site)) {
 $nav_menus = wp_get_nav_menus();
 $all_menu_links = array();
 
+$accepted_schemes = array('mailto:', 'tel:');
+
 foreach ($nav_menus as $menu) {
     $menu_items = wp_get_nav_menu_items($menu->term_id);
     if (!$menu_items) {
@@ -1095,6 +1101,12 @@ foreach ($nav_menus as $menu) {
             continue;
         }
 
+        foreach ($accepted_schemes as $scheme) {
+            if (strpos($item->url, $scheme) === 0) {
+                continue 2;
+            }
+        }
+
         if (!isset($all_menu_links[$menu->name])) {
             $all_menu_links[$menu->name] = array();
         }
@@ -1103,5 +1115,51 @@ foreach ($nav_menus as $menu) {
 }
 
 foreach ($all_menu_links as $menu_name => $menu_links) {
-    $wputools_errors[] = sprintf('The menu "%s" contains %d custom local links: %s', $menu_name, count($menu_links), implode(', ', $menu_links));
+    $wputools_errors[] = sprintf('The menu "%s" contains %d custom local link(s): %s', $menu_name, count($menu_links), implode(', ', $menu_links));
+}
+
+/* ----------------------------------------------------------
+  Find files which are too large in Uploads directory for their type
+---------------------------------------------------------- */
+
+$types = array(
+    'jpg' => 8,
+    'jpeg' => 8,
+    'png' => 2,
+    'gif' => 2
+);
+
+$files = glob_recursive($wpudiag_upload_dir . '/*.*', GLOB_BRACE);
+foreach ($files as $file) {
+    if (!is_file($file)) {
+        continue;
+    }
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    if (!isset($types[$ext])) {
+        continue;
+    }
+    $max_size = $types[$ext] * 1024 * 1024;
+    $file_size = filesize($file);
+    $file_size_h = round($file_size / 1024 / 1024, 2);
+    if ($file_size > $max_size) {
+        $file_name = str_replace(ABSPATH, '', $file);
+        $wputools_errors[] = sprintf('The file %s weighs %dmb !', $file_name, $file_size_h);
+    }
+}
+
+/* ----------------------------------------------------------
+  Find folders which contains too many files in Uploads directory
+---------------------------------------------------------- */
+
+$max_files = 1000;
+$folders = glob_recursive($wpudiag_upload_dir . '/*', GLOB_ONLYDIR);
+foreach ($folders as $folder) {
+    if (!is_dir($folder)) {
+        continue;
+    }
+    $files = glob($folder . '/*');
+    if (count($files) > $max_files) {
+        $folder_name = str_replace(ABSPATH, '', $folder);
+        $wputools_errors[] = sprintf('The folder %s contains %d files (max is %d) !', $folder_name, count($files), $max_files);
+    }
 }

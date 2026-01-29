@@ -126,50 +126,6 @@ foreach ($files as $file) {
 }
 
 /* ----------------------------------------------------------
-  Find files which are too large in Uploads directory for their type
----------------------------------------------------------- */
-
-$types = array(
-    'jpg' => 8,
-    'jpeg' => 8,
-    'png' => 2,
-    'gif' => 2
-);
-
-$files = glob_recursive('wp-content/uploads/*.*', GLOB_BRACE);
-foreach ($files as $file) {
-    if (!is_file($file)) {
-        continue;
-    }
-    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-    if (!isset($types[$ext])) {
-        continue;
-    }
-    $max_size = $types[$ext] * 1024 * 1024;
-    $file_size = filesize($file);
-    $file_size_h = round($file_size / 1024 / 1024, 2);
-    if ($file_size > $max_size) {
-        $wputools_errors[] = sprintf('The file %s weight %dmb !', $file, $file_size_h);
-    }
-}
-
-/* ----------------------------------------------------------
-  Find folders which contains too many files in Uploads directory
----------------------------------------------------------- */
-
-$max_files = 1000;
-$folders = glob_recursive('wp-content/uploads/*', GLOB_ONLYDIR);
-foreach ($folders as $folder) {
-    if (!is_dir($folder)) {
-        continue;
-    }
-    $files = glob($folder . '/*');
-    if (count($files) > $max_files) {
-        $wputools_errors[] = sprintf('The folder %s contains %d files (max is %d) !', $folder, count($files), $max_files);
-    }
-}
-
-/* ----------------------------------------------------------
   Check chmod of some files
 ---------------------------------------------------------- */
 
