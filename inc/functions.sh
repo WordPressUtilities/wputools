@@ -363,41 +363,53 @@ function wputools_is_multisite(){
     _WPCLICOMMAND site list --field=url >/dev/null 2>&1
 }
 
+function wputools_find_url_in_multisite(){
+    local _wputools_sites=($(wputools_get_multisite_urls));
+
+    # Clean argument
+    local _tmp_home_url=$(wputools_format_home_url "${1}");
+    local _tmp_url_www=${_tmp_home_url/\/\//\/\/www\.};
+    local _tmp_site_www="";
+
+    for site in "${_wputools_sites[@]}"; do
+        _tmp_site_www=${site/\/\//\/\/www\.};
+
+        # If the URL matches a website, use it
+        if [[
+            "${site}" == "${_tmp_home_url}" ||
+            "${site}" == "${_tmp_home_url}/" ||
+            "${_tmp_site_www}" == "${_tmp_home_url}" ||
+            "${site}" == "${_tmp_url_www}" ||
+            "${_tmp_site_www}" == "${_tmp_home_url}/" ||
+            "${site}" == "${_tmp_url_www}/"
+            ]]; then
+            echo "$site";
+            return;
+        fi
+    done
+
+}
+
 function wputools_select_multisite(){
     if ! wputools_is_multisite; then
         return;
     fi
 
     local _wputools_sites=($(wputools_get_multisite_urls));
-    local _tmp_home_url="";
-    local _tmp_url_www="";
-    local _tmp_site_www="";
 
     for arg in "$@"; do
 
         # If an argument named url exists, use it
         if [[ "$arg" == *-url=* ]]; then
+            local _tmp_home_url=$(wputools_find_url_in_multisite "${arg#*-url=}");
+            if [[ -n "${_tmp_home_url}" ]]; then
+                _HOME_URL="${_tmp_home_url}";
+                echo "Site URL set to ${_HOME_URL} from argument.";
+                return;
+            else
+                echo "The URL '${arg#*-url=}' does not match any site in the multisite.";
+            fi
 
-            # Clean argument
-            _tmp_home_url=$(wputools_format_home_url "${arg#*-url=}");
-            _tmp_url_www=${_tmp_home_url/\/\//\/\/www\.};
-            for site in "${_wputools_sites[@]}"; do
-                _tmp_site_www=${site/\/\//\/\/www\.};
-
-                # If the URL matches a website, use it
-                if [[
-                    "${site}" == "${_tmp_home_url}" ||
-                    "${site}" == "${_tmp_home_url}/" ||
-                    "${_tmp_site_www}" == "${_tmp_home_url}" ||
-                    "${site}" == "${_tmp_url_www}" ||
-                    "${_tmp_site_www}" == "${_tmp_home_url}/" ||
-                    "${site}" == "${_tmp_url_www}/"
-                    ]]; then
-                    _HOME_URL="$site"
-                    echo "Site URL set to ${_HOME_URL} from argument.";
-                    return;
-                fi
-            done
         fi
 
         # If an argument named blog_id exists, use it

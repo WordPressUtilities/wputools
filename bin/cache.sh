@@ -36,10 +36,28 @@ if [[ "${_cache_type}" == 'purge-wputools' ]];then
 fi;
 
 ###################################
-## Flush Rewrite rules
+## Select multisite
 ###################################
 
 _wputools_multisite_urls=$(wputools_get_multisite_urls);
+for arg in "$@"; do
+    # If an argument named url exists, use it
+    if [[ "$arg" == *-url=* ]]; then
+        local _tmp_home_url=$(wputools_find_url_in_multisite "${arg#*-url=}");
+        if [[ -n "${_tmp_home_url}" ]]; then
+            _wputools_multisite_urls=("${_tmp_home_url}");
+            echo "# Multisite URL selected: ${_tmp_home_url}";
+            if [[ "${1}" == "$arg" ]];then
+                _cache_type='all';
+            fi;
+        fi;
+    fi;
+done;
+
+###################################
+## Flush Rewrite rules
+###################################
+
 if ! wputools_is_multisite; then
     echo '# Flushing Rewrite rules';
     _WPCLICOMMAND rewrite flush --hard;

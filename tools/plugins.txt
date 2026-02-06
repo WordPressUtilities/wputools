@@ -51,3 +51,4 @@ wpuusermetas
 wpuwebsitepassword
 wpuwooaddressfields
 wpuwooproductfields
+wpu_redirection_extended
