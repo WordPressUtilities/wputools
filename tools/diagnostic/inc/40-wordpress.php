@@ -376,7 +376,7 @@ if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
         }
         $max_weight = 30 * 1024 * 1024;
         if ($logs_weight > $max_weight) {
-            $wputools_errors[] = sprintf('WordPress : The log folder size is bigger than %sMB.', round($max_weight / 1024 / 1024));
+            $wputools_notices[] = sprintf('WordPress : The log folder size is bigger than %sMB.', round($max_weight / 1024 / 1024));
         }
         $max_count = 30;
         if ($logs_count > $max_count) {
@@ -397,7 +397,7 @@ foreach ($tables as $table) {
     $logs_table = implode('', get_object_vars($table));
     $logs_count = $wpdb->get_var("SELECT COUNT(*) FROM $logs_table");
     if ($logs_count > 1000) {
-        $wputools_errors[] = sprintf('WordPress : The table “%s” contains more than 1000 rows.', $logs_table);
+        $wputools_notices[] = sprintf('WordPress : The table “%s” contains more than 1000 rows.', $logs_table);
     }
 }
 
@@ -615,12 +615,45 @@ if ($env_type == 'production') {
 ---------------------------------------------------------- */
 
 $start_time = microtime(true);
-$response = wp_remote_get($site_url);
+$response_home_content = wp_remote_get($site_url);
 $end_time = microtime(true);
-if (!is_wp_error($response)) {
+if (!is_wp_error($response_home_content)) {
     $total_time = $end_time - $start_time;
     if ($total_time > 0.2) {
         $wputools_errors[] = sprintf('Homepage took %s seconds to load.', round($total_time, 3));
+    }
+}
+
+/* ----------------------------------------------------------
+  Check content
+---------------------------------------------------------- */
+
+$strings_must_not_exists = array(
+    '?page_id=',
+    '?p=',
+    '?attachment_id=',
+    'PHP Warning',
+    'PHP Parse error',
+    'PHP Fatal error',
+    'SELECT * FROM',
+    ABSPATH
+);
+$strings_must_exists = array(
+    '</html>',
+    ''
+);
+
+if(!is_wp_error($response_home_content)) {
+    $home_content = wp_remote_retrieve_body($response_home_content);
+    foreach ($strings_must_not_exists as $string) {
+        if (strpos($home_content, $string) !== false) {
+            $wputools_errors[] = sprintf('The string "%s" should not be present in the homepage content.', $string);
+        }
+    }
+    foreach ($strings_must_exists as $string) {
+        if (strpos($home_content, $string) === false) {
+            $wputools_errors[] = sprintf('The string "%s" should be present in the homepage content.', $string);
+        }
     }
 }
 
