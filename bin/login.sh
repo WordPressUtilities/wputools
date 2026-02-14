@@ -45,7 +45,13 @@ if [[ -n "${_WPUTOOLS_LOGIN_ID}" ]]; then
         _WPUTOOLS_LOGIN_URL="${_WPUTOOLS_LOGIN_URL}?user_id=${_WPUTOOLS_LOGIN_ID}";
     else
         echo "User ${_WPUTOOLS_LOGIN_ID} does not exist.";
-        return 0;
+        _use_first_available_user=$(bashutilities_get_yn "- Do you want to use the first available user ?" 'y');
+        if [[ "${_use_first_available_user}" == 'y' ]]; then
+            _WPUTOOLS_LOGIN_ID="";
+        else
+            echo "Please provide a valid user ID as a parameter to the command.";
+            return 0;
+        fi;
     fi
 fi;
 

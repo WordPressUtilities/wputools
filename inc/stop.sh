@@ -113,6 +113,7 @@ unset -v _STATIC_FILE;
 unset -v _tmp_dump;
 unset -v _tmp_folder;
 unset -v _TMPLINE;
+unset -v _use_first_available_user;
 unset -v _WP_PROJECT_ENV;
 unset -v _WP_DISALLOW_FILE_EDIT;
 unset -v _WP_DISALLOW_FILE_MODS;
