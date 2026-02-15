@@ -195,6 +195,15 @@ if (isset($url_parts['host'])) {
 }
 $is_test_extension = $host_extension && in_array($host_extension, $ignored_extensions);
 
+/* WP-Config
+-------------------------- */
+
+if ($env_type == 'production' || $env_type == 'staging') {
+    if (is_readable(ABSPATH . 'wp-config.php') && !is_readable(ABSPATH . '../wp-config.php')) {
+        $wputools_errors[] = 'WordPress : The wp-config.php file should be located one level above the WordPress root directory for better security.';
+    }
+}
+
 /* ----------------------------------------------------------
   Htaccess : test file
 ---------------------------------------------------------- */
@@ -643,7 +652,7 @@ $strings_must_exists = array(
     ''
 );
 
-if(!is_wp_error($response_home_content)) {
+if (!is_wp_error($response_home_content)) {
     $home_content = wp_remote_retrieve_body($response_home_content);
     foreach ($strings_must_not_exists as $string) {
         if (strpos($home_content, $string) !== false) {
@@ -654,6 +663,11 @@ if(!is_wp_error($response_home_content)) {
         if (strpos($home_content, $string) === false) {
             $wputools_errors[] = sprintf('The string "%s" should be present in the homepage content.', $string);
         }
+    }
+    /* Check H1 tags */
+    $h1_count = substr_count($home_content, '<h1');
+    if ($h1_count !== 1) {
+        $wputools_errors[] = sprintf('The homepage should contain exactly one <h1> tag, found %d.', $h1_count);
     }
 }
 
