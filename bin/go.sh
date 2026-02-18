@@ -5,8 +5,18 @@ echo "# Going to ...";
 case "$1" in
     "current_theme" | "active_theme" )
         _CURRENT_THEME=$($_PHP_COMMAND $_WPCLISRC option get stylesheet --quiet --skip-plugins --skip-themes --skip-packages);
+        _CURRENT_THEME_PATH="${_CURRENT_DIR}/wp-content/themes/${_CURRENT_THEME}";
         echo "... current theme : ${_CURRENT_THEME}";
-        cd "${_CURRENT_DIR}/wp-content/themes/${_CURRENT_THEME}";
+        if [[ -z "${_CURRENT_THEME}" ]]; then
+            echo "No active theme found.";
+            return 0;
+        fi;
+        if [[ ! -d "${_CURRENT_THEME_PATH}" ]]; then
+            echo "Theme ${_CURRENT_THEME} not found.";
+            wputools_go_folder_or_subfolder "themes" "${2}";
+            return 1;
+        fi;
+        cd "${_CURRENT_THEME_PATH}";
     ;;
     "mu-plugins" | "mu-plugin" | "mu")
         wputools_go_folder_or_subfolder "mu-plugins" "${2}";

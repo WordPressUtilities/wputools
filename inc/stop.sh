@@ -90,6 +90,8 @@ unset -v _cache_dir;
 unset -v _CACHE_DIRS;
 unset -v _cache_type;
 unset -v _COMMIT_CHECK_GIT;
+unset -v _CURRENT_THEME;
+unset -v _CURRENT_THEME_PATH;
 unset -v _dbimport_file;
 unset -v _dbimport_file_tmp;
 unset -v _DEBUGLOG_FILE;
