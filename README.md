@@ -124,6 +124,10 @@ Add CLI shortcut :
 
 `wputools wpuwoo import-export-post import 10`
 
+### Convert a single site to a multisite network.
+
+`wputools multisite-convert;`
+
 ### Duplicate a WordPress site in a multisite network.
 
 `wputools multisite-duplicate;`

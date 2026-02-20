@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.156.2';
+local _WPUTOOLS_VERSION='0.156.3';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0 8.1)
 local _PHP_VERSIONS_ADVANCED=(8.4 8.5 9.0)
@@ -298,7 +298,7 @@ case "$1" in
     "import")
         . "${_SOURCEDIR}bin/wpuwoo.sh" "import-csv" "${2}";
     ;;
-    "adminer" | "anonymizedb" | "archivelogs" | "backup" | "bduser" | "cleanhack" | "codechecker" | "debugfile" | "detecthack" | "diagnostic" | "login" | "go" | "duplicatemenu" |  "generatemenus" | "clean" | "update" | "cache" | "cachewarm" | "dbexport" | "dbimport" | "multisite-duplicate" | "multisite-user" | "muplugin" | "nginx-convert" | "optimizeimage" | "plugin" | "quickinstall" | "sample" | "settings" | "search" | "wpuwoo")
+    "adminer" | "anonymizedb" | "archivelogs" | "backup" | "bduser" | "cleanhack" | "codechecker" | "debugfile" | "detecthack" | "diagnostic" | "login" | "go" | "duplicatemenu" |  "generatemenus" | "clean" | "update" | "cache" | "cachewarm" | "dbexport" | "dbimport" | "multisite-convert" | "multisite-duplicate" | "multisite-user" | "muplugin" | "nginx-convert" | "optimizeimage" | "plugin" | "quickinstall" | "sample" | "settings" | "search" | "wpuwoo")
         . "${_SOURCEDIR}bin/${1}.sh" "${2}" "${3}" "${4}" "${5}";
     ;;
     "wp")

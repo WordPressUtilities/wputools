@@ -24,6 +24,7 @@ wputools duplicatemenu;         # Duplicate a menu.
 wputools go;                    # Quickly go to a specific folder.
 wputools generatemenus;         # Generate default menus.
 wputools importsite;            # Import a distant website.
+wputools multisite-convert;     # Convert a single site to a multisite network.
 wputools multisite-duplicate;   # Duplicate a WordPress site in a multisite network.
 wputools multisite-user;        # Manage users in a multisite network.
 wputools muplugin;              # Install a WordPressUtilities mu-plugin.
