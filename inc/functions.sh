@@ -396,6 +396,10 @@ function wputools_select_multisite(){
     fi
 
     local _wputools_sites=($(wputools_get_multisite_urls));
+    if [[ ${#_wputools_sites[@]} -eq 1 ]]; then
+        _HOME_URL="${_wputools_sites[0]}";
+        return;
+    fi
 
     for arg in "$@"; do
 
