@@ -64,7 +64,7 @@ _wputools_complete() {
                 _reply+="extension-$(basename "$dir") "
             fi
         done
-        COMPREPLY=( $(compgen -W "adminer anonymizedb archivelogs backup bduser cache cachewarm clean cleanhack codechecker dbexport dbimport debugfile detecthack diagnostic duplicatemenu generatemenus go importsite login multisite-convert multisite-duplicate multisite-user muplugin nginx-convert optimizeimage plugin quickinstall sample sandbox search settings self-update src update wp wpconfig wpuwoo ${_reply}" -- $cur) )
+        COMPREPLY=( $(compgen -W "adminer anonymizedb archivelogs backup bduser cache cachewarm clean cleanhack codechecker dbexport dbimport debugfile detecthack diagnostic duplicatemenu generatemenus go importsite language login multisite-convert multisite-duplicate multisite-user muplugin nginx-convert optimizeimage plugin quickinstall sample sandbox search settings self-update src update wp wpconfig wpuwoo ${_reply}" -- $cur) )
     elif [ $COMP_CWORD -eq 2 ]; then
         case "$prev" in
             "archivelogs")
@@ -101,6 +101,9 @@ _wputools_complete() {
                         done
                     fi;
                 done
+            ;;
+            "language")
+                COMPREPLY=( $(compgen -W "add-string" -- $cur) )
             ;;
             "multisite-user")
                 COMPREPLY=( $(compgen -W "create addto" -- $cur) )

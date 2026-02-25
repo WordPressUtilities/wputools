@@ -48,6 +48,11 @@ Add CLI shortcut :
 
 `wputools bduser;`
 
+### Manage language strings.
+
+#### Add a string to all .po files in the current directory
+`wputools language add-string "My string to add"`
+
 ### Login as the first available administrator.
 
 `wputools login;`
