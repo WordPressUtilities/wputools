@@ -14,6 +14,7 @@ if [[ -z "${1}" || "${1}" == 'help' ]];then
     echo "";
     echo "Commands:";
     echo "  add-string <string>        Add a string to all .po files in the current directory";
+    echo "  regenerate                 Regenerate .mo and .php files from .po files in the current directory";
     echo "";
     return 0;
 fi;
@@ -41,4 +42,17 @@ if [ "$1" == "add-string" ]; then
             echo "String '$2' already exists in $file"
         fi
     done
+fi
+
+###################################
+## Regenerate .mo & .php files
+###################################
+
+if [ "$1" == "regenerate" ]; then
+    if [ -z "$(ls ./*.po 2>/dev/null)" ]; then
+        echo "No .po files found in current directory"
+        return 0;
+    fi
+    php "${_WPCLISRC}" i18n make-mo .;
+    php "${_WPCLISRC}" i18n make-php .;
 fi

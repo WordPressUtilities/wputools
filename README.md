@@ -53,6 +53,9 @@ Add CLI shortcut :
 #### Add a string to all .po files in the current directory
 `wputools language add-string "My string to add"`
 
+### Regenerate .mo and .php files from .po files in the current directory
+`wputools language regenerate`
+
 ### Login as the first available administrator.
 
 `wputools login;`

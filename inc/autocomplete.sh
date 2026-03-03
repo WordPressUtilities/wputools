@@ -103,7 +103,7 @@ _wputools_complete() {
                 done
             ;;
             "language")
-                COMPREPLY=( $(compgen -W "add-string" -- $cur) )
+                COMPREPLY=( $(compgen -W "add-string regenerate" -- $cur) )
             ;;
             "multisite-user")
                 COMPREPLY=( $(compgen -W "create addto" -- $cur) )
