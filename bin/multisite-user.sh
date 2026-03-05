@@ -10,8 +10,9 @@ if [[ -z "${1}" || "${1}" == 'help' ]];then
     echo "Usage: wputools multisite-user <command> [<args>]";
     echo "";
     echo "Commands:";
-    echo "  create <user-login> <user-email>        Create a new user on the main site of the multisite";
-    echo "  addto <user-login> <role> [all]         Add an existing user to all or selected sites of the multisite with the specified role";
+    echo "  create <user-login> <user-email>                Create a new user on the main site of the multisite";
+    echo "  addto <user-login> <role> [all]                 Add an existing user to all or selected sites of the multisite with the specified role";
+    echo "  remove <user-login> <user-reassign-id> [all]    Remove an existing user from all or selected sites of the multisite";
     echo "";
     return 0;
 fi;
@@ -76,8 +77,6 @@ if [[ "${1}" == 'addto' ]]; then
         return 1;
     fi;
 
-    _wputools_user_global_id=$(_WPCLICOMMAND  user get "${2}" --field=ID);
-
     _wputools_site_ids=($(_WPCLICOMMAND site list --field=blog_id));
     for _wputools_site_id in "${_wputools_site_ids[@]}"; do
         _wputools_multisite_url=$(_WPCLICOMMAND site list --blog_id="${_wputools_site_id}" --field=url);
@@ -94,6 +93,61 @@ if [[ "${1}" == 'addto' ]]; then
             echo "# User '${2}' added to ${_wputools_multisite_url}"
         else
             _WPCLICOMMAND --url="${_wputools_multisite_url}" user remove-role "${2}";
+        fi;
+
+    done;
+
+fi;
+
+###################################
+## Remove
+###################################
+
+if [[ "${1}" == 'remove' ]]; then
+
+    local _wputools_remove_all="";
+    if [[ "${4}" == 'all' ]]; then
+        _wputools_remove_all="true";
+    fi;
+
+    # Check if user is specified
+    if [[ -z "${2}" ]]; then
+        echo "Usage: wputools multisite-user remove <user-login> <user-reassign-id> [all]";
+        return 1;
+    fi;
+
+    # Check if user to reassign content to is specified
+    if [[ -z "${3}" ]]; then
+        echo "Usage: wputools multisite-user remove <user-login> <user-reassign-id> [all]";
+        return 1;
+    fi;
+
+    # Check if user exists globally
+    if [[ ! $(_WPCLICOMMAND  user get "${2}" --field=ID 2>/dev/null) ]];then
+        echo "# User '${2}' does not exist.";
+        return 1;
+    fi;
+
+    # Check if user to reassign content to exists globally
+    if [[ ! $(_WPCLICOMMAND  user get "${3}" --field=ID 2>/dev/null) ]];then
+        echo "# User '${3}' does not exist.";
+        return 1;
+    fi;
+
+    _wputools_site_ids=($(_WPCLICOMMAND site list --field=blog_id));
+    for _wputools_site_id in "${_wputools_site_ids[@]}"; do
+        _wputools_multisite_url=$(_WPCLICOMMAND site list --blog_id="${_wputools_site_id}" --field=url);
+
+        _wputools_confirm="n";
+        if [[ "${_wputools_remove_all}" == "true" ]]; then
+            _wputools_confirm="y";
+        fi;
+        if [[ "${_wputools_confirm}" == "n" ]]; then
+            read -p "Remove user '${2}' from site ${_wputools_multisite_url}? [Y/n]: " _wputools_confirm
+        fi;
+        if [[ ! "${_wputools_confirm}" =~ ^[Nn]$ ]]; then
+            _WPCLICOMMAND --url="${_wputools_multisite_url}" user delete "${2}" --reassign="${3}";
+            echo "# User '${2}' removed from ${_wputools_multisite_url}"
         fi;
 
     done;

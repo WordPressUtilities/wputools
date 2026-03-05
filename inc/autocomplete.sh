@@ -106,7 +106,7 @@ _wputools_complete() {
                 COMPREPLY=( $(compgen -W "add-string regenerate" -- $cur) )
             ;;
             "multisite-user")
-                COMPREPLY=( $(compgen -W "create addto" -- $cur) )
+                COMPREPLY=( $(compgen -W "create addto remove" -- $cur) )
             ;;
             "muplugin")
                 COMPREPLY=( $(compgen -W "$(cat "${_WPUTOOLS_MUPLUGIN_LIST}" "${_WPUTOOLS_PLUGIN_LIST}" )" -- $cur) )

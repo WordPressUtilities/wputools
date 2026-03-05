@@ -186,8 +186,6 @@ unset -v _WPUTOOLS_TMP_DIR;
 unset -v _WPUTOOLS_UNSPLASH_API_KEY;
 unset -v _WPUTOOLS_URL_LOCAL_FILE;
 unset -v _WPUTOOLS_URL_LOCAL_FILE_TMP;
-unset -v _wputools__addto_all;
-unset -v _wputools_user_global_id;
 unset -v _wputools_confirm;
 unset -v backup_topdir;
 unset -v backup_uploads;
