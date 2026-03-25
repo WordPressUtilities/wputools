@@ -63,9 +63,87 @@ default:
   Attachments
 ---------------------------------------------------------- */
 
+function wputools_sample_sideload_media_all_languages($url) {
+
+    if (empty($url)) {
+        return false;
+    }
+
+    $_hasImport = false;
+    $tmp_file = download_url($url);
+    if (is_wp_error($tmp_file)) {
+        return false;
+    }
+    $base_name = substr(sanitize_title(basename($url)), 0, 50) . '.jpg';
+    $languages = function_exists('pll_languages_list') ? pll_languages_list() : [];
+
+    // Fallback: no Polylang
+    if (empty($languages)) {
+        $id = media_handle_sideload([
+            'name' => $base_name,
+            'tmp_name' => $tmp_file
+        ], 0);
+
+        if (!is_wp_error($id) && is_numeric($id)) {
+            echo "Success : #" . $id . "\n";
+            $_hasImport = true;
+        }
+
+        if (file_exists($tmp_file)) {
+            @unlink($tmp_file);
+        }
+
+        return $_hasImport;
+    }
+
+    if (!function_exists('pll_set_post_language') || !function_exists('pll_save_post_translations')) {
+        echo "Polylang functions not found. Please make sure Polylang is active to import media in multiple languages.\n";
+        if (file_exists($tmp_file)) {
+            @unlink($tmp_file);
+        }
+        return false;
+    }
+
+    $attachments = [];
+
+    foreach ($languages as $lang) {
+        $tmp_file_lang = wp_tempnam($base_name);
+        if (!$tmp_file_lang || !copy($tmp_file, $tmp_file_lang)) {
+            continue;
+        }
+
+        $attachment_id = media_handle_sideload([
+            'name' => substr($base_name, 0, -4) . '-' . $lang . '.jpg',
+            'tmp_name' => $tmp_file_lang
+        ], 0);
+
+        if (is_wp_error($attachment_id)) {
+            if (file_exists($tmp_file_lang)) {
+                @unlink($tmp_file_lang);
+            }
+            continue;
+        }
+        pll_set_post_language($attachment_id, $lang);
+        $attachments[$lang] = $attachment_id;
+    }
+
+    if (file_exists($tmp_file)) {
+        @unlink($tmp_file);
+    }
+
+    if (!empty($attachments)) {
+        echo "Success : #" . implode(', #', $attachments) . "\n";
+        pll_save_post_translations($attachments);
+        $_hasImport = true;
+    }
+
+    return $_hasImport;
+}
+
 if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
 
     $_unsplash_url = 'https://api.unsplash.com/photos/random?client_id=' . $_GET['unsplash_api_key'];
+    echo $_unsplash_url;die;
     if (defined('WPUTOOLS_UNSPLASH_SUBJECT')) {
         $_unsplash_url .= '&query=' . urlencode(WPUTOOLS_UNSPLASH_SUBJECT);
     }
@@ -85,21 +163,12 @@ if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachm
     require_once ABSPATH . 'wp-admin/includes/file.php';
     require_once ABSPATH . 'wp-admin/includes/image.php';
     require_once ABSPATH . 'wp-admin/includes/media.php';
+
     echo "Samples for attachments\n";
     foreach ($images_list as $url) {
-        $tmp_file = download_url($url);
-        $file_array = array(
-            'name' => substr(sanitize_title(basename($url)), 0, 50) . '.jpg',
-            'tmp_name' => $tmp_file
-        );
-        if (is_wp_error($tmp_file)) {
-            @unlink($file_array['tmp_name']);
-        } else {
-            $id = media_handle_sideload($file_array, 0);
-            if (is_numeric($id)) {
-                $_hasImport = true;
-                echo "Success : #" . $id . "\n";
-            }
+        $result = wputools_sample_sideload_media_all_languages($url);
+        if ($result) {
+            $_hasImport = true;
         }
         @flush();
         @ob_flush();
