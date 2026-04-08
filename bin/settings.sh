@@ -7,6 +7,9 @@
 if [[ "${_HAS_WPUTOOLS_LOCAL}" == '1' ]];then
     bashutilities_message "A wputools-local.sh file already exists." 'warning';
     bashutilities_message "Loaded from: ${_WPUTOOLS_LOCAL_LOADED[*]}" 'info';
+    for loaded_file in "${_WPUTOOLS_LOCAL_LOADED[@]}"; do
+        bashutilities_message "Loaded file: ${loaded_file}" 'info';
+    done
 fi;
 if [[ "${_wputools_test__file}" != '' ]];then
     bashutilities_message "A wputools-urls.txt file already exists." 'warning';

@@ -120,6 +120,10 @@ Add CLI shortcut :
 
 `wputools generatemenus;`
 
+### Display information about the current WordPress installation.
+
+`wputools infos;`
+
 ### Import posts from a CSV File.
 
 `wputools wpuwoo import-csv file.csv`

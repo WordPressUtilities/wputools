@@ -23,6 +23,7 @@ wputools dbimport;              # Import an SQL dump.
 wputools duplicatemenu;         # Duplicate a menu.
 wputools go;                    # Quickly go to a specific folder.
 wputools generatemenus;         # Generate default menus.
+wputools infos;                 # Display some information about the current WordPress installation.
 wputools importsite;            # Import a distant website.
 wputools language;              # Manage language strings.
 wputools multisite-convert;     # Convert a single site to a multisite network.
