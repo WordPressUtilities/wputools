@@ -1,5 +1,9 @@
 #!/bin/bash
 
+###################################
+## Format
+###################################
+
 _INFOS_FORMAT="${1:-text}";
 
 if [[ "${_INFOS_FORMAT}" != 'text' && "${_INFOS_FORMAT}" != 'csv' ]];then
@@ -7,17 +11,28 @@ if [[ "${_INFOS_FORMAT}" != 'text' && "${_INFOS_FORMAT}" != 'csv' ]];then
     return 0;
 fi;
 
+###################################
+## Common rows
+###################################
+
+_INFOS_ROWS=();
+_INFOS_ROWS+=("core_version,php,${_PHP_VERSION_FULL},");
+
+###################################
+## WordPress version
+###################################
+
 # Get WordPress core version
 _WP_CORE_VERSION=$(_WPCLICOMMAND core version --skip-plugins --skip-themes --skip-packages);
+_INFOS_ROWS+=("core_version,wordpress,${_WP_CORE_VERSION},");
+
+###################################
+## Plugins
+###################################
 
 # Get plugin list with versions, sorted by name, excluding empty versions
 _PLUGINS_LIST=$(_WPCLICOMMAND plugin list --fields=name,version --format=csv --skip-themes --skip-packages | tail -n +2 | awk -F',' '$2 != ""' | sort -t',' -k1,1);
-
 _PLUGINS_DIR="${_CURRENT_DIR}wp-content/plugins";
-
-# Build rows: slug,version,git
-_INFOS_ROWS=();
-_INFOS_ROWS+=("core_version,wordpress,${_WP_CORE_VERSION},no");
 while IFS=',' read -r _slug _version; do
     _git="no";
     if [[ -d "${_PLUGINS_DIR}/${_slug}/.git" || -f "${_PLUGINS_DIR}/${_slug}/.git" ]];then
@@ -26,7 +41,33 @@ while IFS=',' read -r _slug _version; do
     _INFOS_ROWS+=("plugin_version,${_slug},${_version},${_git}");
 done <<< "${_PLUGINS_LIST}";
 
-# Output
+###################################
+## MU-Plugins
+###################################
+
+# Git submodules in mu-plugins
+_MUPLUGINS_DIR="${_CURRENT_DIR}wp-content/mu-plugins";
+if [[ -d "${_MUPLUGINS_DIR}" ]];then
+    while IFS= read -r _git_path; do
+        _muplugin_dir=$(dirname "${_git_path}");
+        _slug=$(basename "${_muplugin_dir}");
+        _version="";
+        for _php_file in "${_muplugin_dir}"/*.php; do
+            if [[ -f "${_php_file}" ]];then
+                _version=$(grep -m 1 -i "^[ *]*Version:" "${_php_file}" | sed 's/.*Version:[[:space:]]*//i');
+                if [[ -n "${_version}" ]];then
+                    break;
+                fi;
+            fi;
+        done;
+        _INFOS_ROWS+=("muplugin_version,${_slug},${_version},yes");
+    done < <(find "${_MUPLUGINS_DIR}" -maxdepth 3 -name ".git" | sort);
+fi;
+
+###################################
+## Output
+###################################
+
 case "${_INFOS_FORMAT}" in
     "csv")
         echo "type,slug,version,git";

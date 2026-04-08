@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.161.0';
+local _WPUTOOLS_VERSION='0.161.1';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0 8.1)
 local _PHP_VERSIONS_ADVANCED=(8.4 8.5 9.0)
@@ -118,6 +118,7 @@ fi;
 
 # Thanks to https://stackoverflow.com/a/53231244
 _PHP_VERSION=$("${_PHP_COMMAND}" -v | head -n 1 | cut -d " " -f 2 | cut -f1-2 -d".");
+_PHP_VERSION_FULL=$("${_PHP_COMMAND}" -v | head -n 1 | cut -d " " -f 2);
 _PHP_VERSION_OK='n';
 case "${_PHP_VERSIONS[@]}" in  *"${_PHP_VERSION}"*)
     _PHP_VERSION_OK='y';

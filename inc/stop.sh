@@ -109,6 +109,7 @@ unset -v _menu_links;
 unset -v _menu_list;
 unset -v _NOBACKUP_CRONTABS;
 unset -v _PHP_VERSION;
+unset -v _PHP_VERSION_FULL;
 unset -v _PHP_VERSION_OK;
 unset -v _PLUGIN_ID;
 unset -v _SITE_NAME_SLUG;
