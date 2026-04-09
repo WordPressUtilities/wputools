@@ -143,7 +143,6 @@ function wputools_sample_sideload_media_all_languages($url) {
 if ($_posttype == 'all' || $_posttype == 'attachments' || $_posttype == 'attachment') {
 
     $_unsplash_url = 'https://api.unsplash.com/photos/random?client_id=' . $_GET['unsplash_api_key'];
-    echo $_unsplash_url;die;
     if (defined('WPUTOOLS_UNSPLASH_SUBJECT')) {
         $_unsplash_url .= '&query=' . urlencode(WPUTOOLS_UNSPLASH_SUBJECT);
     }

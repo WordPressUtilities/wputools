@@ -26,6 +26,19 @@ _INFOS_ROWS+=("core_version,php,${_PHP_VERSION_FULL},");
 _WP_CORE_VERSION=$(_WPCLICOMMAND core version --skip-plugins --skip-themes --skip-packages);
 _INFOS_ROWS+=("core_version,wordpress,${_WP_CORE_VERSION},");
 
+
+###################################
+## Last commit
+###################################
+
+if [[ -d "${_CURRENT_DIR}.git" ]];then
+    _LAST_COMMIT_DATE=$(git -C "${_CURRENT_DIR}" log -1 --format="%ci" 2>/dev/null | cut -c1-16);
+    if [[ -n "${_LAST_COMMIT_DATE}" ]];then
+        _INFOS_ROWS+=("last_commit,repo,${_LAST_COMMIT_DATE},");
+    fi;
+fi;
+
+
 ###################################
 ## Plugins
 ###################################
@@ -68,6 +81,7 @@ fi;
 ## Output
 ###################################
 
+_TEXT_COL_FORMAT="%-20s %-40s %-20s %s\n";
 case "${_INFOS_FORMAT}" in
     "csv")
         echo "type,slug,version,git";
@@ -78,11 +92,11 @@ case "${_INFOS_FORMAT}" in
     *)
         wputools_echo_message "# INFOS";
         echo "";
-        printf "%-20s %-40s %-12s %s\n" "TYPE" "SLUG" "VERSION" "GIT";
-        printf "%-20s %-40s %-12s %s\n" "----" "----" "-------" "---";
+        printf "${_TEXT_COL_FORMAT}" "TYPE" "SLUG" "VERSION" "GIT";
+        printf "${_TEXT_COL_FORMAT}" "----" "----" "-------" "---";
         for _row in "${_INFOS_ROWS[@]}"; do
             IFS=',' read -r _type _slug _version _git <<< "${_row}";
-            printf "%-20s %-40s %-12s %s\n" "${_type}" "${_slug}" "${_version}" "${_git}";
+            printf "${_TEXT_COL_FORMAT}" "${_type}" "${_slug}" "${_version}" "${_git}";
         done;
     ;;
 esac;
