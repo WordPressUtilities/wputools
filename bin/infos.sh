@@ -38,7 +38,6 @@ if [[ -d "${_CURRENT_DIR}.git" ]];then
     fi;
 fi;
 
-
 ###################################
 ## Plugins
 ###################################
@@ -50,6 +49,16 @@ while IFS=',' read -r _slug _version; do
     _git="no";
     if [[ -d "${_PLUGINS_DIR}/${_slug}/.git" || -f "${_PLUGINS_DIR}/${_slug}/.git" ]];then
         _git="yes";
+    fi;
+    if [[ "${_git}" == "no" ]];then
+        # Find main plugin file
+        _main_plugin_file=$(find "${_PLUGINS_DIR}/${_slug}" -maxdepth 2 -type f -name "*.php" -exec grep -l "^[ \t]*Plugin Name:" {} \; | head -n 1);
+        if [[ -f "${_main_plugin_file}" ]];then
+            # If file does not contains author, set _git to "local"
+            if ! grep -q "^[ \t]*Author:" "${_main_plugin_file}"; then
+                _git="local";
+            fi;
+        fi;
     fi;
     _INFOS_ROWS+=("plugin_version,${_slug},${_version},${_git}");
 done <<< "${_PLUGINS_LIST}";
