@@ -36,6 +36,16 @@ if [[ "${1}" == 'memory' ]];then
 fi;
 
 ###################################
+## Injection
+###################################
+
+if [[ "${1}" == 'injection' ]];then
+    wputools_echo_message "### Injection Test";
+    wputools_test_url_injection;
+    return 0;
+fi;
+
+###################################
 ## Checksums
 ###################################
 

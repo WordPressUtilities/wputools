@@ -68,6 +68,7 @@ unset -f wputools_query;
 unset -f wputools_query_select;
 unset -f wputools_select_multisite;
 unset -f wputools_test_check_urls;
+unset -f wputools_test_url_injection;
 unset -f wputools_update_available_message;
 unset -v _ADMIN_PROTECT_FILE;
 unset -v _ADMIN_PROTECT_FLAG;

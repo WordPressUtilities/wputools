@@ -490,3 +490,108 @@ function wputools_format_home_url(){
     fi
     echo "${_formatted_url}";
 }
+
+function wputools_test_url_injection(){
+
+    # config
+    local TIMEOUT=10
+
+    # colors
+    local RED="\033[0;31m"
+    local GREEN="\033[0;32m"
+    local YELLOW="\033[0;33m"
+    local NC="\033[0m"
+
+    # payloads
+    declare -a _PAYLOADS=(
+        # --- XSS ---
+        's=<script>alert(1)</script>'
+        's=%3Cscript%3Ealert(1)%3C/script%3E'
+        's=<img src=x onerror=alert(1)>'
+        's=%3Cimg%20src=x%20onerror=alert(1)%3E'
+        's=<svg/onload=alert(1)>'
+        's=%3Csvg/onload=alert(1)%3E'
+        's=" autofocus onfocus=alert(1) x="'
+        's=%22%20onmouseover%3Dalert(1)%20x%3D%22'
+        's=<a href=javascript:alert(1)>test</a>'
+        's=%3Ca%20href%3Djavascript%3Aalert(1)%3Etest%3C/a%3E'
+        's=javascript:alert(1)'
+        's=data:text/html,<script>alert(1)</script>'
+        's=vbscript:msgbox(1)'
+        's=<scr<script>ipt>alert(1)</script>'
+        's=%253Cscript%253Ealert(1)%253C/script%253E'
+        's=alert%281%29'
+
+        # --- SQLi ---
+        's=1 UNION ALL SELECT 1'
+        's=1%20UNION%20ALL%20SELECT%201'
+        's=1;DROP TABLE users'
+        's=1%3BDROP%20TABLE%20users'
+        's=1 OR 1=1'
+        's=1%20OR%201=1'
+        's=1 AND SLEEP(5)'
+        's=1%20AND%20SLEEP(5)'
+
+        # --- LFI / traversal ---
+        's=../../etc/passwd'
+        's=..%2F..%2Fetc%2Fpasswd'
+        's=..%252F..%252Fetc%252Fpasswd'
+        's=../../boot.ini'
+        's=..\\..\\windows\\win.ini'
+        's=%2e%2e%2f%2e%2e%2fetc%2fpasswd'
+        's=%252e%252e%252f%252e%252e%252fetc%252fpasswd'
+
+        # --- wrappers / stream ---
+        's=php://input'
+        's=php://filter/convert.base64-encode/resource=index.php'
+        's=data://text/plain;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='
+        's=expect://id'
+        's=zip://shell.jpg%23payload.php'
+
+        # --- sensitive files ---
+        's=/etc/passwd'
+        's=/proc/self/environ'
+        's=C:\\Windows\\win.ini'
+
+        # --- encoding / obfuscation ---
+        's=base64_encode(test)'
+        's=base64_decode(dGVzdA==)'
+        's=%00'
+        's=%2500'
+
+        # --- command injection ---
+        '/ASPSamp/AdvWorks/equipment/catalog_type.asp?ProductType=|shell(""c:cmd.exe"")|"'
+
+        # --- should pass --
+        's=gateau+chocolat'
+        's=hello%20world'
+    )
+
+    # header
+    printf "%-5s | %-6s | %-80s\n" "CODE" "TYPE" "PAYLOAD"
+    printf "%-5s-+-%-6s-+-%-80s\n" "-----" "------" "------"
+
+    # test loop
+    local URL;
+    local CODE;
+    local TYPE;
+    for _payload in "${_PAYLOADS[@]}"; do
+        URL="${_HOME_URL}?${_payload}"
+
+        CODE=$(curl -m "$TIMEOUT" -o /dev/null -s -w "%{http_code}" "$URL")
+
+        if [[ "$CODE" == "403" ]]; then
+            TYPE="${RED}BLOCK${NC}"
+        elif [[ "$CODE" == "404" ]]; then
+            TYPE="${YELLOW}NOT FOUND${NC}"
+        elif [[ "$CODE" == "500" ]]; then
+            TYPE="${YELLOW}ERROR${NC}"
+        elif [[ "$CODE" =~ ^2|3 ]]; then
+            TYPE="${GREEN}PASS${NC}"
+        else
+            TYPE="${YELLOW}OTHER${NC}"
+        fi
+
+        printf "%-5s | %-14b | %-80s\n" "$CODE" "$TYPE" "$_payload"
+    done
+}
