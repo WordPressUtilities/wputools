@@ -83,6 +83,15 @@ if [[ "$(wputools_is_online)" == '0' ]];then
 fi;
 
 ###################################
+## Avoid tests
+###################################
+
+if [[ "${@}" == *'--no-tests'* ]];then
+    echo "Tests will be ignored during this update.";
+    _WPUTOOLS_IGNORE_TESTS_UPDATE=1;
+fi;
+
+###################################
 ## Variables
 ###################################
 
@@ -410,7 +419,7 @@ function wputools__update_all_features() {
 _PLUGIN_ID="$1";
 if [[ "${1}" == 'core' ]];then
     wputools__update_core;
-elif [[ "${1}" == 'pll-pro' ]];then
+elif [[ "${1}" == 'pll-pro' || "${1}" == 'polylang-pro' ]];then
     wputools__check_polylang_pro_install;
 elif [[ "${1}" == 'all-plugins' ]];then
     wputools__check_acf_pro_install;
@@ -497,3 +506,4 @@ fi;
 
 # Clear cache
 wputools_call_route cache > /dev/null;
+_WPUTOOLS_IGNORE_TESTS_UPDATE=0;
