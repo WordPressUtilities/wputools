@@ -1210,3 +1210,15 @@ foreach ($folders as $folder) {
         $wputools_errors[] = sprintf('The folder %s contains %d files (max is %d) !', $folder_name, count($files), $max_files);
     }
 }
+
+/* ----------------------------------------------------------
+  Check WP_SITEURL constant
+---------------------------------------------------------- */
+
+if (!is_multisite() && defined('WP_SITEURL')) {
+    $siteurl_constant = untrailingslashit(WP_SITEURL);
+    $siteurl_option = untrailingslashit($wpdb->get_var("SELECT option_value FROM $wpdb->options WHERE option_name = 'siteurl'"));
+    if ($siteurl_constant != $siteurl_option) {
+        $wputools_errors[] = sprintf('The constant WP_SITEURL is defined as "%s" but the siteurl option is "%s".', $siteurl_constant, $siteurl_option);
+    }
+}
