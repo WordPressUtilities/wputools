@@ -6,9 +6,10 @@
 
 $bootstrap = 'wp-load.php';
 while (!is_file($bootstrap)) {
-    if (is_dir('..') && getcwd() != '/') {
-        chdir('..');
+    if (getcwd() == '/' || !is_dir('..')) {
+        return;
     }
+    chdir('..');
 }
 
 if (!is_readable($bootstrap)) {
@@ -27,7 +28,7 @@ $_SERVER['REQUEST_METHOD'] = 'GET';
 require_once $bootstrap;
 
 /* Load a site */
-if ($wpudiag_site && function_exists('get_site_by_path')) {
+if (isset($wpudiag_site) && $wpudiag_site && function_exists('get_site_by_path')) {
     $wpudiag_site = parse_url($wpudiag_site, PHP_URL_HOST);
     $site = get_site_by_path($wpudiag_site, '/');
     if ($site) {
@@ -97,7 +98,7 @@ if (isset($wpudiag_branch_name) && $wpudiag_branch_name) {
 /* Checksum
 -------------------------- */
 
-if ($wpudiag_checksum) {
+if (isset($wpudiag_checksum) && $wpudiag_checksum) {
     $wpudiag_checksum = strtolower($wpudiag_checksum);
     if (strpos($wpudiag_checksum, 'success') === false) {
         $wputools_errors[] = 'WordPress : Some core files have been modified : ' . strip_tags($wpudiag_checksum);
@@ -112,14 +113,14 @@ $debug_path_list = array('/dev/', '/development/', '/staging/', '/preprod/');
 
 if ($env_type == 'production') {
     foreach ($debug_path_list as $path_part) {
-        if (strpos($wpudiag_path, $path_part) !== false) {
+        if (isset($wpudiag_path) && strpos($wpudiag_path, $path_part) !== false) {
             $wputools_errors[] = 'WordPress : The path contains "' . strip_tags($path_part) . '" on a production environment.';
         }
     }
 }
 if ($is_debug_env) {
     foreach ($production_path_list as $path_part) {
-        if (strpos($wpudiag_path, $path_part) !== false) {
+        if (isset($wpudiag_path) && strpos($wpudiag_path, $path_part) !== false) {
             $wputools_errors[] = 'WordPress : The path contains "' . strip_tags($path_part) . '" on a non-production environment.';
         }
     }
@@ -1042,9 +1043,10 @@ if (function_exists('pll_languages_list')) {
                 $has_lang_file = true;
                 if (!is_readable($source_file)) {
                     $wputools_errors[] = sprintf('Polylang : The source language file (.po) for "%s" is missing in the theme "%s".', $lang_locale, $theme_name);
-                }
-                if (filesize($source_file) < 1000) {
-                    $wputools_errors[] = sprintf('Polylang : The source language file (.po) for "%s" in the theme "%s" seems too small (%skb).', $lang_locale, $theme_name, round(filesize($test_file) / 1024));
+                } else {
+                    if (filesize($source_file) < 1000) {
+                        $wputools_errors[] = sprintf('Polylang : The source language file (.po) for "%s" in the theme "%s" seems too small (%skb).', $lang_locale, $theme_name, round(filesize($test_file) / 1024));
+                    }
                 }
                 break;
             }

@@ -13,13 +13,14 @@ function wputools_cli_table_thead($columns, $separator = ' | ') {
     foreach ($columns as $col_name => $col_width) {
         $parts[] = substr(str_pad($col_name, $col_width, ' ', $col_width > 15 ? STR_PAD_RIGHT : STR_PAD_BOTH), 0, $col_width);
     }
-    echo str_repeat('-', $line_width) . "\n";
-    echo implode($separator, $parts) . "\n";
-    echo str_repeat('-', $line_width) . "\n";
+    $html = str_repeat('-', $line_width) . "\n";
+    $html .= implode($separator, $parts) . "\n";
+    $html .= str_repeat('-', $line_width) . "\n";
+    return $html;
 }
 
 function wputools_cli_table_tr($values, $separator = ' | ') {
-    echo implode($separator, $values) . "\n";
+    return implode($separator, $values) . "\n";
 }
 
 /* Values
@@ -106,6 +107,10 @@ function wputools_do_action_snapshot($label, $arg = null) {
 ---------------------------------------------------------- */
 
 $wp_settings = dirname(__FILE__) . '/wp-settings.php';
+if(!is_readable($wp_settings)) {
+    echo "wp-settings.php not found. Please run this diagnostic from a WordPress root directory.\n";
+    exit(1);
+}
 $wp_settings_original_content = file_get_contents($wp_settings);
 
 /* Replace
@@ -114,7 +119,7 @@ $wp_settings_original_content = file_get_contents($wp_settings);
 $wp_settings_content = $wp_settings_original_content;
 
 /* Snapshot on main hooks */
-$wp_settings_content = str_replace('do_action', 'wputools_do_action_snapshot', $wp_settings_content);
+$wp_settings_content = str_replace('do_action(', 'wputools_do_action_snapshot(', $wp_settings_content);
 
 /* Ensure live queries won't break */
 $wp_settings_content = str_replace('<?php', "<?php
