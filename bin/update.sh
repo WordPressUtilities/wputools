@@ -416,7 +416,11 @@ function wputools__update_all_features() {
 ## Update
 ###################################
 
-_PLUGIN_ID="$1";
+_PLUGIN_ID="";
+if [[ "${1}" != --* ]];then
+    _PLUGIN_ID="${1}";
+fi;
+
 if [[ "${1}" == 'core' ]];then
     wputools__update_core;
 elif [[ "${1}" == 'pll-pro' || "${1}" == 'polylang-pro' ]];then
