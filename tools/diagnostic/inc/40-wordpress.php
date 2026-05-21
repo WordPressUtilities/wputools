@@ -1132,8 +1132,8 @@ if (!empty($wputh_pages_site)) {
 ---------------------------------------------------------- */
 
 $nav_menus = wp_get_nav_menus();
-$all_menu_links = array();
-
+$menus_with_local_links = array();
+$menus_with_https_errors = array();
 $accepted_schemes = array('mailto:', 'tel:');
 
 foreach ($nav_menus as $menu) {
@@ -1146,6 +1146,13 @@ foreach ($nav_menus as $menu) {
             continue;
         }
 
+        if (!$is_test_extension && !$is_debug_env && strpos($item->url, 'http://') === 0) {
+            if (!isset($menus_with_https_errors[$menu->name])) {
+                $menus_with_https_errors[$menu->name] = array();
+            }
+            $menus_with_https_errors[$menu->name][] = $item->url;
+        }
+
         if (strpos($item->url, $site_url) !== 0 && substr($item->url, 0, 4) == 'http') {
             continue;
         }
@@ -1156,15 +1163,19 @@ foreach ($nav_menus as $menu) {
             }
         }
 
-        if (!isset($all_menu_links[$menu->name])) {
-            $all_menu_links[$menu->name] = array();
+        if (!isset($menus_with_local_links[$menu->name])) {
+            $menus_with_local_links[$menu->name] = array();
         }
-        $all_menu_links[$menu->name][] = $item->url;
+        $menus_with_local_links[$menu->name][] = $item->url;
     }
 }
 
-foreach ($all_menu_links as $menu_name => $menu_links) {
+foreach ($menus_with_local_links as $menu_name => $menu_links) {
     $wputools_errors[] = sprintf('The menu "%s" contains %d custom local link(s): %s', $menu_name, count($menu_links), implode(', ', $menu_links));
+}
+
+foreach ($menus_with_https_errors as $menu_name => $menu_links) {
+    $wputools_errors[] = sprintf('The menu "%s" contains %d custom link(s) with http instead of https: %s', $menu_name, count($menu_links), implode(', ', $menu_links));
 }
 
 /* ----------------------------------------------------------
