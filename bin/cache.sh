@@ -138,10 +138,12 @@ rm "${_CURRENT_DIR}${_STATIC_FILE}";
 
 echo '# Cache warming';
 
-for _wputools_multisite_url in ${_wputools_multisite_urls}; do
-    echo "## Cache warming for ${_wputools_multisite_url}";
-    wputools_call_url "${_wputools_multisite_url}" > /dev/null;
-done;
+if [[ "${_WPUTOOLS_DISABLE_CACHEWARM}" != '1' ]]; then
+    for _wputools_multisite_url in ${_wputools_multisite_urls}; do
+        echo "## Cache warming for ${_wputools_multisite_url}";
+        wputools_call_url "${_wputools_multisite_url}" > /dev/null;
+    done;
+fi;
 
 # After all
 wputools_execute_file "wputools-cache-after-purge.sh";

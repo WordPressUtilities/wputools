@@ -236,6 +236,9 @@ _EXTRA_CACHE_DIRS=(wp-content/uploads/wpufilecache)
 # IGNORE TESTS WHEN UPDATING
 _WPUTOOLS_IGNORE_TESTS_UPDATE="1";
 
+# DISABLE CACHE WARMING
+_WPUTOOLS_DISABLE_CACHEWARM="1";
+
 # Override WP-CLI Version or PHP binary
 _PHP_COMMAND='/Applications/MAMP/bin/php/php5.4.45/bin/php';
 _WPCLICOMMAND(){
