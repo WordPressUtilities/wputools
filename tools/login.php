@@ -26,7 +26,7 @@ if (filemtime(__FILE__) < time() - 60) {
 }
 
 /* ----------------------------------------------------------
-  Login
+  Bootstrap
 ---------------------------------------------------------- */
 
 /* Disable default environment */
@@ -52,10 +52,24 @@ while (!is_file($bootstrap)) {
 }
 require_once $bootstrap;
 
-/* Require some functions if W3TC is installed */
+/* ----------------------------------------------------------
+  Correct URL
+---------------------------------------------------------- */
 
-$bloginfo_url_parts = parse_url(get_bloginfo('url'));
+define('WPUTOOLS_LOGIN_DOMAIN', '{{LOGIN_DOMAIN}}');
+$blog_url = get_bloginfo('url');
+$bloginfo_url_parts = parse_url($blog_url);
 $bloginfo_url = $bloginfo_url_parts['scheme'] . "://" . $bloginfo_url_parts['host'];
+if (WPUTOOLS_LOGIN_DOMAIN !== $bloginfo_url_parts['host']) {
+    http_response_code(400);
+    die('Bad Request: This file must be accessed from ' . WPUTOOLS_LOGIN_DOMAIN);
+}
+
+/* ----------------------------------------------------------
+  Login
+---------------------------------------------------------- */
+
+/* Require some functions if W3TC is installed */
 
 /* Require some functions if W3TC is installed */
 $admin_path = str_replace(strtok($bloginfo_url, '?') . '/', ABSPATH, get_admin_url());

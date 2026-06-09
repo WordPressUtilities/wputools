@@ -61,6 +61,10 @@ fi;
 
 cat "${_TOOLSDIR}login.php" > "${_CURRENT_DIR}${_WPULOG_FILE}";
 
+# Extract domain name from URL
+_WPUTOOLS_LOGIN_DOMAIN=$(echo "${_HOME_URL}" | awk -F[/:] '{print $4}');
+bashutilities_sed "s/{{LOGIN_DOMAIN}}/${_WPUTOOLS_LOGIN_DOMAIN}/g" "${_WPULOG_FILE}";
+
 ###################################
 ## Launch
 ###################################
