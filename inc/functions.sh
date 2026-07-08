@@ -132,6 +132,13 @@ function wputools_execute_file(){
 ###################################
 
 function wputools_call_url(){
+    # Manual mode: print the URL and wait, so the caller delays its cleanup
+    if [[ "${_WPUTOOLS_MANUAL_CALL}" == '1' ]];then
+        echo "Visit this URL then press Enter:";
+        echo "${1}";
+        read -r;
+        return;
+    fi;
     curl --connect-timeout "${_WPUTOOLS_CONNECT_TIMEOUT}" -ksL ${_EXTRA_CURL_ARGS} "${1}";
 }
 

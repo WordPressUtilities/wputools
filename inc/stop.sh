@@ -100,6 +100,7 @@ unset -v _DEBUGLOG_FILE;
 unset -v _DEBUGLOG_FILE_SIZE;
 unset -v _DEBUGLOG_FILE_SIZE_AFTER;
 unset -v _EXTRA_CURL_ARGS;
+unset -v _WPUTOOLS_MANUAL_CALL;
 unset -v _HOME_URL;
 unset -v _latest_backup;
 unset -v _CURRENT_WORDPRESS;
