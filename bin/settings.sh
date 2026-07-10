@@ -108,9 +108,6 @@ if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
             mkdir "${_WPUTOOLS_BACKUP_DIR}";
         fi;
     fi
-    if [[ "${wputools_use_logs_dir}" == 'y' && ! -d "${_WPUTOOLS_LOGS_DIR}" ]];then
-        mkdir "${_WPUTOOLS_LOGS_DIR}";
-    fi
     # Check for .htpasswd file
     _HTPASSWD_FILE='';
     if [[ -f "${_CURRENT_DIR}.htpasswd" ]]; then
@@ -126,6 +123,11 @@ if [[ "${_HAS_WPUTOOLS_LOCAL}" != '1' ]];then
         bashutilities_sed "s/#_EXTRA_CURL_ARGS/_EXTRA_CURL_ARGS/g" "${_WPUTOOLS_LOCAL_FILE}";
         bashutilities_sed "s#user:password#${_HTPASSWD_USER}:${_HTPASSWD_PASS}#g" "${_WPUTOOLS_LOCAL_FILE}";
     fi
+fi
+
+# Logs
+if [[ "${wputools_use_logs_dir}" == 'y' && ! -d "${_WPUTOOLS_LOGS_DIR}" ]];then
+    mkdir "${_WPUTOOLS_LOGS_DIR}";
 fi
 
 # Generate URL file
