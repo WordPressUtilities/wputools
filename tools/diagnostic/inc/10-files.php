@@ -152,3 +152,59 @@ foreach ($chmod_items as $item => $mode) {
         $wputools_errors[] = sprintf('The %s %s should be writable !', $file_type, $item);
     }
 }
+
+/* ----------------------------------------------------------
+  Display last modified files
+---------------------------------------------------------- */
+
+function wputools_get_last_modified_files($dir = '.', $limit = 10) {
+    global $wpudiag_file;
+    $files = [];
+    if (!class_exists('RecursiveDirectoryIterator') || !class_exists('RecursiveIteratorIterator')) {
+        return $files;
+    }
+
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS)
+    );
+
+    $exclude = [
+        'node_modules',
+        'vendor',
+        '.git',
+        '.svn',
+        '.DS_Store',
+        '.hg',
+        'wp-content/cache',
+        'wp-content/uploads',
+        $wpudiag_file
+    ];
+
+    foreach ($iterator as $file) {
+        if (!$file->isFile()) {
+            continue;
+        }
+
+        $pathname = str_replace($dir, '', $file->getPathname());
+
+        $exclude_file = false;
+        foreach ($exclude as $excluded_path) {
+            if (strpos($pathname, $excluded_path) !== false) {
+                $exclude_file = true;
+                break;
+            }
+        }
+        if ($exclude_file) {
+            continue;
+        }
+
+        $files[$pathname] = $file->getMTime();
+    }
+
+    arsort($files);
+
+    return array_slice($files, 0, $limit, true);
+}
+
+$last_files = wputools_get_last_modified_files($wpudiag_path, 10);
+$wputools_notices[] = 'Last modified files: ' . implode(', ', array_keys($last_files));
