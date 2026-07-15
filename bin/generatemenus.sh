@@ -11,8 +11,7 @@ function wputools__generate_menus(){
     local _ARGS=$(wputools_convert_args_to_url "$@");
 
     # Create file
-    local _FILE=$(wputools_create_random_file "generatemenus");
-    cat "${_TOOLSDIR}generatemenus.php" > "${_CURRENT_DIR}${_FILE}";
+    local _FILE=$(wputools_create_bootstrapped_file "generatemenus");
 
     # Detect multisite
     wputools_select_multisite "$@";

@@ -22,9 +22,8 @@ function wputools__search(){
         return 0;
     fi;
 
-    # Create file
-    local _FILE=$(wputools_create_random_file "search");
-    cat "${_TOOLSDIR}search.php" > "${_CURRENT_DIR}${_FILE}";
+    # Create file with shared bootstrap injected
+    local _FILE=$(wputools_create_bootstrapped_file "search");
 
     # Detect multisite
     wputools_select_multisite "$@";

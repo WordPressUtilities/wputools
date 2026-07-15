@@ -13,7 +13,7 @@ fi;
 ## Initial datas
 ###################################
 
-_WPUSAMPLE_FILE=$(wputools_create_random_file "sample");
+_WPUSAMPLE_FILE=$(wputools_create_bootstrapped_file "sample");
 
 ###################################
 ## Help
@@ -67,12 +67,6 @@ if [[ "${1}" == "wptest" ]];then
     wputools__sample_wptest;
     return;
 fi;
-
-###################################
-## Copy file
-###################################
-
-cat "${_TOOLSDIR}sample.php" > "${_CURRENT_DIR}${_WPUSAMPLE_FILE}";
 
 ###################################
 ## Information

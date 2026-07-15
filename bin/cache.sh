@@ -113,10 +113,7 @@ _EXTRA_CACHE_DIRS='';
 ###################################
 
 # Initial datas
-_STATIC_FILE=$(wputools_create_random_file "cache");
-
-# Copy file
-cat "${_TOOLSDIR}cache.php" > "${_CURRENT_DIR}${_STATIC_FILE}";
+_STATIC_FILE=$(wputools_create_bootstrapped_file "cache");
 
 # Calling url
 echo '# Clearing static cache';

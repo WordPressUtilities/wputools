@@ -293,6 +293,18 @@ function wputools_create_random_file(){
 }
 
 ###################################
+## Create a random file with shared bootstrap injected
+###################################
+
+# $1 = base name (prefix + source file), e.g. "search" -> ${_TOOLSDIR}search.php
+function wputools_create_bootstrapped_file(){
+    local _FILE=$(wputools_create_random_file "$1");
+    cat "${_TOOLSDIR}_bootstrap.php" > "${_CURRENT_DIR}${_FILE}";
+    sed '1,/WPU_BOOTSTRAP_END/d' "${_TOOLSDIR}${1}.php" >> "${_CURRENT_DIR}${_FILE}";
+    echo "${_FILE}";
+}
+
+###################################
 ## Echo a message if not quiet mode
 ###################################
 

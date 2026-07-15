@@ -76,9 +76,7 @@ _WPUDIAG_BRANCH_NAME='';
 if [[ -d "${_CURRENT_DIR}.git" ]];then
     _WPUDIAG_BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD);
 fi;
-if [[ -n "${2}" ]]; then
-    wputools_select_multisite "$@";
-fi;
+wputools_select_multisite "$@";
 
 _WPUDIAG_FILE=$(wputools_create_random_file "diagnostic");
 _WPUDIAG_ARGS=$(wputools_convert_args_to_url "$@");

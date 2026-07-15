@@ -133,8 +133,7 @@ fi
 # Generate URL file
 function wputools__generate_urls(){
 
-    local _FILE=$(wputools_create_random_file "generateurls");
-    cat "${_TOOLSDIR}generateurls.php" > "${_CURRENT_DIR}${_FILE}";
+    local _FILE=$(wputools_create_bootstrapped_file "generateurls");
 
     # Call file
     wputools_call_url "${_HOME_URL}/${_FILE}?file=${_WPUTOOLS_LOCAL_PATH}wputools-urls.txt";
