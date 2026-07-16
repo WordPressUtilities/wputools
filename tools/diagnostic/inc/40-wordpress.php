@@ -19,10 +19,8 @@ if (!is_readable($bootstrap)) {
 /* Disable default environment */
 define('WP_USE_THEMES', false);
 
-/* Fix for qtranslate and other plugins */
-define('WP_ADMIN', true);
-$_SERVER['PHP_SELF'] = '/wp-admin/index.php';
-$_SERVER['REQUEST_METHOD'] = 'GET';
+/* Disable maintenance */
+define('WPUMAINTENANCE_DISABLED', true);
 
 /* Include wp load */
 require_once $bootstrap;
@@ -880,6 +878,19 @@ if (!is_wp_error($response_robots) && wp_remote_retrieve_response_code($response
     if (!$has_sitemap) {
         $wputools_errors[] = 'robots.txt should contain a link to the sitemap.';
     }
+}
+
+/* ----------------------------------------------------------
+  Favicon
+---------------------------------------------------------- */
+
+$current_favicon_url = get_site_icon_url();
+if (is_multisite() && !$current_favicon_url) {
+    $wputools_errors[] = 'The favicon is not set for the multisite network.';
+}
+$favicon_ext = pathinfo(parse_url($current_favicon_url, PHP_URL_PATH), PATHINFO_EXTENSION);
+if (!in_array($favicon_ext, array('ico', 'png'))) {
+    $wputools_errors[] = 'The favicon should be in .ico or .png format.';
 }
 
 /* ----------------------------------------------------------

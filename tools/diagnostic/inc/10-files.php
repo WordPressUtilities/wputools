@@ -207,4 +207,9 @@ function wputools_get_last_modified_files($dir = '.', $limit = 10) {
 }
 
 $last_files = wputools_get_last_modified_files($wpudiag_path, 10);
-$wputools_notices[] = 'Last modified files: ' . implode(', ', array_keys($last_files));
+$display_last_files = array_map(function ($file, $mtime) {
+    return sprintf('%s (last modified: %s)', $file, date('Y-m-d H:i:s', $mtime));
+}, array_keys($last_files), $last_files);
+
+$sep = "\n-- ";
+$wputools_notices[] = 'Last modified files: ' . $sep . implode($sep, $display_last_files);
