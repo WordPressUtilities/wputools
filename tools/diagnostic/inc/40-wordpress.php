@@ -444,6 +444,10 @@ foreach ($ram_vars as $ram_var) {
     }
 }
 
+if (defined('WP_MAX_MEMORY_LIMIT') && defined('WP_MEMORY_LIMIT') && WP_MAX_MEMORY_LIMIT < WP_MEMORY_LIMIT) {
+    $wputools_errors[] = 'WordPress : WP_MAX_MEMORY_LIMIT should be higher than WP_MEMORY_LIMIT.';
+}
+
 /* ----------------------------------------------------------
   Check execution time
 ---------------------------------------------------------- */
