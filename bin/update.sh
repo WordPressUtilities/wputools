@@ -355,12 +355,12 @@ function wputools__update_plugin() {
                     return;
                 fi;
                 rm -rf "${_PLUGIN_DIR}";
-                _WPCLICOMMAND plugin --debug=false --quiet --include-vcs install "https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${_acf_api_key}";
+                _WPCLICOMMAND plugin --debug=false --quiet install "https://connect.advancedcustomfields.com/v2/plugins/download?p=pro&k=${_acf_api_key}";
             else
                 _WPCLICOMMAND plugin --debug=false --quiet --include-vcs update "${_PLUGIN_ID}";
             fi;
 
-            _WPCLICOMMAND language plugin --debug=false --quiet --include-vcs update "${_PLUGIN_ID}";
+            _WPCLICOMMAND language plugin --debug=false --quiet update "${_PLUGIN_ID}";
         fi;
         # Commit plugin update
         local _PLUGIN_VERSION=$(_WPCLICOMMAND plugin --debug=false --quiet get "${_PLUGIN_ID}" --field=version);
