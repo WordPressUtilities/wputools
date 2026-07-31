@@ -122,6 +122,9 @@ foreach ($files as $file) {
     if (in_array($file, $allowlist_files)) {
         continue;
     }
+    if (basename($file) == 'index.php' && filesize($file) == 0) {
+        continue;
+    }
     $wputools_errors[] = sprintf('The file %s should not be present in the uploads directory !', $file);
 }
 
