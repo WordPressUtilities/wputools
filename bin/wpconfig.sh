@@ -16,6 +16,12 @@ function wputools__wpconfig_set_values(){
     _WPCLICOMMAND config set AUTOMATIC_UPDATER_DISABLED true --raw;
     _WPCLICOMMAND config set WP_AUTO_UPDATE_CORE false --raw;
     _WPCLICOMMAND config set WP_ENVIRONMENT_TYPE 'local';
+
+    # Debug
+    _WPCLICOMMAND config set WP_DEBUG true --raw;
+    _WPCLICOMMAND config set WP_DEBUG_DISPLAY false --raw;
+    _WPCLICOMMAND config set WP_DEBUG_LOG "WP_DEBUG ? dirname(__FILE__) . '/../logs/debug-' . date('Ymd') . '.log' : false" --raw;
+    _WPCLICOMMAND config set SAVEQUERIES "WP_DEBUG && php_sapi_name() !== 'cli'" --raw;
 }
 
 ###################################
@@ -91,22 +97,8 @@ define('WP_HOME', '${wputools__protocol}://' . \$_SERVER['HTTP_HOST'] . '/');
 #define('DISALLOW_FILE_EDIT', true);
 #define('DISALLOW_FILE_MODS', true);
 
-# Debug
-if(!defined('WP_DEBUG')){
-    define('WP_DEBUG', true);
-}
-if (WP_DEBUG) {
-    @ini_set('display_errors', 0);
-    if (!defined('WP_DEBUG_DISPLAY')) {
-        define('WP_DEBUG_DISPLAY', false);
-    }
-    if (!defined('WP_DEBUG_LOG')) {
-        define('WP_DEBUG_LOG', dirname(__FILE__) . '/../logs/debug-' . date('Ymd') . '.log');
-    }
-    if (!defined('SAVEQUERIES')) {
-        define('SAVEQUERIES', (php_sapi_name() !== 'cli'));
-    }
-}
+# Debug (constants are set by wputools__wpconfig_set_values)
+@ini_set('display_errors', 0);
 PHP
 
 

@@ -242,7 +242,7 @@ _WPUTOOLS_DISABLE_CACHEWARM="1";
 # Override WP-CLI Version or PHP binary
 _PHP_COMMAND='/Applications/MAMP/bin/php/php5.4.45/bin/php';
 _WPCLICOMMAND(){
-    $_PHP_COMMAND $_WPCLISRC $@;
+    $_PHP_COMMAND $_WPCLISRC "$@";
 }
 
 # Clean some folders before backup with uploads

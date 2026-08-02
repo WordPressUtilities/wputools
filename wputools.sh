@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.167.4';
+local _WPUTOOLS_VERSION='0.168.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 8.6 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2)
 local _PHP_VERSIONS_ADVANCED=(8.5 8.6 9.0)
@@ -73,7 +73,7 @@ if ! command -v $_PHP_COMMAND &> /dev/null; then
 fi
 
 _WPCLICOMMAND(){
-    $_PHP_COMMAND -d error_reporting=0 $_WPCLISRC $@;
+    $_PHP_COMMAND -d error_reporting=0 $_WPCLISRC "$@";
 }
 
 typeset -fx _WPCLICOMMAND;
