@@ -197,10 +197,8 @@ $is_test_extension = $host_extension && in_array($host_extension, $ignored_exten
 /* WP-Config
 -------------------------- */
 
-if ($env_type == 'production' || $env_type == 'staging') {
-    if (is_readable(ABSPATH . 'wp-config.php') && !is_readable(ABSPATH . '../wp-config.php')) {
-        $wputools_errors[] = 'WordPress : The wp-config.php file should be located one level above the WordPress root directory for better security.';
-    }
+if (is_readable(ABSPATH . 'wp-config.php') && !is_readable(ABSPATH . '../wp-config.php')) {
+    $wputools_errors[] = 'WordPress : The wp-config.php file should be located one level above the WordPress root directory for better security.';
 }
 
 /* ----------------------------------------------------------
@@ -1226,7 +1224,7 @@ foreach ($files as $file) {
   Find folders which contains too many files in Uploads directory
 ---------------------------------------------------------- */
 
-$max_files = 1000;
+$max_files = 3000;
 $folders = glob_recursive($wpudiag_upload_dir . '/*', GLOB_ONLYDIR);
 foreach ($folders as $folder) {
     if (!is_dir($folder)) {

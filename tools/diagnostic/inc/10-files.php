@@ -99,6 +99,53 @@ foreach ($files as $file) {
   Find files which should not be in a Uploads directory
 ---------------------------------------------------------- */
 
+/*
+ * Check if a PHP file contains only comments and whitespace.
+ *
+ * @param string $file_path The path to the PHP file.
+ * @return bool True if the file contains only comments and whitespace, false otherwise.
+ */
+function wpu_is_php_file_only_comments($file_path) {
+    if (!is_readable($file_path)) {
+        return false;
+    }
+
+    $content = file_get_contents($file_path);
+    if ($content === false) {
+        return false;
+    }
+
+    $ignorable_tokens = array(
+        T_OPEN_TAG,
+        T_CLOSE_TAG,
+        T_WHITESPACE,
+        T_COMMENT,
+        T_DOC_COMMENT
+    );
+
+    foreach (token_get_all($content) as $token) {
+        if (!is_array($token)) {
+            // Single-char tokens (';', '{', etc.) mean actual code
+            return false;
+        }
+
+        list($id, $text) = $token;
+
+        if ($id === T_INLINE_HTML) {
+            if (trim($text) !== '') {
+                return false;
+            }
+            continue;
+        }
+
+        if (!in_array($id, $ignorable_tokens, true)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 if (!function_exists('glob_recursive')) {
     function glob_recursive($pattern, $flags = 0) {
         $files = glob($pattern, $flags);
@@ -122,8 +169,11 @@ foreach ($files as $file) {
     if (in_array($file, $allowlist_files)) {
         continue;
     }
-    if (basename($file) == 'index.php' && filesize($file) == 0) {
-        continue;
+    /* Ignore index files */
+    if (basename($file) == 'index.php') {
+        if (filesize($file) === 0 || wpu_is_php_file_only_comments($file)) {
+            continue;
+        }
     }
     $wputools_errors[] = sprintf('The file %s should not be present in the uploads directory !', $file);
 }
