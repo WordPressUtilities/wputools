@@ -37,7 +37,7 @@ function wpudhk_rglob($pattern, $flags = 0) {
 }
 
 function wputh_echo($string) {
-    echo $string . "\n";
+    fwrite(STDOUT, $string . "\n");
 }
 
 $old_line = '';

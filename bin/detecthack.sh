@@ -15,12 +15,18 @@ _WPUDHK_DIR="tmpwp${_WPUDHK_RAND}";
 ## Questions
 ###################################
 
-_WPUDHK_COMPARE_WP=$(bashutilities_get_yn "- Compare core code to a fresh WordPress install instead of checksums?" 'y');
+_WPUDHK_ONLY_PHP=$(bashutilities_get_yn "- Only run the PHP detection (skip core & plugins comparison/checksums)?" 'n');
+_WPUDHK_COMPARE_WP='n';
 _WPUDHK_COMPARE_PLUG='n';
-if [[ "${_WPUDHK_COMPARE_WP}" == 'y' ]];then
-    _WPUDHK_COMPARE_PLUG=$(bashutilities_get_yn "- Compare each plugin code to a fresh plugin install?" "${_WPUDHK_COMPARE_WP}");
-else
+if [[ "${_WPUDHK_ONLY_PHP}" == 'y' ]];then
     _WPUDHK_DIR=".";
+else
+    _WPUDHK_COMPARE_WP=$(bashutilities_get_yn "- Compare core code to a fresh WordPress install instead of checksums?" 'y');
+    if [[ "${_WPUDHK_COMPARE_WP}" == 'y' ]];then
+        _WPUDHK_COMPARE_PLUG=$(bashutilities_get_yn "- Compare each plugin code to a fresh plugin install?" "${_WPUDHK_COMPARE_WP}");
+    else
+        _WPUDHK_DIR=".";
+    fi;
 fi;
 
 ###################################
@@ -51,7 +57,7 @@ if [[ "${_WPUDHK_COMPARE_WP}" == 'y' ]];then
         --locale="${_WPUDHK_LOCAL_PACKAGE}" \
         --path="${_WPUDHK_DIR}" \
         --version="${_CURRENT_WORDPRESS}";
-else
+elif [[ "${_WPUDHK_ONLY_PHP}" != 'y' ]];then
     _WPCLICOMMAND core verify-checksums;
 fi;
 
@@ -72,7 +78,7 @@ for line in ${_WPPLUGINSTMPLIST}; do
             --quiet;
     fi;
 done
-else
+elif [[ "${_WPUDHK_ONLY_PHP}" != 'y' ]];then
     _WPCLICOMMAND plugin verify-checksums --all;
 fi;
 

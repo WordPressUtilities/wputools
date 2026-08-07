@@ -145,6 +145,7 @@ unset -v _WPUDIAG_BRANCH_NAME;
 unset -v _WPUDIAG_FILE;
 unset -v _WPUDIAG_SITE;
 unset -v _WPUDIAG_SITES;
+unset -v _WPUDHK_ONLY_PHP;
 unset -v _WPUDHK_COMPARE_PLUG;
 unset -v _WPUDHK_COMPARE_WP;
 unset -v _WPUDHK_DIR;
