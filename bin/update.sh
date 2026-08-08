@@ -102,8 +102,13 @@ _WPUTOOLS_MAINTENANCE_FILE=".maintenance";
 _WPUTOOLS_MAINTENANCE_FILE_PATH="${_CURRENT_DIR}${_WPUTOOLS_MAINTENANCE_FILE}";
 _DEBUGLOG_FILE=$(find . -mount -name 'debug.log');
 
+# Set target version for the core update
 if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == '' ]];then
     _WPUTOOLS_CORE_UPDATE_TYPE='major';
+fi;
+if [[ "${@}" == *'--core-update-type='* ]];then
+    _WPUTOOLS_CORE_UPDATE_TYPE="${@#*--core-update-type=}";
+    _WPUTOOLS_CORE_UPDATE_TYPE="${_WPUTOOLS_CORE_UPDATE_TYPE%% *}";
 fi;
 
 wputools_add_files_to_excludes "${_ADMIN_PROTECT_FLAG}";
