@@ -110,6 +110,10 @@ if [[ "${@}" == *'--core-update-type='* ]];then
     _WPUTOOLS_CORE_UPDATE_TYPE="${@#*--core-update-type=}";
     _WPUTOOLS_CORE_UPDATE_TYPE="${_WPUTOOLS_CORE_UPDATE_TYPE%% *}";
 fi;
+if [[ "${@}" == *'--core-update-target='* ]];then
+    _WPUTOOLS_CORE_UPDATE_TARGET="${@#*--core-update-target=}";
+    _WPUTOOLS_CORE_UPDATE_TARGET="${_WPUTOOLS_CORE_UPDATE_TARGET%% *}";
+fi;
 
 wputools_add_files_to_excludes "${_ADMIN_PROTECT_FLAG}";
 
