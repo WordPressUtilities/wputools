@@ -106,12 +106,14 @@ _DEBUGLOG_FILE=$(find . -mount -name 'debug.log');
 if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == '' ]];then
     _WPUTOOLS_CORE_UPDATE_TYPE='major';
 fi;
-if [[ "${@}" == *'--core-update-type='* ]];then
-    _WPUTOOLS_CORE_UPDATE_TYPE="${@#*--core-update-type=}";
+# Note: use "${*}" (single string) : "${@#pat}" would strip the prefix on each arg separately
+_WPUTOOLS_UPDATE_ARGS="${*}";
+if [[ "${_WPUTOOLS_UPDATE_ARGS}" == *'--core-update-type='* ]];then
+    _WPUTOOLS_CORE_UPDATE_TYPE="${_WPUTOOLS_UPDATE_ARGS#*--core-update-type=}";
     _WPUTOOLS_CORE_UPDATE_TYPE="${_WPUTOOLS_CORE_UPDATE_TYPE%% *}";
 fi;
-if [[ "${@}" == *'--core-update-target='* ]];then
-    _WPUTOOLS_CORE_UPDATE_TARGET="${@#*--core-update-target=}";
+if [[ "${_WPUTOOLS_UPDATE_ARGS}" == *'--core-update-target='* ]];then
+    _WPUTOOLS_CORE_UPDATE_TARGET="${_WPUTOOLS_UPDATE_ARGS#*--core-update-target=}";
     _WPUTOOLS_CORE_UPDATE_TARGET="${_WPUTOOLS_CORE_UPDATE_TARGET%% *}";
 fi;
 
@@ -286,7 +288,12 @@ function wputools__update_core(){
     fi
     _LATEST_WORDPRESS=$(echo "${_LATEST_WORDPRESS}" | tail -n 1)
 
-    if [[ "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "" && "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "${_LATEST_WORDPRESS}" ]]; then
+    local _skip_core_update=0;
+    if [[ "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "" && "${_WPUTOOLS_CORE_UPDATE_TARGET}" == "${_CURRENT_WORDPRESS}" ]]; then
+        bashutilities_message "WordPress is already on the target version ${_CURRENT_WORDPRESS} : skipping core update.";
+        _LATEST_WORDPRESS="${_CURRENT_WORDPRESS}";
+        _skip_core_update=1;
+    elif [[ "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "" && "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "${_LATEST_WORDPRESS}" ]]; then
         local _use_target_version=$(bashutilities_get_yn "- Do you want to update from ${_CURRENT_WORDPRESS} to ${_WPUTOOLS_CORE_UPDATE_TARGET} instead of going to ${_LATEST_WORDPRESS} ?" 'n');
         if [[ "${_use_target_version}" == 'y' ]];then
             _LATEST_WORDPRESS="${_WPUTOOLS_CORE_UPDATE_TARGET}";
@@ -296,7 +303,7 @@ function wputools__update_core(){
     fi;
 
 
-    if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == "major" && "${_LATEST_WORDPRESS}" != "${_CURRENT_WORDPRESS}" ]]; then
+    if [[ "${_skip_core_update}" == '0' && "${_WPUTOOLS_CORE_UPDATE_TYPE}" == "major" && "${_LATEST_WORDPRESS}" != "${_CURRENT_WORDPRESS}" ]]; then
         local _CURRENT_MINOR_VERSION=$(echo "${_CURRENT_WORDPRESS}" | cut -d'.' -f1-2)
         local _LATEST_MINOR_VERSION=$(echo "${_LATEST_WORDPRESS}" | cut -d'.' -f1-2)
         if [[ "${_CURRENT_MINOR_VERSION}" != "${_LATEST_MINOR_VERSION}" ]]; then
@@ -387,15 +394,28 @@ function wputools__update_plugin() {
 
 function wputools__update_all_plugins() {
     echo '# Updating WordPress plugins';
-    local _plugin_id;
-    for _plugin_id in $(_WPCLICOMMAND plugin list --field=name --status=active,active-network,inactive); do
+    local _plugin_id _plugins _total _index;
+    _plugins=$(_WPCLICOMMAND plugin list --field=name --status=active,active-network,inactive);
+    _total=$(echo "${_plugins}" | grep -c .);
+    _index=0;
+    for _plugin_id in ${_plugins}; do
+        _index=$((_index + 1));
+        echo "## [${_index}/${_total}] ${_plugin_id}";
         wputools__update_plugin "${_plugin_id}";
     done
 }
 
 function wputools__update_all_submodules() {
     echo '# Updating submodules';
-    git submodule foreach 'git fetch; git checkout master; git checkout main; git pull origin';
+    local _submodules _total _index _sm_path;
+    _submodules=$(git submodule foreach --quiet 'echo "${sm_path}"');
+    _total=$(echo "${_submodules}" | grep -c .);
+    _index=0;
+    for _sm_path in ${_submodules}; do
+        _index=$((_index + 1));
+        echo "## [${_index}/${_total}] ${_sm_path}";
+        (cd "${_sm_path}" || exit; git fetch; git checkout master; git checkout main; git pull origin);
+    done
 
     # Update
     commit_without_protect "Update Submodules";
