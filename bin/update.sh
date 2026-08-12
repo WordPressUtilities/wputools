@@ -284,11 +284,23 @@ function wputools__update_core(){
     local _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
     local _LATEST_WORDPRESS=$(_WPCLICOMMAND core check-update --force-check --field=version);
     if [[ "${_LATEST_WORDPRESS}" == *"uccess"* ]]; then
-        _LATEST_WORDPRESS="${_CURRENT_WORDPRESS}"
-    fi
-    _LATEST_WORDPRESS=$(echo "${_LATEST_WORDPRESS}" | tail -n 1)
+        _LATEST_WORDPRESS="${_CURRENT_WORDPRESS}";
+    fi;
+    _LATEST_WORDPRESS=$(echo "${_LATEST_WORDPRESS}" | tail -n 1);
 
     local _skip_core_update=0;
+    local _force_target_version=0;
+
+    # Ensure the target version was really released
+    if [[ "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "" ]];then
+        local _WP_RELEASED_VERSIONS=$(curl -s --connect-timeout "${_WPUTOOLS_CONNECT_TIMEOUT}" 'https://api.wordpress.org/core/stable-check/1.0/');
+        # skip the check if the API is unreachable, "core update" will fail loudly anyway
+        if [[ "${_WP_RELEASED_VERSIONS}" != "" && "${_WP_RELEASED_VERSIONS}" != *"\"${_WPUTOOLS_CORE_UPDATE_TARGET}\""* ]];then
+            bashutilities_message "The target version ${_WPUTOOLS_CORE_UPDATE_TARGET} does not exist : skipping core update." 'error';
+            return 1;
+        fi;
+    fi;
+
     if [[ "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "" && "${_WPUTOOLS_CORE_UPDATE_TARGET}" == "${_CURRENT_WORDPRESS}" ]]; then
         bashutilities_message "WordPress is already on the target version ${_CURRENT_WORDPRESS} : skipping core update.";
         _LATEST_WORDPRESS="${_CURRENT_WORDPRESS}";
@@ -297,37 +309,46 @@ function wputools__update_core(){
         local _use_target_version=$(bashutilities_get_yn "- Do you want to update from ${_CURRENT_WORDPRESS} to ${_WPUTOOLS_CORE_UPDATE_TARGET} instead of going to ${_LATEST_WORDPRESS} ?" 'n');
         if [[ "${_use_target_version}" == 'y' ]];then
             _LATEST_WORDPRESS="${_WPUTOOLS_CORE_UPDATE_TARGET}";
+            _force_target_version=1;
         else
-            bashutilities_message "Using latest version ${_LATEST_WORDPRESS} instead of target version."
+            bashutilities_message "Using latest version ${_LATEST_WORDPRESS} instead of target version." 'warning';
         fi;
     fi;
 
 
-    if [[ "${_skip_core_update}" == '0' && "${_WPUTOOLS_CORE_UPDATE_TYPE}" == "major" && "${_LATEST_WORDPRESS}" != "${_CURRENT_WORDPRESS}" ]]; then
-        local _CURRENT_MINOR_VERSION=$(echo "${_CURRENT_WORDPRESS}" | cut -d'.' -f1-2)
-        local _LATEST_MINOR_VERSION=$(echo "${_LATEST_WORDPRESS}" | cut -d'.' -f1-2)
+    # A version explicitly targeted by the user is never downgraded to a minor update
+    if [[ "${_skip_core_update}" == '0' && "${_force_target_version}" == '0' && "${_WPUTOOLS_CORE_UPDATE_TYPE}" == "major" && "${_LATEST_WORDPRESS}" != "${_CURRENT_WORDPRESS}" ]]; then
+        local _CURRENT_MINOR_VERSION=$(echo "${_CURRENT_WORDPRESS}" | cut -d'.' -f1-2);
+        local _LATEST_MINOR_VERSION=$(echo "${_LATEST_WORDPRESS}" | cut -d'.' -f1-2);
         if [[ "${_CURRENT_MINOR_VERSION}" != "${_LATEST_MINOR_VERSION}" ]]; then
             bashutilities_message "Warning: It seems like it is a major update (${_CURRENT_WORDPRESS} -> ${_LATEST_WORDPRESS})" 'warning';
             local switch_minor=$(bashutilities_get_yn "- Do you want to switch to a minor update?" 'n');
             if [[ "${switch_minor}" == 'y' ]];then
                 _WPUTOOLS_CORE_UPDATE_TYPE='minor';
             fi;
-        fi
-    fi
-
-    if [[ "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
-        _WPCLICOMMAND core update --skip-themes --version="${_LATEST_WORDPRESS}";
-    else
-        _WPCLICOMMAND core update --skip-themes --minor;
+        fi;
     fi;
-    rm -f "${_CURRENT_DIR}wp-content/languages/themes/twenty*";
-    _LATEST_WORDPRESS=$(_WPCLICOMMAND core version);
 
-    local _WP_UPDATE_TEXT="Update WordPress from ${_CURRENT_WORDPRESS} to ${_LATEST_WORDPRESS}";
-    if [[ "${_CURRENT_WORDPRESS}" == "${_LATEST_WORDPRESS}" ]];then
-        local _WP_UPDATE_TEXT="Update WordPress";
+    if [[ "${_skip_core_update}" == '0' ]];then
+        local _core_update_failed=0;
+        if [[ "${_force_target_version}" == '1' || "${_WPUTOOLS_CORE_UPDATE_TYPE}" == 'major' ]];then
+            _WPCLICOMMAND core update --skip-themes --version="${_LATEST_WORDPRESS}" || _core_update_failed=1;
+        else
+            _WPCLICOMMAND core update --skip-themes --minor || _core_update_failed=1;
+        fi;
+        if [[ "${_core_update_failed}" == '1' ]];then
+            bashutilities_message "WordPress core update failed : nothing was committed." 'error';
+            return 1;
+        fi;
+        rm -f "${_CURRENT_DIR}"wp-content/languages/themes/twenty*;
+
+        local _NEW_WORDPRESS=$(_WPCLICOMMAND core version);
+        local _WP_UPDATE_TEXT="Update WordPress from ${_CURRENT_WORDPRESS} to ${_NEW_WORDPRESS}";
+        if [[ "${_CURRENT_WORDPRESS}" == "${_NEW_WORDPRESS}" ]];then
+            _WP_UPDATE_TEXT="Update WordPress";
+        fi;
+        commit_without_protect "${_WP_UPDATE_TEXT}";
     fi;
-    commit_without_protect "${_WP_UPDATE_TEXT}";
 
     echo '# Updating WordPress core translations';
     _WPCLICOMMAND language core update;
