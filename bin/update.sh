@@ -301,6 +301,14 @@ function wputools__update_core(){
         fi;
     fi;
 
+    # Refuse a downgrade
+    if [[ "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "" && "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "${_CURRENT_WORDPRESS}" ]];then
+        if [[ "$(printf '%s\n' "${_CURRENT_WORDPRESS}" "${_WPUTOOLS_CORE_UPDATE_TARGET}" | sort -V | head -n1)" == "${_WPUTOOLS_CORE_UPDATE_TARGET}" ]];then
+            bashutilities_message "The target version ${_WPUTOOLS_CORE_UPDATE_TARGET} is older than the current version ${_CURRENT_WORDPRESS} : skipping core update." 'error';
+            return 1;
+        fi;
+    fi;
+
     if [[ "${_WPUTOOLS_CORE_UPDATE_TARGET}" != "" && "${_WPUTOOLS_CORE_UPDATE_TARGET}" == "${_CURRENT_WORDPRESS}" ]]; then
         bashutilities_message "WordPress is already on the target version ${_CURRENT_WORDPRESS} : skipping core update.";
         _LATEST_WORDPRESS="${_CURRENT_WORDPRESS}";
