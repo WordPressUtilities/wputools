@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.170.1';
+local _WPUTOOLS_VERSION='0.171.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 8.6 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2)
 local _PHP_VERSIONS_ADVANCED=(8.5 8.6 9.0)
@@ -56,6 +56,20 @@ if [[ -f "${_CURRENT_DIR}wputools-local.sh" ]];then
     . "${_CURRENT_DIR}wputools-local.sh";
     _HAS_WPUTOOLS_LOCAL='1';
     _WPUTOOLS_LOCAL_LOADED+=("${_CURRENT_DIR}wputools-local.sh");
+fi;
+
+###################################
+## Commands log
+###################################
+
+# Path is the current dir, not the WordPress root: the root is only resolved later.
+# Grepping a site still works, as its root is a prefix of any subfolder.
+if [[ -n "${_WPUTOOLS_COMMANDS_LOG}" ]];then
+    if [[ ! -f "${_WPUTOOLS_COMMANDS_LOG}" ]];then
+        touch "${_WPUTOOLS_COMMANDS_LOG}";
+        chmod 600 "${_WPUTOOLS_COMMANDS_LOG}";
+    fi;
+    printf '"%s","%s","%s"\n' "$(date +%FT%T)" "${_CURRENT_DIR//\"/\"\"}" "${*//\"/\"\"}" >> "${_WPUTOOLS_COMMANDS_LOG}";
 fi;
 
 ###################################

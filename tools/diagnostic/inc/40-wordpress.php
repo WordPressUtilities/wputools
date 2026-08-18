@@ -1192,6 +1192,36 @@ foreach ($menus_with_https_errors as $menu_name => $menu_links) {
 }
 
 /* ----------------------------------------------------------
+  Find total weight of uploads directory
+---------------------------------------------------------- */
+
+function wputools_get_directory_size($directory) {
+    if (!is_dir($directory)) {
+        return 0;
+    }
+
+    $size = 0;
+
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(
+            $directory,
+            FilesystemIterator::SKIP_DOTS
+        )
+    );
+
+    foreach ($iterator as $file) {
+        if ($file->isFile()) {
+            $size += $file->getSize();
+        }
+    }
+
+    return $size;
+}
+
+$size = wputools_get_directory_size($wpudiag_upload_dir);
+$wputools_notices[] = sprintf('The total weight of the uploads directory is %s.', size_format($size));
+
+/* ----------------------------------------------------------
   Find files which are too large in Uploads directory for their type
 ---------------------------------------------------------- */
 
