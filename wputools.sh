@@ -2,7 +2,7 @@
 
 WPUTools(){
 
-local _WPUTOOLS_VERSION='0.171.0';
+local _WPUTOOLS_VERSION='0.172.0';
 local _PHP_VERSIONS=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4 8.5 8.6 9.0)
 local _PHP_VERSIONS_OBSOLETES=(7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2)
 local _PHP_VERSIONS_ADVANCED=(8.5 8.6 9.0)
@@ -218,8 +218,8 @@ fi;
 ###################################
 
 case "$1" in
-    "wpconfig")
-        . "${_SOURCEDIR}bin/wpconfig.sh";
+    "wpconfig" | "update-quick")
+        . "${_SOURCEDIR}bin/${1}.sh";
         . "${_SOURCEDIR}inc/stop.sh";
         return 0;
     ;;

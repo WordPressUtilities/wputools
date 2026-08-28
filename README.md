@@ -192,6 +192,9 @@ Add CLI shortcut :
 
 `wputools update;`
 
+### Quick update of your WordPress core
+`wputools update-quick`
+
 ## Override
 
 You can add a `wputools-local.sh` file at the root of your WordPress install or in the folder above.
