@@ -364,6 +364,46 @@ function wputools__update_core(){
     commit_without_protect "Update WordPress core languages";
 }
 
+function wputools__update_plugin_from_folder(){
+    local _PLUGIN_ID="${1}";
+    local _SOURCE_DIR="${_PLUGINSMANUALDIR}${_PLUGIN_ID}";
+    local _TARGET_DIR="${_CURRENT_DIR}wp-content/plugins/${_PLUGIN_ID}";
+
+    # No manual source available for this plugin
+    if [[ ! -d "${_SOURCE_DIR}" ]];then
+        return 0;
+    fi;
+
+    # Plugin is handled by git : never overwrite the repository
+    if [[ -d "${_TARGET_DIR}/.git" || -f "${_TARGET_DIR}/.git" ]];then
+        return 0;
+    fi;
+
+    local _SOURCE_FILE=$(grep -lm1 'Plugin Name:' "${_SOURCE_DIR}"/*.php 2>/dev/null | head -n 1);
+    local _SOURCE_VERSION='';
+    if [[ -n "${_SOURCE_FILE}" ]];then
+        _SOURCE_VERSION=$(grep -m1 -oE 'Version:[[:space:]]*[0-9][^[:space:]]*' "${_SOURCE_FILE}" | grep -oE '[0-9][^[:space:]]*');
+    fi;
+    if [[ "${_SOURCE_VERSION}" == '' ]];then
+        bashutilities_message "No readable plugin version found in plugins/${_PLUGIN_ID} : skipping folder update." 'error';
+        return 0;
+    fi;
+
+    local _INSTALLED_VERSION=$(_WPCLICOMMAND plugin --debug=false --quiet get "${_PLUGIN_ID}" --field=version);
+
+    # Nothing to do unless the folder holds a newer version
+    if [[ "${_SOURCE_VERSION}" == "${_INSTALLED_VERSION}" ]];then
+        return 0;
+    fi;
+    if [[ "$(printf '%s\n' "${_INSTALLED_VERSION}" "${_SOURCE_VERSION}" | sort -V | head -n1)" == "${_SOURCE_VERSION}" ]];then
+        return 0;
+    fi;
+
+    echo "# Update from plugins/ folder (v${_INSTALLED_VERSION} -> v${_SOURCE_VERSION})";
+    rm -rf "${_TARGET_DIR}";
+    cp -r "${_SOURCE_DIR}" "${_TARGET_DIR}";
+}
+
 function wputools__update_plugin() {
     local _PLUGIN_ID="${1}";
     local _MUPLUGIN_DIR_BASE="${_CURRENT_DIR}wp-content/mu-plugins/${_PLUGIN_ID}";
@@ -407,6 +447,8 @@ function wputools__update_plugin() {
 
             _WPCLICOMMAND language plugin --debug=false --quiet update "${_PLUGIN_ID}";
         fi;
+        # Fallback : update from the local plugins/ folder if it holds a newer version
+        wputools__update_plugin_from_folder "${_PLUGIN_ID}";
         # Commit plugin update
         local _PLUGIN_VERSION=$(_WPCLICOMMAND plugin --debug=false --quiet get "${_PLUGIN_ID}" --field=version);
         local _PLUGIN_TITLE=$(_WPCLICOMMAND plugin --debug=false --quiet get "${_PLUGIN_ID}" --field=title);

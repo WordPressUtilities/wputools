@@ -24,6 +24,7 @@ wpuinternallinks
 wpulivesearch
 wpuloginas
 wpumaintenance
+wpumaps
 wpumediafinder
 wpunewsletter
 wpunotifications
@@ -52,3 +53,6 @@ wpuwebsitepassword
 wpuwooaddressfields
 wpuwooproductfields
 wpu_redirection_extended
+wpu_two_factor
+wpu_import_export
+wpu_attachments_enhanced

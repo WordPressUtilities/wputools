@@ -37,6 +37,7 @@ unset -f wputools__update_all_submodules;
 unset -f wputools__update_all_themes;
 unset -f wputools__update_core;
 unset -f wputools__update_plugin;
+unset -f wputools__update_plugin_from_folder;
 unset -f wputools__wpconfig_set_values;
 unset -f wputools_add_files_to_excludes;
 unset -f wputools_archive_logs;
