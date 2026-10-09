@@ -20,7 +20,7 @@ function wputools__wpconfig_set_values(){
     # Debug
     _WPCLICOMMAND config set WP_DEBUG true --raw;
     _WPCLICOMMAND config set WP_DEBUG_DISPLAY false --raw;
-    _WPCLICOMMAND config set WP_DEBUG_LOG "WP_DEBUG ? dirname(__FILE__) . '/../logs/debug-' . date('Ymd') . '.log' : false" --raw;
+    _WPCLICOMMAND config set WP_DEBUG_LOG "WP_DEBUG ? ABSPATH . '../logs/debug-' . date('Ymd') . '.log' : false" --raw;
     _WPCLICOMMAND config set SAVEQUERIES "WP_DEBUG && php_sapi_name() !== 'cli'" --raw;
 }
 
@@ -71,8 +71,9 @@ fi;
 ## Create config
 ###################################
 
-_WPCLICOMMAND core config \
+_WPCLICOMMAND config create \
     --skip-check \
+    --config-file="${_CURRENT_DIR}../wp-config.php" \
     --dbhost="${wputools__mysql_host}" \
     --dbname="${wputools__mysql_database}" \
     --dbuser="${wputools__mysql_user}" \

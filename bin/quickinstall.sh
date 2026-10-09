@@ -14,7 +14,12 @@ if [[ "${_HOME_URL}" != '' && "${_SITE_NAME}" != '' ]];then
     return 0;
 fi;
 
-_HOME_URL=$(bashutilities_get_user_var "What is the home URL ? (Example: http://example.test)");
+# Default domain from the install folder name (or its parent if generic)
+_DEFAULT_DOMAIN=$(basename "${PWD}");
+case "${_DEFAULT_DOMAIN}" in
+    htdocs|www|public|public_html) _DEFAULT_DOMAIN=$(basename "$(dirname "${PWD}")");;
+esac
+_HOME_URL=$(bashutilities_get_user_var "What is the home URL ?" "http://${_DEFAULT_DOMAIN}.test");
 
 if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
     bashutilities_message "The home URL is required." 'error';
