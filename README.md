@@ -164,6 +164,10 @@ Add CLI shortcut :
 
 `wputools quickinstall;`
 
+### Resize an attachment original to the big image threshold.
+
+`wputools resizebigimage 4088;`
+
 ### Create an override settings file.
 
 `wputools settings;`

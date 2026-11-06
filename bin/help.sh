@@ -34,6 +34,7 @@ wputools nginx-convert;         # Convert some htaccess rules to nginx
 wputools optimizeimage;         # Optimize an image using TinyPNG.
 wputools plugin;                # Install a WordPressUtilities plugin.
 wputools quickinstall;          # Quick WordPress Install.
+wputools resizebigimage;        # Resize an attachment original to the big image threshold.
 wputools sample;                # Insert sample posts & images.
 wputools sandbox;               # Create a WordPress sandbox.
 wputools search;                # Search content in the database.

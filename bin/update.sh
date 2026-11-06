@@ -54,6 +54,13 @@ if [[ "${_WP_PROJECT_ENV}" == 'production' || "${_WP_PROJECT_ENV}" == 'prod' ]];
     return;
 fi;
 
+# Check if memory limit is enough
+_MEM_LIMIT=$(_WPCLICOMMAND config get WP_MEMORY_LIMIT);
+if [[ "${_MEM_LIMIT}" < '256M' ]];then
+    bashutilities_message "Error : Memory limit should be at least 256M" 'error';
+    return;
+fi;
+
 # Check if an update is already in progress
 _has_core_updated_lock=$(_WPCLICOMMAND option --quiet get "core_updater.lock" 2> /dev/null);
 _has_auto_updated_lock=$(_WPCLICOMMAND option --quiet get "auto_updater.lock" 2> /dev/null);
