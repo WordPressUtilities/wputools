@@ -41,7 +41,7 @@ fi;
 ## Get infos
 ###################################
 
-wpconfig_site_id=$(bashutilities_get_user_var "- What is your project ID?" "project_id");
+wpconfig_site_id=$(bashutilities_get_user_var "- What is your project ID?" "$(wputools_get_default_domain)");
 wpconfig_site_prefix=$(bashutilities_get_user_var "- What is your site prefix?" "wp_");
 
 # Default values

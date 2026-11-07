@@ -499,6 +499,15 @@ function wputools_is_website_id_valid(){
     return 1;
 }
 
+# Default domain from the current folder name (or its parent if generic), sanitized
+function wputools_get_default_domain(){
+    local _default_domain=$(basename "${PWD}");
+    case "${_default_domain}" in
+        htdocs|www|public|public_html) _default_domain=$(basename "$(dirname "${PWD}")");;
+    esac
+    echo "${_default_domain}" | tr 'A-Z' 'a-z' | tr -c 'a-z0-9_\n' '_';
+}
+
 function wputools_format_home_url(){
     local _formatted_url="${1%/}";
     if [[ "${_formatted_url}" != http*://* ]]; then
