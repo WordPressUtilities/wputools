@@ -14,7 +14,8 @@ if [[ "${_HOME_URL}" != '' && "${_SITE_NAME}" != '' ]];then
     return 0;
 fi;
 
-_HOME_URL=$(bashutilities_get_user_var "What is the home URL ?" "http://$(wputools_get_default_domain).test");
+_WPUTOOLS_DEFAULT_INSTALL_DOMAIN=$(wputools_get_default_domain);
+_HOME_URL=$(bashutilities_get_user_var "What is the home URL ?" "http://${_WPUTOOLS_DEFAULT_INSTALL_DOMAIN}.test");
 
 if [[ -z "${_HOME_URL}" || "${_HOME_URL}" == '' ]];then
     bashutilities_message "The home URL is required." 'error';
@@ -29,13 +30,12 @@ _WPCLICOMMAND core install \
     --admin_user=admin_example \
     --admin_password=admin_example \
     --admin_email=admin@example.com\
-    --title="${_HOME_URL#*://}"\
+    --title="${_WPUTOOLS_DEFAULT_INSTALL_DOMAIN}"\
     --url="${_HOME_URL}" \
     --skip-email;
 
-_WPCLICOMMAND user create \
-    admin_example \
-    admin@example.com\
-    --user_pass=admin_example \
-    --role=administrator \
-    --url="${_HOME_URL}";
+# Clear cache after install
+wputools_call_route cache > /dev/null;
+
+# Login to the new install
+wputools_call_route login;

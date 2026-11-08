@@ -166,6 +166,7 @@ unset -v _WPUTOOLS_ACF_PRO_LICENSE;
 unset -v _WPUTOOLS_BACKUP_DIR;
 unset -v _WPUTOOLS_COMMANDS_LOG;
 unset -v _WPUTOOLS_CORE_UPDATE_TYPE;
+unset -v _WPUTOOLS_DEFAULT_INSTALL_DOMAIN;
 unset -v _WPUTOOLS_DUMP_FILESIZE;
 unset -v _WPUTOOLS_HAS_CRONTAB;
 unset -v _wputools_last_check_age;
