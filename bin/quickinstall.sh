@@ -8,6 +8,12 @@ if [[ ! -f "${_CURRENT_DIR}wp-config.php" && ! -f "${_CURRENT_DIR}/../wp-config.
     return 0;
 fi
 
+# Check MySQL
+if [[ ! $(_WPCLICOMMAND db check) ]];then
+    bashutilities_message 'MySQL is not available' 'error';
+    return 0;
+fi;
+
 # WordPress is already configured
 if [[ "${_HOME_URL}" != '' && "${_SITE_NAME}" != '' ]];then
     bashutilities_message "WordPress is already installed." 'error';

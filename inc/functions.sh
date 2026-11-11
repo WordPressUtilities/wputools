@@ -623,3 +623,25 @@ function wputools_test_url_injection(){
         printf "%-5s | %-14b | %-80s\n" "$CODE" "$TYPE" "$_payload"
     done
 }
+
+###################################
+## WordPress files infos
+###################################
+
+# Read from version.php : works even if WordPress is not installed
+function wputools_get_wp_version(){
+    grep "\$wp_version =" wp-includes/version.php | awk -F"'" '{print $2}';
+}
+
+function wputools_get_wp_locale(){
+    local _wp_lang=$(grep "\$wp_local_package =" wp-includes/version.php | awk -F"'" '{print $2}');
+    echo "${_wp_lang:-en_US}";
+}
+
+###################################
+## Git main branch : main or master
+###################################
+
+function wputools_get_main_branch(){
+    git rev-parse --verify --quiet main >/dev/null && echo "main" || echo "master";
+}

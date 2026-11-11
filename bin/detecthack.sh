@@ -43,10 +43,7 @@ if [[ "${_WPUDHK_COMPARE_WP}" == 'y' ]];then
     _CURRENT_WORDPRESS=$(_WPCLICOMMAND core version);
 
     # Extract local package
-    _WPUDHK_LOCAL_PACKAGE=$(bashutilities_search_extract_file "\$wp_local_package = '" "';" "wp-includes/version.php");
-    if [[ "${_WPUDHK_LOCAL_PACKAGE}" == '' ]];then
-        _WPUDHK_LOCAL_PACKAGE='en_US';
-    fi;
+    _WPUDHK_LOCAL_PACKAGE=$(wputools_get_wp_locale);
 
     # Downloading test version
     echo "# Downloading core WordPress to have a clean base to compare";

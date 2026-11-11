@@ -27,20 +27,17 @@ function maintainer_update_wp_cleanup {
 ###################################
 
 # Main branch is "main" or "master" depending on the project
-git rev-parse --verify --quiet main >/dev/null && _main_branch="main" || _main_branch="master"
+_main_branch=$(wputools_get_main_branch);
 
 # Get current version from wp-includes/version.php
-_current_version=$(grep "\$wp_version =" wp-includes/version.php | awk -F"'" '{print $2}')
+_current_version=$(wputools_get_wp_version);
 
 if [ -z "$_current_version" ]; then
     bashutilities_message "No WordPress install found here." 'error';
     return;
 fi
 
-_wp_lang=$(grep "\$wp_local_package =" wp-includes/version.php | awk -F"'" '{print $2}')
-if [ -z "$_wp_lang" ]; then
-    _wp_lang="en_US"
-fi
+_wp_lang=$(wputools_get_wp_locale);
 
 ###################################
 ## WordPress Update Script
