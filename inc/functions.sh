@@ -628,11 +628,6 @@ function wputools_test_url_injection(){
 ## WordPress files infos
 ###################################
 
-# Read from version.php : works even if WordPress is not installed
-function wputools_get_wp_version(){
-    grep "\$wp_version =" wp-includes/version.php | awk -F"'" '{print $2}';
-}
-
 function wputools_get_wp_locale(){
     local _wp_lang=$(grep "\$wp_local_package =" wp-includes/version.php | awk -F"'" '{print $2}');
     echo "${_wp_lang:-en_US}";
