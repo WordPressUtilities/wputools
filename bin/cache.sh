@@ -117,16 +117,16 @@ _STATIC_FILE=$(wputools_create_bootstrapped_file "cache");
 
 # Calling url
 echo '# Clearing static cache';
-if [[ "${_cache_type}" == 'purge-cli' ]];then
-    _cache_type='all';
-    echo '## Launching purge via CLI';
-    $_PHP_COMMAND "${_STATIC_FILE}";
-else
-    for _wputools_multisite_url in ${_wputools_multisite_urls}; do
-        echo "## Clearing static cache for ${_wputools_multisite_url}";
+for _wputools_multisite_url in ${_wputools_multisite_urls}; do
+    echo "## Clearing static cache for ${_wputools_multisite_url}";
+    if [[ "${_cache_type}" == 'purge-cli' ]];then
+        # Keep the bootstrap expiration check (60s) valid across sites
+        touch "${_CURRENT_DIR}${_STATIC_FILE}";
+        $_PHP_COMMAND "${_STATIC_FILE}" "${_wputools_multisite_url}";
+    else
         wputools_call_url "${_wputools_multisite_url}/${_STATIC_FILE}?cache_type=${_cache_type}&cache_arg=${_cache_arg}";
-    done;
-fi;
+    fi;
+done;
 rm "${_CURRENT_DIR}${_STATIC_FILE}";
 
 ###################################
